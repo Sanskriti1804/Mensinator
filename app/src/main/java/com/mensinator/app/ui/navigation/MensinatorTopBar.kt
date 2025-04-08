@@ -26,7 +26,7 @@ fun MensinatorTopBar(
     Column(
         modifier = Modifier
             //.windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 25.dp)
             .fillMaxWidth()
     ) {
         val modifier = onTitleClick?.let {
@@ -38,7 +38,7 @@ fun MensinatorTopBar(
             text = stringResource(titleStringId),
             modifier = modifier,
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Normal
         )
     }
 }

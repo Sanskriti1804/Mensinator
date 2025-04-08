@@ -32,7 +32,7 @@ import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
-import kotlinx.coroutines.launch
+//import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
