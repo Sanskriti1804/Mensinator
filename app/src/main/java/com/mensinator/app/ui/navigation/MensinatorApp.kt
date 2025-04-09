@@ -15,10 +15,16 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -165,7 +171,13 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 titleStringId = currentScreen.titleRes,
-                                onTitleClick = toolbarOnClick
+                                onTitleClick = toolbarOnClick,
+                                textColor = Color.Red,
+                                textStyle = TextStyle(
+                                    fontFamily = FontFamily(Font(R.font.appfont)),
+                                    fontSize = 36.sp,
+                                    fontWeight = FontWeight.Bold
+                                    )
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -178,7 +190,12 @@ private fun MainScaffold(
                 }
                 composable(route = Screen.Statistic.name) {
                     Scaffold(
-                        topBar = { MensinatorTopBar(currentScreen.titleRes) },
+                        topBar = {
+                            MensinatorTopBar(
+                                currentScreen.titleRes,
+                                textColor = Color.Red
+                            )
+                                 },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         StatisticsScreen(modifier = Modifier.padding(topBarPadding))
@@ -205,7 +222,8 @@ private fun MainScaffold(
                                 }
                             }
                         },
-                        topBar = { MensinatorTopBar(currentScreen.titleRes) },
+                        topBar = { MensinatorTopBar(currentScreen.titleRes,
+                            textColor = Color.Red,) },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         ManageSymptomScreen(
@@ -216,7 +234,10 @@ private fun MainScaffold(
                 }
                 composable(route = Screen.Settings.name) {
                     Scaffold(
-                        topBar = { MensinatorTopBar(currentScreen.titleRes) },
+                        topBar = { MensinatorTopBar(
+                            currentScreen.titleRes,
+                            textColor = Color.Red
+                        ) },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         Column {

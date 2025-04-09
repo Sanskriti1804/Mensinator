@@ -132,7 +132,7 @@ fun CalendarScreen(
             val date = state.value.selectedDays.last()
 
             EditSymptomsForDaysDialog(
-                date = date,  // Pass the last selected date
+                date = date,
                 symptoms = activeSymptoms,
                 currentlyActiveSymptomIds = state.value.activeSymptomIdsForLatestSelectedDay,
                 onSave = { selectedSymptoms ->

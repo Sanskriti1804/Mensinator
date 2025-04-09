@@ -1,6 +1,6 @@
 <resources>
     <!-- App Name -->
-    <string name="app_name">Mensinator</string>
+    <string name="app_name">Mahavari</string>
 
     <!-- Home -->
     <string name="previous">Previous</string>
@@ -103,7 +103,7 @@
     <string name="manage_symptoms">Manage Symptoms</string>
 
     <!-- Calender -->
-    <string name="calendar_title">Calendar</string>
+    <string name="calendar_title">Mahavari</string>
     <string name="mon">Mon</string>
     <string name="tue">Tue</string>
     <string name="wed">Wed</string>

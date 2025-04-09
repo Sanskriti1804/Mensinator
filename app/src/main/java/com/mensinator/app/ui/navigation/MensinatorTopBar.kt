@@ -22,6 +22,8 @@ import com.mensinator.app.ui.theme.MensinatorTheme
 fun MensinatorTopBar(
     @StringRes titleStringId: Int,
     onTitleClick: (() -> Unit)? = null,
+     textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground,
+    textStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.headlineMedium
 ) {
     Column(
         modifier = Modifier
@@ -37,12 +39,13 @@ fun MensinatorTopBar(
         Text(
             text = stringResource(titleStringId),
             modifier = modifier,
-            style = MaterialTheme.typography.headlineMedium,
+            style = textStyle, // Use the passed text style
+            color = textColor, // Use the passed text color
             fontWeight = FontWeight.Normal
         )
     }
 }
-//Hellooo baby
+
 private class ScreenTitleProvider : PreviewParameterProvider<Int> {
     override val values: Sequence<Int>
         get() = Screen.entries.map { it.titleRes }.asSequence()
