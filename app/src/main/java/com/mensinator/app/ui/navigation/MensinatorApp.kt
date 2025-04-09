@@ -29,6 +29,7 @@ import com.mensinator.app.R
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
+import com.mensinator.app.splash.SplashScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
+    Splash(R.string.app_name),
     Calendar(R.string.calendar_title),
     Symptoms(R.string.symptoms_page),
     Statistic(R.string.statistics_title),
@@ -148,11 +150,14 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Calendar.name,
+                startDestination = Screen.Splash.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
             ) {
+                composable(Screen.Splash.name) {
+                    SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
+                }
                 composable(route = Screen.Calendar.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
                     val (toolbarOnClick, setToolbarOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }

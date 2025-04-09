@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,10 +15,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.mensinator.app.R
+import com.mensinator.app.ui.navigation.Screen
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(navController: NavController) {
+    LaunchedEffect(Unit) {
+        delay(3000)
+        navController.navigate(Screen.Calendar.name) {
+            popUpTo(Screen.Splash.name) { inclusive = true }
+        }
+    }
+
     // Load your custom font from res/font
     val customFont = FontFamily(
         Font(R.font.appfont, FontWeight.Normal) // replace with your font file name
