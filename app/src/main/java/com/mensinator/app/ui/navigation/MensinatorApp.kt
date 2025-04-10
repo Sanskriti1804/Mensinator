@@ -1,6 +1,8 @@
 package com.mensinator.app.ui.navigation
 
+import android.os.Build
 import androidx.activity.compose.LocalActivity
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -39,6 +41,8 @@ import com.mensinator.app.splash.SplashScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
+import com.mensinator.app.user.LoginScreen
+import com.mensinator.app.user.SignUpScreen
 import kotlinx.coroutines.launch
 //import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -48,7 +52,9 @@ enum class Screen(@StringRes val titleRes: Int) {
     Calendar(R.string.calendar_title),
     Symptoms(R.string.symptoms_page),
     Statistic(R.string.statistics_title),
-    Settings(R.string.settings_page)
+    Settings(R.string.settings_page),
+    Login(R.string.login_title),     // Add this
+    SignUp(R.string.signup_title),
 }
 
 /**
@@ -61,6 +67,7 @@ enum class Screen(@StringRes val titleRes: Int) {
 fun Modifier.displayCutoutExcludingStatusBarsPadding() =
     windowInsetsPadding(WindowInsets.displayCutout.exclude(WindowInsets.statusBars))
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MensinatorApp(
@@ -108,6 +115,7 @@ fun MensinatorApp(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 private fun MainScaffold(
     currentScreen: Screen,
@@ -164,6 +172,34 @@ private fun MainScaffold(
                 composable(Screen.Splash.name) {
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
+                composable(route = Screen.Login.name) {
+                    LoginScreen(
+                        authViewModel = koinInject(), // if you're using Koin for DI
+                        onNavigateToSignUp = {
+                            navController.navigate(Screen.SignUp.name)
+                        },
+                        onSignInSuccess = {
+                            navController.navigate(Screen.Calendar.name) {
+                                popUpTo(Screen.Login.name) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+
+                composable(route = Screen.SignUp.name) {
+                    SignUpScreen(
+                        authViewModel = koinInject(),
+                        onSignUpSuccess = {
+                            navController.navigate(Screen.Calendar.name) {
+                                popUpTo(Screen.SignUp.name) { inclusive = true }
+                            }
+                        },
+                        onNavigateToLogin = {
+                            navController.navigate(Screen.Login.name)
+                        }
+                    )
+                }
+
                 composable(route = Screen.Calendar.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
                     val (toolbarOnClick, setToolbarOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }

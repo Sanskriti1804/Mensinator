@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 //authentication related logic
 //FirebaseAuth.getInstance() - for managing user authentication
@@ -12,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 class AuthViewModel : ViewModel() {
     private val userRepository: UserRepository = UserRepository(
         FirebaseAuth.getInstance(),
-        Injection.instance()
+       Injection.instance()
     )
 
     init {

@@ -100,6 +100,7 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.androidx.runtime.livedata)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -112,7 +113,7 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    
+
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth-ktx:23.1.0")

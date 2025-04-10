@@ -2,6 +2,10 @@
     <!-- App Name -->
     <string name="app_name">Mahavari</string>
 
+    <!-- Screen Name -->
+    <string name="login_title">Login</string>
+    <string name="signup_title">Sign Up</string>
+
     <!-- Home -->
     <string name="previous">Previous</string>
     <string name="next">Next</string>

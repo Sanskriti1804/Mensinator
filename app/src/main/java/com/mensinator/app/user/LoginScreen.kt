@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
 import com.mensinator.app.ui.navigation.Screen
 
@@ -164,7 +166,7 @@ fun LoginScreen(
     var password by remember { mutableStateOf("")
     }
 
-//    val result by authViewModel.authResult.observeAsState()
+    val result by authViewModel.authResult.observeAsState()
 
     Column(
         modifier = Modifier

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
 import com.mensinator.app.ui.navigation.Screen
 import kotlinx.coroutines.delay
@@ -25,11 +26,19 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
-        delay(3000)
-        navController.navigate(Screen.Calendar.name) {
-            popUpTo(Screen.Splash.name) { inclusive = true }
+        delay(3000) // or however long your splash shows
+
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            navController.navigate(Screen.Calendar.name) {
+                popUpTo(Screen.Splash.name) { inclusive = true }
+            }
+        } else {
+            navController.navigate(Screen.Login.name) {
+                popUpTo(Screen.Splash.name) { inclusive = true }
+            }
         }
     }
+
 
     // Load your custom font from res/font
     val customFont = FontFamily(
