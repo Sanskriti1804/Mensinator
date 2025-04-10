@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "176343936083",
+    "project_id": "project-dad69",
+    "storage_bucket": "project-dad69.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176343936083:android:e18caddb5020ed0ae86aa6",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBKkOLt869tw9NAobBeV2XdElXr_FT2XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176343936083:android:d907215e7258a94be86aa6",
+        "android_client_info": {
+          "package_name": "com.mensinator.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBKkOLt869tw9NAobBeV2XdElXr_FT2XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
