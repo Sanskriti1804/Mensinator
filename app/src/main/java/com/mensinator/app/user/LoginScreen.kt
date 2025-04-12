@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
-import com.mensinator.app.ui.navigation.Screen
+import com.mensinator.app.ui.navigation.Screen6
 
 
 @Composable
@@ -57,7 +57,7 @@ fun LoginLogo(
     isLooping : Boolean = true,
     isPlaying : Boolean = true
 ){
-//    val composition by rememberLottieComposition(
+//    val  composition by rememberLottieComposition(
 //        LottieCompositionSpec.Asset(assetRes) )
 //    val progress by animateLottieCompositionAsState(
 //        composition = composition,

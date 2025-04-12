@@ -94,6 +94,9 @@ dependencies {
 
     implementation(libs.kizitonwose.calendar.compose)
 
+    implementation("androidx.biometric:biometric:1.1.0")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     implementation(platform(libs.koin.bom))
     implementation(libs.koin)
     implementation(libs.koin.compose)
