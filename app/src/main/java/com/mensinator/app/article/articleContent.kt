@@ -456,7 +456,7 @@ Injection: A shot given every 3 months.
 Hormonal IUD: A device placed in the uterus, releases hormones.
 
 Barrier Methods
-
+ 
 Condoms: Male or female, prevent sperm from entering the uterus and protect against STIs.
 
 Diaphragm & Cervical Cap: Inserted into the vagina to cover the cervix, usually with spermicide.

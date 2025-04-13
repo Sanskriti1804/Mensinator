@@ -1,6 +1,5 @@
 package com.mensinator.app.user
 
-
 import android.os.Build
 import android.webkit.WebSettings.TextSize
 import androidx.annotation.RequiresApi
@@ -47,7 +46,6 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
 import com.mensinator.app.ui.navigation.Screen6
-
 
 @Composable
 fun LoginLogo(
