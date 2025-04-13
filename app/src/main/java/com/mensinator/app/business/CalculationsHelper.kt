@@ -5,7 +5,7 @@ import com.mensinator.app.extensions.roundToTwoDecimalPoints
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
-class CalculationsHelper(
+abstract class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : ICalculationsHelper {
     private val periodHistory
