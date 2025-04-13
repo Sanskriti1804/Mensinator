@@ -92,8 +92,7 @@ fun EditSymptomsForDaysDialog(
             Text(
                 text = stringResource(id = R.string.symptoms_dialog_title, date),
                 style = TextStyle(
-                    fontFamily = dialogFont,
-                    fontSize = 20.sp
+                    fontFamily = dialogFont, fontSize = 20.sp
                 )
             )
         },
