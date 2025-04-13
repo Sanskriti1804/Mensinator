@@ -35,8 +35,8 @@ fun ArticleLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(appWhite)
-            .padding(18.dp),
-        contentPadding = PaddingValues(bottom = 32.dp)
+            .padding(8.dp),
+        contentPadding = PaddingValues(bottom = 8.dp)
     ) {
         item {
             Text(
@@ -46,7 +46,7 @@ fun ArticleLayout(
                 fontWeight = FontWeight.Bold,
                 color = appDRed,
                 lineHeight = 64.sp,
-                modifier = Modifier.padding(bottom = 8.dp, top = 20.dp)
+                modifier = Modifier.padding(bottom = 8.dp, top = 2.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
         }

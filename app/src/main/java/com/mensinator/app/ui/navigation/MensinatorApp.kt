@@ -1,5 +1,6 @@
 package com.mensinator.app.ui.navigation
 
+//import kotlinx.coroutines.launch
 import android.os.Build
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.RequiresApi
@@ -7,15 +8,44 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,7 +74,6 @@ import com.mensinator.app.ui.theme.UiConstants
 import com.mensinator.app.user.LoginScreen
 import com.mensinator.app.user.SignUpScreen
 import kotlinx.coroutines.launch
-//import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -81,7 +110,8 @@ fun MensinatorApp(
         launch {
             // If protectScreen is 1, it should protect the screen
             // If protectScreen is 0, should not protect screen (allows screenshots and screen visibility in recent apps)
-            val protectScreen = (dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1) == 1
+            val protectScreen =
+                (dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1) == 1
             onScreenProtectionChanged(protectScreen)
         }
     }
@@ -116,6 +146,7 @@ fun MensinatorApp(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 private fun MainScaffold(
@@ -131,7 +162,8 @@ private fun MainScaffold(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier
+                        .fillMaxHeight()
                         .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Start)),
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -204,9 +236,12 @@ private fun MainScaffold(
                 composable(route = Screen.Article.name) {
                     Scaffold(
                         topBar = {
-                            MensinatorTopBar(
-                                titleStringId = Screen.Article.titleRes,
-                                textColor = Color.Red
+                            TopAppBar(
+                                title = { /* No text, just leave this empty */ },
+                                colors = TopAppBarDefaults.topAppBarColors(
+                                    containerColor = Color.White, // or your custom white from Color.kt
+                                    titleContentColor = Color.Transparent // makes sure even accidental title stays invisible
+                                )
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -220,7 +255,11 @@ private fun MainScaffold(
 
                 composable(route = Screen.Calendar.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
-                    val (toolbarOnClick, setToolbarOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }
+                    val (toolbarOnClick, setToolbarOnClick) = remember {
+                        mutableStateOf<(() -> Unit)?>(
+                            null
+                        )
+                    }
                     Scaffold(
                         topBar = {
                             MensinatorTopBar(
@@ -231,7 +270,7 @@ private fun MainScaffold(
                                     fontFamily = FontFamily(Font(R.font.appfont)),
                                     fontSize = 36.sp,
                                     fontWeight = FontWeight.Bold
-                                    )
+                                )
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -249,7 +288,7 @@ private fun MainScaffold(
                                 currentScreen.titleRes,
                                 textColor = Color.Red
                             )
-                                 },
+                        },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         StatisticsScreen(modifier = Modifier.padding(topBarPadding))
@@ -276,8 +315,12 @@ private fun MainScaffold(
                                 }
                             }
                         },
-                        topBar = { MensinatorTopBar(currentScreen.titleRes,
-                            textColor = Color.Red,) },
+                        topBar = {
+                            MensinatorTopBar(
+                                currentScreen.titleRes,
+                                textColor = Color.Red,
+                            )
+                        },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         ManageSymptomScreen(
@@ -288,10 +331,12 @@ private fun MainScaffold(
                 }
                 composable(route = Screen.Settings.name) {
                     Scaffold(
-                        topBar = { MensinatorTopBar(
-                            currentScreen.titleRes,
-                            textColor = Color.Red
-                        ) },
+                        topBar = {
+                            MensinatorTopBar(
+                                currentScreen.titleRes,
+                                textColor = Color.Red
+                            )
+                        },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         Column {

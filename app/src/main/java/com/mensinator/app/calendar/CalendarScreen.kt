@@ -5,11 +5,36 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +62,12 @@ import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
-import kotlinx.collections.immutable.*
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.minus
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.plus
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -51,12 +81,14 @@ import java.time.temporal.ChronoUnit
 fun CalendarScreen(
     modifier: Modifier,
     viewModel: CalendarViewModel = koinViewModel(),
-    setToolbarOnClick: (() -> Unit) -> Unit,
+    setToolbarOnClick: (() -> Unit) -> Unit
 ) {
     val onAction = { uiAction: UiAction -> viewModel.onAction(uiAction) }
 
     val state = viewModel.viewState.collectAsStateWithLifecycle()
     val isDarkMode = isDarkMode()
+    val todayDate = LocalDate.now()
+    val menstrualPhase = "MenstrualPhase"
 
     val currentYearMonth = YearMonth.now()
     val calendarState = rememberCalendarState(
@@ -66,6 +98,7 @@ fun CalendarScreen(
     )
     val coroutineScope = rememberCoroutineScope()
     val showSymptomsDialog = remember { mutableStateOf(false) }
+
 
     LaunchedEffect(isDarkMode) { viewModel.updateDarkModeStatus(isDarkMode) }
 
@@ -85,6 +118,11 @@ fun CalendarScreen(
             .displayCutoutExcludingStatusBarsPadding()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
+        CalendarTopHeader(
+            todayDate = LocalDate.now(),
+            time = "08.00",
+            location = "Indonesia"// Pass the menstrual phase as needed
+        )
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
         }
@@ -155,6 +193,71 @@ fun CalendarScreen(
 }
 
 @Composable
+private fun CalendarTopHeader(
+    todayDate: LocalDate = LocalDate.now(),
+    time: String = "08.00",
+    location: String = "Indonesia"
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 16.dp)
+    ) {
+        // Weekday name
+        Text(
+            text = todayDate.dayOfWeek.name.lowercase()
+                .replaceFirstChar { it.uppercase() },
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = Color.Gray
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Date and time-location row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Date column
+            Column {
+                Text(
+                    text = todayDate.dayOfMonth.toString(),
+                    style = MaterialTheme.typography.displaySmall.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Text(
+                    text = todayDate.month.name.lowercase().replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+
+            // Time and location
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = time,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.SemiBold
+                    )
+                )
+                Text(
+                    text = location,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = Color.Gray
+                    )
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
 private fun PeriodButton(
     state: State<CalendarViewModel.ViewState>,
     onAction: (uiAction: UiAction) -> Unit,
@@ -190,9 +293,11 @@ private fun PeriodButton(
             selectedIsPeriod && isPeriodButtonEnabled -> {
                 stringResource(id = R.string.period_button_selected)
             }
+
             !selectedIsPeriod && isPeriodButtonEnabled -> {
                 stringResource(id = R.string.period_button_not_selected)
             }
+
             else -> stringResource(id = R.string.period_button)
         }
         ButtonText(text)
@@ -245,9 +350,11 @@ private fun OvulationButton(
             selectedIsOvulation && ovulationButtonEnabled -> {
                 stringResource(id = R.string.ovulation_button_selected)
             }
+
             !selectedIsOvulation && ovulationButtonEnabled -> {
                 stringResource(id = R.string.ovulation_button_not_selected)
             }
+
             else -> stringResource(id = R.string.ovulation_button)
         }
         ButtonText(text)
@@ -335,6 +442,7 @@ fun Day(
         wideWindow -> {
             Modifier.aspectRatio(2f) // Make cells less tall
         }
+
         else -> {
             Modifier.aspectRatio(1f) // Ensure cells remain square
         }
