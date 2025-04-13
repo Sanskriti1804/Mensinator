@@ -1,6 +1,7 @@
 package com.mensinator.app.ui.navigation
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,27 +23,34 @@ import com.mensinator.app.ui.theme.MensinatorTheme
 fun MensinatorTopBar(
     @StringRes titleStringId: Int,
     onTitleClick: (() -> Unit)? = null,
-     textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground,
-    textStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.headlineMedium
+    textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground,
+    textStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.headlineMedium,
+    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.background // <-- NEW PARAM
 ) {
-    Column(
+    androidx.compose.foundation.layout.Box(
         modifier = Modifier
-            //.windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(horizontal = 25.dp)
             .fillMaxWidth()
+            .background(color = backgroundColor) // <-- APPLY BACKGROUND
     ) {
-        val modifier = onTitleClick?.let {
-            Modifier
-                .clip(MaterialTheme.shapes.small)
-                .clickable { it() }
-        } ?: Modifier
-        Text(
-            text = stringResource(titleStringId),
-            modifier = modifier,
-            style = textStyle, // Use the passed text style
-            color = textColor, // Use the passed text color
-            fontWeight = FontWeight.Normal
-        )
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 25.dp, vertical = 16.dp)
+                .fillMaxWidth()
+        ) {
+            val modifier = onTitleClick?.let {
+                Modifier
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable { it() }
+            } ?: Modifier
+
+            Text(
+                text = stringResource(titleStringId),
+                modifier = modifier,
+                style = textStyle,
+                color = textColor,
+                fontWeight = FontWeight.Normal
+            )
+        }
     }
 }
 

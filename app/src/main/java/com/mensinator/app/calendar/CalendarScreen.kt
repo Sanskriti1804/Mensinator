@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -63,7 +65,7 @@ import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
-import com.mensinator.app.ui.theme.appDRed
+import com.mensinator.app.ui.theme.appLRed
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.minus
@@ -118,7 +120,7 @@ fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = appDRed)
+            .background(color = appLRed)
             .displayCutoutExcludingStatusBarsPadding()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {

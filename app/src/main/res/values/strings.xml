@@ -18,7 +18,7 @@
 
     <string name="ovulation_button_selected">Remove Ovulation</string>
     <string name="ovulation_button_not_selected">Add Ovulation</string>
-    
+
     <!-- Home Alerts -->
     <string name="empty_click_alert">No dates to save or remove</string>
     <string name="successfully_saved_alert">Changes saved successfully</string>
@@ -64,7 +64,7 @@
     <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
-    
+
     <!-- Color values -->
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -143,6 +143,8 @@
 
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Frequently Asked Questions</string>
+    <string name="empty_string" />
+
 
     <!-- User Manual Section -->
     <string name="user_manual_header">User Manual</string>
@@ -173,5 +175,5 @@
     <string name="import_data">Import Data</string>
     <string name="export_data">Export Data</string>
     <string name="about_app">About App</string>
-    <string name="rename_symptom" >Rename symptom</string>
+    <string name="rename_symptom">Rename symptom</string>
 </resources>
