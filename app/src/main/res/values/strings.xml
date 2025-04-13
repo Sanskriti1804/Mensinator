@@ -32,6 +32,8 @@
     <string name="statisic_page">Statistics</string>
     <string name="symptoms_page">Symptoms</string>
     <string name="settings_page">Settings</string>
+    <string name="article_title">Article</string>
+
 
     <!-- symptoms page -->
     <string name="delete_symptom">Delete Symptom</string>

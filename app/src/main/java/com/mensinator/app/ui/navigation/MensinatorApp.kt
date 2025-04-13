@@ -55,6 +55,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     Settings(R.string.settings_page),
     Login(R.string.login_title),     // Add this
     SignUp(R.string.signup_title),
+    Article(R.string.article_title)
 }
 
 /**
@@ -164,7 +165,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Splash.name,
+                startDestination = Screen.Article.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -199,6 +200,23 @@ private fun MainScaffold(
                         }
                     )
                 }
+
+                composable(route = Screen.Article.name) {
+                    Scaffold(
+                        topBar = {
+                            MensinatorTopBar(
+                                titleStringId = Screen.Article.titleRes,
+                                textColor = Color.Red
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        Column(modifier = Modifier.padding(topBarPadding)) {
+                            com.mensinator.app.article.ArticleScreen()
+                        }
+                    }
+                }
+
 
                 composable(route = Screen.Calendar.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
