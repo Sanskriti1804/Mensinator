@@ -2,9 +2,7 @@ package com.mensinator.app.user
 
 
 import android.os.Build
-import android.webkit.WebSettings.TextSize
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,17 +43,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
-import com.mensinator.app.ui.navigation.Screen6
-
+import com.mensinator.app.ui.navigation.Screen
 
 @Composable
 fun LoginLogo(
-    assetRes : String,
+    assetRes: String,
     modifier: Modifier = Modifier,
-    size : Dp = 100.dp,
-    isLooping : Boolean = true,
-    isPlaying : Boolean = true
-){
+    size: Dp = 100.dp,
+    isLooping: Boolean = true,
+    isPlaying: Boolean = true
+) {
 //    val  composition by rememberLottieComposition(
 //        LottieCompositionSpec.Asset(assetRes) )
 //    val progress by animateLottieCompositionAsState(
@@ -78,8 +74,8 @@ fun Header(
     fontSize: TextUnit = 24.sp,
     fontFamily: FontFamily,
     modifier: Modifier = Modifier.padding(bottom = 16.dp),
-    textColor : Color = Color.Red
-){
+    textColor: Color = Color.Red
+) {
     Text(
         text = text,
         fontSize = fontSize,
@@ -92,24 +88,24 @@ fun Header(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextLoginField(
-    label : String,
-    value : String,
-    onValueChange : (String) -> Unit,
-    leadingIcon : @Composable (()-> Unit)? = null,
-    trailingIcon : @Composable (()-> Unit)? = null,
-    textfieldColor : Color = Color.Black,
-    iconColor : Color = Color.Red,
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    textfieldColor: Color = Color.Black,
+    iconColor: Color = Color.Red,
     labelColor: Color = Color.Red,
-    isPassword : Boolean = false,
+    isPassword: Boolean = false,
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(20.dp),
     shape: Shape = RoundedCornerShape(8.dp)
-){
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = {Text(text = label, color = labelColor)},
+        label = { Text(text = label, color = labelColor) },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         modifier = modifier,
@@ -136,18 +132,20 @@ fun CustomButton(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(12.dp),
-    onClick : () -> Unit
-){
+    onClick: () -> Unit
+) {
     Button(
-        onClick =  onClick,
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColors
         ),
         modifier = modifier,
-        shape = shape) {
+        shape = shape
+    ) {
         Text(
             text = text,
-            color = textColor)
+            color = textColor
+        )
     }
 }
 
@@ -157,13 +155,14 @@ fun CustomButton(
 fun LoginScreen(
     authViewModel: AuthViewModel,
     onNavigateToSignUp: () -> Unit,
-    onSignInSuccess:()->Unit
+    onSignInSuccess: () -> Unit
 ) {
     val AppHeaderFont = FontFamily(Font(R.font.appfont))
 
     var passwordVisibility by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("")
+    var password by remember {
+        mutableStateOf("")
     }
 
     val result by authViewModel.authResult.observeAsState()
@@ -174,7 +173,7 @@ fun LoginScreen(
             .background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         LoginLogo(
             assetRes = "heart_icon.json",
 //                assetRes = "smiley_icon.json",
@@ -193,11 +192,13 @@ fun LoginScreen(
             value = email,
             onValueChange = { email = it },
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.icon_email),
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_email),
                     contentDescription = "email",
                     tint = Color.Red,
                     modifier = Modifier.size(20.dp)
-                ) },
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(18.dp),
@@ -210,11 +211,13 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.icon_password),
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_password),
                     contentDescription = "password",
                     tint = Color.Red,
                     modifier = Modifier.size(20.dp)
-                ) },
+                )
+            },
             trailingIcon = {
                 Icon(painter = painterResource(id = R.drawable.icon_password_visibility),
                     contentDescription = "password visibility",
@@ -236,7 +239,7 @@ fun LoginScreen(
 
 
         CustomButton(
-            text =  "SIGN IN",
+            text = "SIGN IN",
             textColor = Color.White,
             shape = RoundedCornerShape(8.dp),
             buttonColor = Color.Red,
@@ -272,7 +275,7 @@ fun LoginScreen(
 }
 
 fun isUserAlreadySignIn(navController: NavController) {
-    if(FirebaseAuth.getInstance().currentUser != null){
+    if (FirebaseAuth.getInstance().currentUser != null) {
         navController.navigate(Screen.Calendar)
     }
 }
