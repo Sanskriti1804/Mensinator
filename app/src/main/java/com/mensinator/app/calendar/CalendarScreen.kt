@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,6 +63,7 @@ import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
+import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.minus
@@ -115,6 +118,7 @@ fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(color = appDRed)
             .displayCutoutExcludingStatusBarsPadding()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
@@ -195,9 +199,13 @@ fun CalendarScreen(
 @Composable
 private fun CalendarTopHeader(
     todayDate: LocalDate = LocalDate.now(),
-    time: String = "08.00",
-    location: String = "Indonesia"
+    location: String = "Indonesia",
+    time: String = "10:00 AM"
 ) {
+    val headingFont = FontFamily(
+        Font(R.font.secfont) // Your custom font
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,51 +216,83 @@ private fun CalendarTopHeader(
             text = todayDate.dayOfWeek.name.lowercase()
                 .replaceFirstChar { it.uppercase() },
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Medium,
-                color = Color.Gray
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = headingFont,
+                color = Color.Gray,
+                fontSize = 16.sp
             )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Date and time-location row
+        // Date and location row with vertical divider
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Date column
-            Column {
+            // Date column - bigger width
+            Column(
+                modifier = Modifier.weight(1.5f)
+            ) {
                 Text(
                     text = todayDate.dayOfMonth.toString(),
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.displayLarge.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 40.sp,
+                        fontFamily = headingFont
                     )
                 )
                 Text(
-                    text = todayDate.month.name.lowercase().replaceFirstChar { it.uppercase() },
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Medium
+                    text = todayDate.month.name,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        letterSpacing = 2.sp,
+                        fontFamily = headingFont
                     )
                 )
             }
 
-            // Time and location
-            Column(horizontalAlignment = Alignment.End) {
+            // Vertical divider - slightly toward the location
+            Divider(
+                color = Color.LightGray,
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(1.dp)
+                    .padding(horizontal = 12.dp)
+            )
+
+            // Time & location column - smaller width
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End
+            ) {
                 Text(
                     text = time,
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = headingFont
                     )
                 )
                 Text(
                     text = location,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = Color.Gray
+                        color = Color.Gray,
+                        fontFamily = headingFont
                     )
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Horizontal grey line under the row
+        Divider(
+            color = Color(0xFFB0B0B0),
+            thickness = 1.dp
+        )
     }
 }
 
@@ -371,6 +411,7 @@ private fun ButtonText(
         modifier = modifier,
         style = MaterialTheme.typography.labelMedium,
         textAlign = TextAlign.Center,
+        color = Color.Black,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2
     )
@@ -399,6 +440,10 @@ private fun DaysOfWeekTitle(daysOfWeek: PersistentList<DayOfWeek>) {
  */
 @Composable
 private fun MonthTitle(yearMonth: YearMonth) {
+    val headingFont = FontFamily(
+        Font(R.font.secfont) // use your actual file
+    )
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(10.dp))
         Text(
@@ -407,12 +452,18 @@ private fun MonthTitle(yearMonth: YearMonth) {
                 .padding(bottom = 4.dp),
             textAlign = TextAlign.Center,
             text = "${stringResource(id = yearMonth.month.stringRes)} ${yearMonth.year}",
-            style = MaterialTheme.typography.titleLarge, // Adjust text style as needed
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFamily = headingFont,
+                color = Color.White
+            )
         )
         HorizontalDivider(
             color = MaterialTheme.colorScheme.primary,
             thickness = 2.dp,
             modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        val headingFont = FontFamily(
+            Font(R.font.secfont) // use your actual file
         )
     }
 }

@@ -17,7 +17,8 @@ import java.time.LocalDate
  * Does not perform the actual scheduling itself, instead it delegates this to [IAndroidNotificationScheduler].
  * This is done to be able to unit test this class without using Robolectric.
  */
-class NotificationScheduler(
+class
+NotificationScheduler(
     private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
     private val periodPrediction: IPeriodPrediction,
