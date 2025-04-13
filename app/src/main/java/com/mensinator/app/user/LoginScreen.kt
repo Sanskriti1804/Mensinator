@@ -42,11 +42,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
-<<<<<<< HEAD
-import com.mensinator.app.ui.navigation.Screen6
-=======
+//import com.mensinator.app.ui.navigation.Screen
 import com.mensinator.app.ui.navigation.Screen
->>>>>>> 9e30be8e4550f5516c1d4737202efa93b8b1dd00
 
 @Composable
 fun LoginLogo(
