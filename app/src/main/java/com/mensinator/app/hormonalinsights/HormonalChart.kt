@@ -1,47 +1,44 @@
-package com.mensinator.app.hormonalinsights
-
+import android.graphics.Color
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import java.lang.reflect.Modifier
-import java.security.KeyStore
-import java.util.Collections.emptyList
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.mensinator.app.hormonalinsights.HormonalChartViewModel
 
 @Composable
 fun HormonalChart(
     viewModel: HormonalChartViewModel
 ) {
-    val chartData = remember { mutableStateOf(emptyList<KeyStore.Entry>()) }
+    val chartData = remember { mutableStateOf(emptyList<Entry>()) }
 
-    // Fetch the hormonal data from ViewModel
     LaunchedEffect(Unit) {
         chartData.value = viewModel.getHormonalData()
     }
 
     AndroidView(
         factory = { context ->
-            // Initialize MPAndroidChart LineChart
-            val chart = LineChart(context)
-
-            // Prepare data set for the chart
-            val dataSet = LineDataSet(chartData.value, "Hormonal Data")
-            dataSet.color = Color.BLUE
-            dataSet.valueTextColor = Color.BLACK
-            dataSet.valueTextSize = 12f
-
-            // Create a LineData object
-            val data = LineData(dataSet)
-            chart.data = data
-            chart.invalidate() // Refresh the chart
-
-            // Customize chart appearance (optional)
-            chart.setBackgroundColor(Color.WHITE)
-            chart.description.isEnabled = false
-
-            chart
+            LineChart(context).apply {
+                setBackgroundColor(Color.WHITE)
+                description.isEnabled = false
+            }
+        },
+        update = { chart ->
+            val dataSet = LineDataSet(chartData.value, "Hormonal Data").apply {
+                color = Color.BLUE
+                valueTextColor = Color.BLACK
+                valueTextSize = 12f
+            }
+            chart.data = LineData(dataSet)
+            chart.invalidate()
         },
         modifier = Modifier.fillMaxSize()
     )
 }
+

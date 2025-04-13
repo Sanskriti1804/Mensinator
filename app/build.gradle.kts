@@ -94,7 +94,6 @@ dependencies {
 
     implementation(libs.kizitonwose.calendar.compose)
 
-    implementation("androidx.biometric:biometric:1.1.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     implementation(platform(libs.koin.bom))
@@ -104,6 +103,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.androidx.runtime.livedata)
+//    implementation(libs.androidx.biometric.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

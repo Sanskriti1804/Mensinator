@@ -82,7 +82,7 @@ private fun FAQDialogContent() {
             text = stringResource(id = R.string.ovulation),
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
+         Text(
             text = stringResource(id = R.string.statistics),
             style = MaterialTheme.typography.bodyMedium
         )

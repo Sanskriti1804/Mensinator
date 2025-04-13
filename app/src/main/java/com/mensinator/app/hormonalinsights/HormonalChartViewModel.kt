@@ -1,9 +1,8 @@
 package com.mensinator.app.hormonalinsights
 
-import android.os.DropBoxManager
+import com.github.mikephil.charting.data.Entry
 import com.mensinator.app.business.CalculationsHelper
 import com.mensinator.app.business.IPeriodDatabaseHelper
-import java.security.KeyStore
 import java.time.LocalDate
 
 class HormonalChartViewModel(
@@ -11,26 +10,23 @@ class HormonalChartViewModel(
     private val dbHelper: IPeriodDatabaseHelper
 ) {
 
-    fun getHormonalData(): List<KeyStore.Entry> {
-        val hormonalData = mutableListOf<KeyStore.Entry>()
+    fun getHormonalData(): List<Entry> {
+        val hormonalData = mutableListOf<Entry>()
 
-        // Fetch cycle lengths and hormonal phases (e.g., luteal, ovulation)
-        val cycleLengths = calculationsHelper.getCycleLengths() // Fetch your cycle lengths
-        val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(5) // Get ovulation dates
+        val cycleLengths = calculationsHelper.getCycleLengths()
+        val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(5)
 
-        // Example: Add data points for each ovulation
-        ovulationDates.forEachIndexed { index, ovulationDate ->
-            // This assumes cycle length data and ovulation date are aligned
-            val hormoneLevel = calculateHormoneLevelForCycle(ovulationDate, cycleLengths[index])
-            hormonalData.add(DropBoxManager.Entry(index.toFloat(), hormoneLevel))
-        }
+//        ovulationDates.forEachIndexed { index, ovulationDate ->
+//            val hormoneLevel =
+//                calculateHormoneLevelForCycle(ovulationDate, cycleLengths.getOrNull(index) ?: 28)
+//            hormonalData.add(Entry(index.toFloat(), hormoneLevel))
+//        }
 
         return hormonalData
     }
 
     private fun calculateHormoneLevelForCycle(ovulationDate: LocalDate, cycleLength: Long): Float {
-        // You can calculate hormone levels based on the cycle length or phase
-        // For simplicity, let’s assume it’s a random value for this example
-        return (cycleLength % 10).toFloat()  // Just an example, replace with your own logic
+        // Just a simple example for now
+        return (cycleLength % 10).toFloat()
     }
 }

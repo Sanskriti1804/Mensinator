@@ -49,4 +49,5 @@ interface ICalculationsHelper {
      * @return The luteal phase length as an integer.
      */
     fun getLutealLengthForPeriod(date: LocalDate): Int
+    abstract fun getCycleLengths(): Any
 }
