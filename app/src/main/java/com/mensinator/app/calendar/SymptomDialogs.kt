@@ -8,16 +8,22 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mensinator.app.R
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.theme.MensinatorTheme
+import com.mensinator.app.ui.theme.YourRedColor // Make sure to replace this with your actual red color from colors.kt
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentSet
@@ -40,29 +46,44 @@ fun EditSymptomsForDaysDialog(
 
     AlertDialog(
         onDismissRequest = { onCancel() },
+        containerColor = Color.White, // White background for the dialog
         confirmButton = {
-            Button(
-                onClick = {
-                    onSave(selectedSymptoms)
-                },
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp) // Tight button spacing
             ) {
-                Text(text = stringResource(id = R.string.save_symptoms_button))
+                Button(
+                    onClick = { onSave(selectedSymptoms) },
+                    colors = ButtonDefaults.buttonColors(containerColor = YourRedColor), // Red button
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.save_symptoms_button).uppercase(),
+                        color = Color.White // White text in the button
+                    )
+                }
+                Button(
+                    onClick = { onCancel() },
+                    colors = ButtonDefaults.buttonColors(containerColor = YourRedColor), // Red button
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.cancel_button).uppercase(),
+                        color = Color.White // White text in the button
+                    )
+                }
             }
         },
         modifier = modifier,
-        dismissButton = {
-            Button(
-                onClick = {
-                    onCancel()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.cancel_button))
-            }
-        },
+        dismissButton = {}, // Dismiss button already handled by confirmButton, so empty here
         title = {
-            Text(text = stringResource(id = R.string.symptoms_dialog_title, date))
+            val DialogText =  FontFamily(Font(R.font.secfont)
+            Text(
+                text = stringResource(id = R.string.symptoms_dialog_title, date),
+                style = TextStyle(
+                    fontFamily = DialogText, // Replace with your custom font family
+                    fontSize = 20.sp // Adjust font size if needed
+                )
+            )
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -85,7 +106,8 @@ fun EditSymptomsForDaysDialog(
                     ) {
                         Checkbox(
                             checked = selectedSymptoms.contains(symptom),
-                            onCheckedChange = null
+                            onCheckedChange = null,
+                            colors = CheckboxDefaults.colors(checkedColor = Color.Gray) // Gray checkbox when selected
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(text = symptomDisplayName)
@@ -114,7 +136,6 @@ private fun EditSymptomsForDaysDialog_OneDayPreview() {
     }
 }
 
-// TODO: Fix within https://github.com/EmmaTellblom/Mensinator/issues/203
 @Preview
 @Composable
 private fun EditSymptomsForDaysDialog_MultipleDaysPreview() {
