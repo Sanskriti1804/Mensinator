@@ -8,11 +8,34 @@ import android.provider.Settings
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -35,6 +58,7 @@ import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
+import com.mensinator.app.ui.theme.appGray
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
 
@@ -72,7 +96,11 @@ fun SettingsScreen(
         Spacer(Modifier.height(16.dp))
 
         SettingSectionHeader(text = stringResource(R.string.colors))
-        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)
+        ) {
             Column(Modifier.padding(16.dp)) {
                 ColorSection(viewState, viewModel)
             }
@@ -81,7 +109,11 @@ fun SettingsScreen(
         Spacer(Modifier.height(16.dp))
 
         SettingSectionHeader(text = stringResource(R.string.reminders))
-        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)
+        ) {
             Column(Modifier.padding(16.dp)) {
                 SettingNumberSelection(
                     intSetting = IntSetting.REMINDER_DAYS,
@@ -119,7 +151,11 @@ fun SettingsScreen(
         Spacer(Modifier.height(16.dp))
 
         SettingSectionHeader(text = stringResource(R.string.other_settings))
-        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.elevatedCardColors(containerColor = appGray)
+        ) {
             Column(Modifier.padding(16.dp)) {
                 SettingSwitch(
                     text = stringResource(BooleanSetting.LUTEAL_PHASE_CALCULATION.stringResId),
@@ -128,26 +164,7 @@ fun SettingsScreen(
                         viewModel.updateBooleanSetting(BooleanSetting.LUTEAL_PHASE_CALCULATION, it)
                     }
                 )
-                SettingNumberSelection(
-                    intSetting = IntSetting.PERIOD_HISTORY,
-                    text = "${viewState.daysForPeriodHistory}",
-                    openIntPickerForSetting = viewState.openIntPickerForSetting,
-                    onClosePicker = { viewModel.showIntPicker(null) },
-                    onNumberChange = { intSetting, newNumber ->
-                        viewModel.updateIntSetting(intSetting, newNumber)
-                    },
-                    onOpenIntPicker = { viewModel.showIntPicker(it) }
-                )
-                SettingNumberSelection(
-                    intSetting = IntSetting.OVULATION_HISTORY,
-                    text = "${viewState.daysForOvulationHistory}",
-                    openIntPickerForSetting = viewState.openIntPickerForSetting,
-                    onClosePicker = { viewModel.showIntPicker(null) },
-                    onNumberChange = { intSetting, newNumber ->
-                        viewModel.updateIntSetting(intSetting, newNumber)
-                    },
-                    onOpenIntPicker = { viewModel.showIntPicker(it) }
-                )
+                
                 SettingLanguagePicker()
                 SettingSwitch(
                     text = stringResource(BooleanSetting.SHOW_CYCLE_NUMBERS.stringResId),
@@ -170,7 +187,11 @@ fun SettingsScreen(
         Spacer(Modifier.height(16.dp))
 
         SettingSectionHeader(text = stringResource(R.string.data_settings))
-        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.elevatedCardColors(containerColor = appGray)
+        ) {
             Column(Modifier.padding(16.dp)) {
                 ImportExportRow(viewModel)
             }

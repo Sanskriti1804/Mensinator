@@ -1,8 +1,16 @@
 package com.mensinator.app.statistics
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,90 +46,64 @@ private fun StatisticsScreenContent(
     modifier: Modifier = Modifier,
     state: StatisticsViewModel.ViewState
 ) {
+    val stats = listOf(
+        state.trackedPeriods to stringResource(id = R.string.period_count),
+        state.averageCycleLength to stringResource(id = R.string.average_cycle_length),
+        state.averagePeriodLength to stringResource(id = R.string.average_period_length),
+        state.periodPredictionDate to stringResource(id = R.string.next_period_start_future),
+        state.ovulationCount to stringResource(id = R.string.ovulation_count),
+        state.follicleGrowthDays to stringResource(id = R.string.average_ovulation_day),
+        state.ovulationPredictionDate to stringResource(id = R.string.next_predicted_ovulation),
+        state.averageLutealLength to stringResource(id = R.string.average_luteal_length)
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .displayCutoutExcludingStatusBarsPadding()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        RowOfText(
-            stringResource(id = R.string.period_count),
-            state.trackedPeriods
-        )
-        RowOfText(
-            stringResource(id = R.string.average_cycle_length),
-            state.averageCycleLength
-        )
-        RowOfText(
-            stringResource(id = R.string.average_period_length),
-            state.averagePeriodLength
-        )
-        RowOfText(
-            stringResource(id = R.string.next_period_start_future),
-            state.periodPredictionDate
-        )
-        RowOfText(
-            stringResource(id = R.string.ovulation_count),
-            state.ovulationCount
-        )
-        RowOfText(
-            stringResource(id = R.string.average_ovulation_day),
-            state.follicleGrowthDays
-        )
-        RowOfText(
-            stringResource(id = R.string.next_predicted_ovulation),
-            state.ovulationPredictionDate
-        )
-        RowOfText(
-            stringResource(id = R.string.average_luteal_length),
-            state.averageLutealLength
-        )
-    }
-}
-
-@Composable
-fun RowOfText(stringOne: String, stringTwo: String?) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.SpaceAround
-    ) {
-        Text(
-            text = stringOne,
-            modifier = Modifier
-                .weight(0.7f)
-                .padding(end = 8.dp),
-        )
-        stringTwo?.let {
-            Text(
-                text = it,
-                modifier = Modifier.alignByBaseline().widthIn(max = 200.dp),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.End
-            )
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(stats) { (value, label) ->
+                StatCard(value = value ?: "-", label = label)
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun RowOfTextPreview() {
-    RowOfText("firstString", "secondstring")
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RowOfTextLongPreview() {
-    RowOfText("Very long first string, we could even use lorem ipsum here", "secondstring")
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RowOfTextLongSecondPreview() {
-    RowOfText("Short Text", "first string, we could even use lorem ipsum here")
+fun StatCard(value: String, label: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1.4f),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
