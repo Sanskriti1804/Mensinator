@@ -6,14 +6,21 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
@@ -27,6 +34,10 @@ fun ExportDialog(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val ExheadingFont = FontFamily(
+        Font(R.font.secfont) // Your custom font
+    )
+
 
     val expSuccess = stringResource(id = R.string.export_success_toast, exportFilePath)
     AlertDialog(
@@ -34,30 +45,47 @@ fun ExportDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    onExportClick(exportFilePath) // Calls the exported function
+                    onExportClick(exportFilePath)
                     Toast.makeText(context, expSuccess, Toast.LENGTH_SHORT).show()
                     onDismissRequest()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = com.mensinator.app.ui.theme.appDRed,
+                    contentColor = Color.White
+                )
             ) {
-                Text(stringResource(id = R.string.export_button))
+
+                Text(
+                    stringResource(id = R.string.export_button),
+                )
             }
         },
         modifier = modifier,
         dismissButton = {
             Button(
-                onClick = {
-                    onDismissRequest()
-                },
+                onClick = onDismissRequest,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = com.mensinator.app.ui.theme.appDRed,
+                    contentColor = Color.White
+                )
             ) {
                 Text(stringResource(id = R.string.cancel_button))
             }
         },
         title = {
-            Text(stringResource(id = R.string.export_data))
+            Text(
+                stringResource(id = R.string.export_data),
+                style = TextStyle(
+                    fontFamily = ExheadingFont,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 26.sp
+                )
+            )
         },
         text = {
             Text(stringResource(id = R.string.export_path_label, exportFilePath))
-        }
+        },
+        containerColor = Color.White,
     )
 }
 
@@ -73,6 +101,9 @@ fun ImportDialog(
     val importPath = remember { mutableStateOf("") }
     val impSuccess = stringResource(id = R.string.import_success_toast)
     val impFailure = stringResource(id = R.string.import_failure_toast)
+    val ExheadingFont = FontFamily(
+        Font(R.font.secfont) // Your custom font
+    )
 
     val importLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -111,6 +142,10 @@ fun ImportDialog(
                 onClick = {
                     importLauncher.launch("application/json")
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = com.mensinator.app.ui.theme.appDRed,
+                    contentColor = Color.White
+                )
             ) {
                 Text(stringResource(id = R.string.select_file_button))
             }
@@ -118,15 +153,24 @@ fun ImportDialog(
         modifier = modifier,
         dismissButton = {
             Button(
-                onClick = {
-                    onDismissRequest()
-                },
+                onClick = onDismissRequest,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = com.mensinator.app.ui.theme.appDRed,
+                    contentColor = Color.White
+                )
             ) {
                 Text(stringResource(id = R.string.cancel_button))
             }
         },
         title = {
-            Text(stringResource(id = R.string.import_data))
+            Text(
+                stringResource(id = R.string.import_data),
+                style = TextStyle(
+                    fontFamily = ExheadingFont,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 26.sp
+                )
+            )
         },
         text = {
             Text(

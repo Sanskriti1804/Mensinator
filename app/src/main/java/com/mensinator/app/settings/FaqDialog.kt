@@ -9,14 +9,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
 
@@ -26,18 +32,34 @@ fun FaqDialog(
     onDismissRequest: () -> Unit, // Callback to handle the close action
     modifier: Modifier = Modifier
 ) {
+    val ExheadingFont = FontFamily(
+        Font(R.font.secfont) // Your custom font
+    )
     AlertDialog(
         onDismissRequest = onDismissRequest,  // Call the dismiss callback when dialog is dismissed
         confirmButton = {
             Button(
-                onClick = onDismissRequest  // Call the dismiss callback when the button is clicked
+                onClick = onDismissRequest,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = com.mensinator.app.ui.theme.appDRed,
+                    contentColor = Color.White
+                )
+                // Call the dismiss callback when the button is clicked
             ) {
                 Text(stringResource(id = R.string.close_button))
             }
         },
         modifier = modifier.fillMaxWidth(),
         title = {
-            Text(text = stringResource(id = R.string.about_app))
+            Text(
+                text = stringResource(id = R.string.about_app),
+                style = TextStyle(
+                    fontFamily = ExheadingFont,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 38.sp
+                )
+
+            )
         },
         text = {
             FAQDialogContent()
@@ -56,8 +78,11 @@ private fun FAQDialogContent() {
         // User Manual Header
         Text(
             text = stringResource(id = R.string.user_manual_header),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.primary
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            ),
+            color = com.mensinator.app.ui.theme.appDRed
         )
         Spacer(modifier = Modifier.height(8.dp)) // Space between sections
 
@@ -82,7 +107,7 @@ private fun FAQDialogContent() {
             text = stringResource(id = R.string.ovulation),
             style = MaterialTheme.typography.bodyMedium
         )
-         Text(
+        Text(
             text = stringResource(id = R.string.statistics),
             style = MaterialTheme.typography.bodyMedium
         )
@@ -126,6 +151,7 @@ private fun FAQDialogContent() {
             text = stringResource(id = R.string.disclaimer),
             style = MaterialTheme.typography.bodyMedium
         )
+
     }
 }
 
