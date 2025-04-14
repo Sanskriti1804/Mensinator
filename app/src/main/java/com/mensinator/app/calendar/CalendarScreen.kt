@@ -18,11 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -65,7 +63,7 @@ import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
-import com.mensinator.app.ui.theme.appLRed
+import com.mensinator.app.ui.theme.appWhite
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.minus
@@ -120,14 +118,14 @@ fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = appLRed)
+            .background(color = appWhite)
             .displayCutoutExcludingStatusBarsPadding()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
         CalendarTopHeader(
             todayDate = LocalDate.now(),
-            time = "08.00",
-            location = "Indonesia"// Pass the menstrual phase as needed
+            time = "08:00",
+            location = "India"// Pass the menstrual phase as needed
         )
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
@@ -198,6 +196,7 @@ fun CalendarScreen(
     }
 }
 
+//Date and time component
 @Composable
 private fun CalendarTopHeader(
     todayDate: LocalDate = LocalDate.now(),
@@ -211,7 +210,8 @@ private fun CalendarTopHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .background(Color.White)
+            .padding(horizontal = 24.dp, vertical = 12.dp)
     ) {
         // Weekday name
         Text(
@@ -221,28 +221,24 @@ private fun CalendarTopHeader(
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = headingFont,
                 color = Color.Gray,
-                fontSize = 16.sp
+                fontSize = 25.sp
             )
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
-        // Date and location row with vertical divider
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Date column - bigger width
-            Column(
-                modifier = Modifier.weight(1.5f)
-            ) {
+            Column(modifier = Modifier.weight(1.5f)) {
                 Text(
                     text = todayDate.dayOfMonth.toString(),
                     style = MaterialTheme.typography.displayLarge.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 40.sp,
+                        fontWeight = FontWeight.W700,
+                        fontSize = 50.sp,
                         fontFamily = headingFont
                     )
                 )
@@ -250,23 +246,16 @@ private fun CalendarTopHeader(
                     text = todayDate.month.name,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
+                        fontSize = 30.sp, // Increased font size
                         letterSpacing = 2.sp,
-                        fontFamily = headingFont
+                        fontFamily = headingFont,
+                        color = com.mensinator.app.ui.theme.appDRed
                     )
                 )
             }
 
-            // Vertical divider - slightly toward the location
-            Divider(
-                color = Color.LightGray,
-                modifier = Modifier
-                    .height(50.dp)
-                    .width(1.dp)
-                    .padding(horizontal = 12.dp)
-            )
 
-            // Time & location column - smaller width
+
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End
@@ -275,26 +264,24 @@ private fun CalendarTopHeader(
                     text = time,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = headingFont
+                        fontFamily = headingFont,
+                        fontSize = 30.sp
                     )
                 )
                 Text(
                     text = location,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = Color.Gray,
-                        fontFamily = headingFont
+                        color = Color.Red,
+                        fontFamily = headingFont,
+                        fontSize = 25.sp
                     )
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // Slightly reduced from original 12.dp
 
-        // Horizontal grey line under the row
-        Divider(
-            color = Color(0xFFB0B0B0),
-            thickness = 1.dp
-        )
+
     }
 }
 
@@ -453,10 +440,11 @@ private fun MonthTitle(yearMonth: YearMonth) {
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             textAlign = TextAlign.Center,
-            text = "${stringResource(id = yearMonth.month.stringRes)} ${yearMonth.year}",
+            text = "${stringResource(id = yearMonth.month.stringRes)} ",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontFamily = headingFont,
-                color = Color.White
+                color = com.mensinator.app.ui.theme.appDRed,
+                fontSize = 30.sp
             )
         )
         HorizontalDivider(
