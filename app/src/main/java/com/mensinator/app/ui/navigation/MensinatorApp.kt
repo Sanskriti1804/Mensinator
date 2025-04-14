@@ -63,6 +63,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.mensinator.app.R
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
@@ -373,22 +374,22 @@ private fun NavigationItemIcon(
 private val navigationItems = listOf(
     NavigationItem(
         screen = Screen.Calendar,
-        R.drawable.baseline_calendar_month_24,
-        R.drawable.baseline_calendar_month_24 //here you can add not_field icon if you want. when its not selected
+        R.drawable.icapp_calendar,
+        R.drawable.icapp_calendar //here you can add not_field icon if you want. when its not selected
     ),
     NavigationItem(
         screen = Screen.Statistic,
-        R.drawable.outline_bar_chart_24,
-        R.drawable.outline_bar_chart_24
+        R.drawable.icapp_stats,
+        R.drawable.icapp_stats
     ),
     NavigationItem(
         screen = Screen.Symptoms,
-        R.drawable.baseline_bloodtype_24,
-        R.drawable.baseline_bloodtype_24
+        R.drawable.icapp_article,
+        R.drawable.icapp_article
     ),
     NavigationItem(
         screen = Screen.Settings,
-        R.drawable.settings_24px,
-        R.drawable.settings_24px
+        R.drawable.icapp_user,
+        R.drawable.icapp_user
     ),
 )
