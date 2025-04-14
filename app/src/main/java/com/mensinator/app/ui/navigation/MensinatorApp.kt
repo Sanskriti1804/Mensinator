@@ -48,9 +48,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -367,29 +366,32 @@ private fun NavigationItemIcon(
     }
     Icon(
         painter = painterResource(id = image),
-        contentDescription = stringResource(item.screen.titleRes)
+        contentDescription = stringResource(item.screen.titleRes),
+        modifier = Modifier
+            .size(42.dp)
+            .padding(4.dp)
     )
 }
 
 private val navigationItems = listOf(
     NavigationItem(
         screen = Screen.Calendar,
-        R.drawable.icapp_calendar,
-        R.drawable.icapp_calendar //here you can add not_field icon if you want. when its not selected
+        R.drawable.icappcalendar,
+        R.drawable.icappcalendar //here you can add not_field icon if you want. when its not selected
     ),
     NavigationItem(
         screen = Screen.Statistic,
-        R.drawable.icapp_stats,
-        R.drawable.icapp_stats
+        R.drawable.icappstats2,
+        R.drawable.icappstats2
     ),
     NavigationItem(
         screen = Screen.Symptoms,
-        R.drawable.icapp_article,
-        R.drawable.icapp_article
+        R.drawable.icapparticle,
+        R.drawable.icapparticle
     ),
     NavigationItem(
         screen = Screen.Settings,
-        R.drawable.icapp_user,
-        R.drawable.icapp_user
+        R.drawable.icappuser,
+        R.drawable.icappuser
     ),
 )
