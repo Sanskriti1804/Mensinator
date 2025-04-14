@@ -366,7 +366,7 @@ private fun NavigationItemIcon(
         item.imageUnSelected
     }
     Icon(
-        imageVector = ImageVector.vectorResource(image),
+        painter = painterResource(id = image),
         contentDescription = stringResource(item.screen.titleRes)
     )
 }
