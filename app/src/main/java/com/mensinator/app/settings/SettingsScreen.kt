@@ -49,6 +49,8 @@ fun SettingsScreen(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
     val isDarkMode = isDarkMode()
+    val context = LocalContext.current
+
     LaunchedEffect(isDarkMode) {
         viewModel.updateDarkModeStatus(isDarkMode)
     }
@@ -68,32 +70,39 @@ fun SettingsScreen(
             .displayCutoutExcludingStatusBarsPadding()
     ) {
         Spacer(Modifier.height(16.dp))
+
         SettingSectionHeader(text = stringResource(R.string.colors))
-        ColorSection(viewState, viewModel)
+        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+            Column(Modifier.padding(16.dp)) {
+                ColorSection(viewState, viewModel)
+            }
+        }
 
         Spacer(Modifier.height(16.dp))
+
         SettingSectionHeader(text = stringResource(R.string.reminders))
-
-        val context = LocalContext.current
-        SettingNumberSelection(
-            intSetting = IntSetting.REMINDER_DAYS,
-            text = viewState.daysBeforeReminder,
-            openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.showIntPicker(null) },
-            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
-                viewModel.updateIntSetting(intSetting, newNumber)
-
-                if (!viewModel.areNotificationsEnabled(context)) {
-                    Log.d("SettingsDialog", "Notifications are not enabled")
-                    openNotificationSettings(context)
-                }
-            },
-            onOpenIntPicker = { viewModel.showIntPicker(it) }
-        )
-        SettingText(
-            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
-            onClick = { viewModel.showPeriodNotificationDialog(true) }
-        )
+        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+            Column(Modifier.padding(16.dp)) {
+                SettingNumberSelection(
+                    intSetting = IntSetting.REMINDER_DAYS,
+                    text = viewState.daysBeforeReminder,
+                    openIntPickerForSetting = viewState.openIntPickerForSetting,
+                    onClosePicker = { viewModel.showIntPicker(null) },
+                    onNumberChange = { intSetting, newNumber ->
+                        viewModel.updateIntSetting(intSetting, newNumber)
+                        if (!viewModel.areNotificationsEnabled(context)) {
+                            Log.d("SettingsDialog", "Notifications are not enabled")
+                            openNotificationSettings(context)
+                        }
+                    },
+                    onOpenIntPicker = { viewModel.showIntPicker(it) }
+                )
+                SettingText(
+                    text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
+                    onClick = { viewModel.showPeriodNotificationDialog(true) }
+                )
+            }
+        }
 
         if (viewState.showPeriodNotificationDialog) {
             val initPeriodKeyOrCustomMessage = viewState.periodNotificationMessage
@@ -101,69 +110,74 @@ fun SettingsScreen(
             NotificationDialog(
                 messageText = messageText,
                 onSave = {
-                    viewModel.updateStringSetting(
-                        stringSetting = StringSetting.PERIOD_NOTIFICATION_MESSAGE,
-                        newString = it
-                    )
+                    viewModel.updateStringSetting(StringSetting.PERIOD_NOTIFICATION_MESSAGE, it)
                 },
-                onDismissRequest = { viewModel.showPeriodNotificationDialog(false) },
+                onDismissRequest = { viewModel.showPeriodNotificationDialog(false) }
             )
         }
 
         Spacer(Modifier.height(16.dp))
 
         SettingSectionHeader(text = stringResource(R.string.other_settings))
-        SettingSwitch(
-            text = stringResource(BooleanSetting.LUTEAL_PHASE_CALCULATION.stringResId),
-            checked = viewState.lutealPhaseCalculationEnabled,
-            onCheckedChange = {
-                viewModel.updateBooleanSetting(BooleanSetting.LUTEAL_PHASE_CALCULATION, it)
+        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+            Column(Modifier.padding(16.dp)) {
+                SettingSwitch(
+                    text = stringResource(BooleanSetting.LUTEAL_PHASE_CALCULATION.stringResId),
+                    checked = viewState.lutealPhaseCalculationEnabled,
+                    onCheckedChange = {
+                        viewModel.updateBooleanSetting(BooleanSetting.LUTEAL_PHASE_CALCULATION, it)
+                    }
+                )
+                SettingNumberSelection(
+                    intSetting = IntSetting.PERIOD_HISTORY,
+                    text = "${viewState.daysForPeriodHistory}",
+                    openIntPickerForSetting = viewState.openIntPickerForSetting,
+                    onClosePicker = { viewModel.showIntPicker(null) },
+                    onNumberChange = { intSetting, newNumber ->
+                        viewModel.updateIntSetting(intSetting, newNumber)
+                    },
+                    onOpenIntPicker = { viewModel.showIntPicker(it) }
+                )
+                SettingNumberSelection(
+                    intSetting = IntSetting.OVULATION_HISTORY,
+                    text = "${viewState.daysForOvulationHistory}",
+                    openIntPickerForSetting = viewState.openIntPickerForSetting,
+                    onClosePicker = { viewModel.showIntPicker(null) },
+                    onNumberChange = { intSetting, newNumber ->
+                        viewModel.updateIntSetting(intSetting, newNumber)
+                    },
+                    onOpenIntPicker = { viewModel.showIntPicker(it) }
+                )
+                SettingLanguagePicker()
+                SettingSwitch(
+                    text = stringResource(BooleanSetting.SHOW_CYCLE_NUMBERS.stringResId),
+                    checked = viewState.showCycleNumbers,
+                    onCheckedChange = {
+                        viewModel.updateBooleanSetting(BooleanSetting.SHOW_CYCLE_NUMBERS, it)
+                    }
+                )
+                SettingSwitch(
+                    text = stringResource(BooleanSetting.PREVENT_SCREENSHOTS.stringResId),
+                    checked = viewState.preventScreenshots,
+                    onCheckedChange = { newValue ->
+                        viewModel.updateBooleanSetting(BooleanSetting.PREVENT_SCREENSHOTS, newValue)
+                        onSwitchProtectionScreen(newValue)
+                    }
+                )
             }
-        )
-        SettingNumberSelection(
-            intSetting = IntSetting.PERIOD_HISTORY,
-            text = "${viewState.daysForPeriodHistory}",
-            openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.showIntPicker(null) },
-            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
-                viewModel.updateIntSetting(intSetting, newNumber)
-            },
-            onOpenIntPicker = { viewModel.showIntPicker(it) }
-        )
-        SettingNumberSelection(
-            intSetting = IntSetting.OVULATION_HISTORY,
-            text = "${viewState.daysForOvulationHistory}",
-            openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.showIntPicker(null) },
-            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
-                viewModel.updateIntSetting(intSetting, newNumber)
-            },
-            onOpenIntPicker = { viewModel.showIntPicker(it) }
-        )
-        SettingLanguagePicker()
-        SettingSwitch(
-            text = stringResource(BooleanSetting.SHOW_CYCLE_NUMBERS.stringResId),
-            checked = viewState.showCycleNumbers,
-            onCheckedChange = {
-                viewModel.updateBooleanSetting(BooleanSetting.SHOW_CYCLE_NUMBERS, it)
-            }
-        )
-        SettingSwitch(
-            text = stringResource(BooleanSetting.PREVENT_SCREENSHOTS.stringResId),
-            checked = viewState.preventScreenshots,
-            onCheckedChange = { newValue ->
-                viewModel.updateBooleanSetting(BooleanSetting.PREVENT_SCREENSHOTS, newValue)
-                onSwitchProtectionScreen(newValue)
-            }
-        )
+        }
 
         Spacer(Modifier.height(16.dp))
+
         SettingSectionHeader(text = stringResource(R.string.data_settings))
-        Spacer(Modifier.height(4.dp))
-        ImportExportRow(viewModel)
+        ElevatedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)) {
+            Column(Modifier.padding(16.dp)) {
+                ImportExportRow(viewModel)
+            }
+        }
+
         Spacer(Modifier.height(32.dp))
         AboutSection(viewModel, viewState)
-        Spacer(Modifier.height(16.dp))
 
         if (viewState.showFaqDialog) {
             FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
@@ -173,9 +187,7 @@ fun SettingsScreen(
             ImportDialog(
                 defaultImportFilePath = viewState.defaultImportFilePath,
                 onDismissRequest = { viewModel.showImportDialog(false) },
-                onImportClick = { importPath ->
-                    viewModel.handleImport(importPath)
-                }
+                onImportClick = { importPath -> viewModel.handleImport(importPath) }
             )
         }
 
@@ -183,11 +195,11 @@ fun SettingsScreen(
             ExportDialog(
                 exportFilePath = viewState.exportFilePath,
                 onDismissRequest = { viewModel.showExportDialog(false) },
-                onExportClick = { exportPath ->
-                    viewModel.handleExport(exportPath)
-                }
+                onExportClick = { exportPath -> viewModel.handleExport(exportPath) }
             )
         }
+
+        Spacer(Modifier.height(16.dp))
     }
 }
 
