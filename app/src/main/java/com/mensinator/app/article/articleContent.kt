@@ -304,8 +304,7 @@ Health conditions: Conditions like polycystic ovary syndrome (PCOS) or thyroid d
 Age: As people age, particularly after 35, ovulation may become less frequent, affecting fertility.
     """.trimIndent()
 
-
-    object ArticleContent {
+    object ArticleTwenty {
         val heading = "Why Track Your Periods?"
         val article = """
 ❓ Why should I track my periods?

@@ -1,5 +1,28 @@
 package com.mensinator.app.article
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun StickyHeaderPage(headers: List<HeaderItem>, onCardClick: (String) -> Unit) {
     LazyColumn {
@@ -8,7 +31,7 @@ fun StickyHeaderPage(headers: List<HeaderItem>, onCardClick: (String) -> Unit) {
                 // Sticky Header Layout
                 Text(
                     text = header.title,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
@@ -37,16 +60,19 @@ fun CardView(card: CardItem, onCardClick: (String) -> Unit) {
             .padding(8.dp)
             .clickable { onCardClick(card.articleId) }
             .width(180.dp),
-        elevation = 4.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(16.dp)
         ) {
-            Icon(painter = painterResource(id = card.iconResId), contentDescription = card.title)
+            Icon(
+                painter = painterResource(id = card.iconResId),
+                contentDescription = card.title
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = card.title, style = MaterialTheme.typography.body2)
+            Text(text = card.title, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

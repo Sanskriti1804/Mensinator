@@ -247,7 +247,7 @@ private fun MainScaffold(
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         Column(modifier = Modifier.padding(topBarPadding)) {
-                            com.mensinator.app.article.ArticleScreen()
+                            com.mensinator.app.article.ArticleNavScreen()
                         }
                     }
                 }
