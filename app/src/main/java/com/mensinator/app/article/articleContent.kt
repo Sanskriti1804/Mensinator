@@ -690,7 +690,7 @@ These could be signs of conditions like PCOS, endometriosis, fibroids, or other 
     """.trimIndent()
 }
 
-object ArticleEleOne {
+object ArticleEleven {
     val heading = "Self-Care During Your Period: How to Take Care of Yourself\n"
     val article = """
 ❓ Why is self-care important during my period?
@@ -1251,7 +1251,7 @@ object ArticleOneEight {
     """.trimIndent()
 }
 
-object ArticleOneNice {
+object ArticleOneNine {
     val heading = "Period Products, Hygiene, and How to Choose the Best Option for You\n"
     val article = """
        When it comes to period products, choosing the right option not only affects your comfort and convenience but also your hygiene. Maintaining proper hygiene during your period is crucial for preventing irritation, infections, and discomfort. Here's a breakdown of popular period products, hygiene practices, and tips for choosing the best option for your needs.

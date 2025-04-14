@@ -22,8 +22,7 @@ import com.mensinator.app.ui.theme.appWhite
 
 @Composable
 fun ArticleLayout(
-    heading: String,
-    content: String
+    articles: List<Article>
 ) {
     val headingFont = FontFamily(
         Font(R.font.secfont) // use your actual file
@@ -38,9 +37,9 @@ fun ArticleLayout(
             .padding(8.dp),
         contentPadding = PaddingValues(bottom = 8.dp)
     ) {
-        item {
+        items(articles) {article ->
             Text(
-                text = heading,
+                text = article.heading,
                 fontFamily = headingFont,
                 fontSize = 60.sp,
                 fontWeight = FontWeight.Bold,
@@ -49,11 +48,9 @@ fun ArticleLayout(
                 modifier = Modifier.padding(bottom = 8.dp, top = 2.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-        }
 
-        item {
             Text(
-                text = content,
+                text = article.content,
                 fontFamily = contentFont,
                 fontSize = 24.sp,
                 lineHeight = 30.sp,
@@ -65,10 +62,3 @@ fun ArticleLayout(
     }
 }
 
-@Composable
-fun ArticleScreen() {
-    ArticleLayout(
-        heading = ArticleOne.heading,
-        content = ArticleOne.article
-    )
-}
