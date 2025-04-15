@@ -49,8 +49,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -412,6 +413,8 @@ private fun NavigationItemIcon(
         modifier = Modifier
             .size(42.dp)
             .padding(4.dp)
+        painter = painterResource(id = image),
+        contentDescription = stringResource(item.screen.titleRes)
     )
 }
 
@@ -419,22 +422,28 @@ private fun NavigationItemIcon(
 private val navigationItems = listOf(
     NavigationItem(
         screen = Screen.Calendar,
-        R.drawable.icappcalendar,
-        R.drawable.icappcalendar //here you can add not_field icon if you want. when its not selected
+        R.drawable.icapp_calendar,
+        R.drawable.icapp_calendar //here you can add not_field icon if you want. when its not selected
     ),
     NavigationItem(
         screen = Screen.Statistic,
-        R.drawable.icappstats2,
-        R.drawable.icappstats2
+        R.drawable.icapp_stats,
+        R.drawable.icapp_stats
     ),
     NavigationItem(
+<<<<<<< HEAD
         screen = Screen.BrowseArticles,
         R.drawable.icapparticle,
         R.drawable.icapparticle
+=======
+        screen = Screen.Symptoms,
+        R.drawable.icapp_article,
+        R.drawable.icapp_article
+>>>>>>> parent of 69a949b (Update navigation icons and add new drawable resources)
     ),
     NavigationItem(
         screen = Screen.Settings,
-        R.drawable.icappuser,
-        R.drawable.icappuser
+        R.drawable.icapp_user,
+        R.drawable.icapp_user
     ),
 )
