@@ -71,6 +71,7 @@ import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.splash.SplashScreen
+import com.mensinator.app.statistics.HormoneCycleChart
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
@@ -83,6 +84,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     Splash(R.string.app_name),
     Calendar(R.string.calendar_title),
     Symptoms(R.string.symptoms_page),
+    HormoneGraph(R.string.hormone_chart_title),
     Statistic(R.string.statistics_title),
     Settings(R.string.settings_page),
     Login(R.string.login_title),     // Add this
@@ -201,7 +203,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.BrowsingArticle.name,
+                startDestination = Screen.Statistic.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -284,6 +286,9 @@ private fun MainScaffold(
                             setToolbarOnClick = setToolbarOnClick
                         )
                     }
+                }
+                composable(route = Screen.HormoneGraph.name) {
+                    HormoneCycleChart()
                 }
                 composable(route = Screen.Statistic.name) {
                     Scaffold(

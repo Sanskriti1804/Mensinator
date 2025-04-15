@@ -29,6 +29,14 @@ val appGray = Color(0xFF929193)
 val appWhite = Color(0xFFFEFEFE)
 
 
+//hormone colors
+val EstrogenColor = Color(0xFF7F1F0E)
+val FSHColor = Color(0xFFAC746C)
+val LHColor = Color(0xFF3D0A05)
+val ProgesteroneColor = Color(0xFFDAC181)
+val TestosteroneColor = Color(0xFFA58570)
+
+
 
 
 
