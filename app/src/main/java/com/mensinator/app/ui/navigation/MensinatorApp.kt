@@ -65,6 +65,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.mensinator.app.R
+import com.mensinator.app.article.ArticleBrowsingScreen
+import com.mensinator.app.article.headerItems
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
@@ -86,6 +88,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     Login(R.string.login_title),     // Add this
     SignUp(R.string.signup_title),
     Article(R.string.article_title),
+    BrowsingArticle(R.string.browsing_article_title)
 }
 
 /**
@@ -198,7 +201,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Calendar.name,
+                startDestination = Screen.BrowsingArticle.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -321,6 +324,15 @@ private fun MainScaffold(
 //                        }
 //                    )
 //                }
+
+                composable(route = Screen.BrowsingArticle.name) {
+                    ArticleBrowsingScreen(
+                        headers = headerItems,
+                        onCardClick = { item ->
+                            // Handle card click here
+                        }
+                    )
+                }
 
                 composable(route = Screen.Symptoms.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578

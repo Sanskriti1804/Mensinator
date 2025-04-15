@@ -4,13 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -22,36 +18,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
-@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
-@Composable
-fun StickyHeaderPage(headers: List<HeaderItem>, onCardClick: (String) -> Unit) {
-    LazyColumn {
-        headers.forEach { header ->
-            stickyHeader {
-                // Sticky Header Layout
-                Text(
-                    text = header.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
-            item {
-                // Horizontal list of cards for each header
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                ) {
-                    items(header.cards) { card ->
-                        CardView(card, onCardClick)
-                    }
-                }
-            }
-        }
-    }
-}
+//@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+//@Composable
+//fun StickyHeaderPage(headers: List<HeaderItem>, onCardClick: (String) -> Unit) {
+//    LazyColumn {
+//        headers.forEach { header ->
+//            stickyHeader {
+//                // Sticky Header Layout
+//                Text(
+//                    text = header.title,
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(16.dp)
+//                )
+//            }
+//            item {
+//                // Horizontal list of cards for each header
+//                LazyRow(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 8.dp)
+//                ) {
+//                    items(header.cards) { card ->
+//                        CardView(card, onCardClick)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun CardView(card: CardItem, onCardClick: (String) -> Unit) {
