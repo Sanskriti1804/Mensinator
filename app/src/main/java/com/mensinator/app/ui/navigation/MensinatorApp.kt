@@ -49,9 +49,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -66,9 +65,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.mensinator.app.R
-import com.mensinator.app.article.CardItem
-import com.mensinator.app.article.HeaderItem
-import com.mensinator.app.article.StickyHeaderPage
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
@@ -90,7 +86,6 @@ enum class Screen(@StringRes val titleRes: Int) {
     Login(R.string.login_title),     // Add this
     SignUp(R.string.signup_title),
     Article(R.string.article_title),
-    BrowseArticles(R.string.browse_articles_title)
 }
 
 /**
@@ -203,7 +198,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.BrowseArticles.name,
+                startDestination = Screen.Calendar.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -300,32 +295,32 @@ private fun MainScaffold(
                         StatisticsScreen(modifier = Modifier.padding(topBarPadding))
                     }
                 }
-                composable(Screen.BrowseArticles.name) {
-                    val headers = listOf(
-                        HeaderItem(
-                            title = "For You",
-                            cards = listOf(
-                                CardItem("Boost Your Sleep", "sleep"),
-                                CardItem("Hydration Myths", "hydration")
-                            )
-                        ),
-                        HeaderItem(
-                            title = "Popular Reads",
-                            cards = listOf(
-                                CardItem("Workout Tips", "workout"),
-                                CardItem("Mental Fitness", "mental")
-                            )
-                        )
-                    )
-
-                    StickyHeaderPage(
-                        headers = headers,
-                        onCardClick = {
-//                                        articleId ->
-//                            navController.navigate("articleDetail/$articleId")
-                        }
-                    )
-                }
+//                composable(Screen.BrowseArticles.name) {
+//                    val headers = listOf(
+//                        HeaderItem(
+//                            title = "For You",
+//                            cards = listOf(
+//                                CardItem("Boost Your Sleep", "sleep"),
+//                                CardItem("Hydration Myths", "hydration")
+//                            )
+//                        ),
+//                        HeaderItem(
+//                            title = "Popular Reads",
+//                            cards = listOf(
+//                                CardItem("Workout Tips", "workout"),
+//                                CardItem("Mental Fitness", "mental")
+//                            )
+//                        )
+//                    )
+//
+//                    StickyHeaderPage(
+//                        headers = headers,
+//                        onCardClick = {
+////                                        articleId ->
+////                            navController.navigate("articleDetail/$articleId")
+//                        }
+//                    )
+//                }
 
                 composable(route = Screen.Symptoms.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
@@ -413,8 +408,6 @@ private fun NavigationItemIcon(
         modifier = Modifier
             .size(42.dp)
             .padding(4.dp)
-        painter = painterResource(id = image),
-        contentDescription = stringResource(item.screen.titleRes)
     )
 }
 
@@ -422,28 +415,22 @@ private fun NavigationItemIcon(
 private val navigationItems = listOf(
     NavigationItem(
         screen = Screen.Calendar,
-        R.drawable.icapp_calendar,
-        R.drawable.icapp_calendar //here you can add not_field icon if you want. when its not selected
+        R.drawable.icappcalendar,
+        R.drawable.icappcalendar //here you can add not_field icon if you want. when its not selected
     ),
     NavigationItem(
         screen = Screen.Statistic,
-        R.drawable.icapp_stats,
-        R.drawable.icapp_stats
+        R.drawable.icappstats2,
+        R.drawable.icappstats2
     ),
     NavigationItem(
-<<<<<<< HEAD
-        screen = Screen.BrowseArticles,
+        screen = Screen.Symptoms,
         R.drawable.icapparticle,
         R.drawable.icapparticle
-=======
-        screen = Screen.Symptoms,
-        R.drawable.icapp_article,
-        R.drawable.icapp_article
->>>>>>> parent of 69a949b (Update navigation icons and add new drawable resources)
     ),
     NavigationItem(
         screen = Screen.Settings,
-        R.drawable.icapp_user,
-        R.drawable.icapp_user
+        R.drawable.icappuser,
+        R.drawable.icappuser
     ),
 )
