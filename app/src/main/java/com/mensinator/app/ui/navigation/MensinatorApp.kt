@@ -2,6 +2,7 @@ package com.mensinator.app.ui.navigation
 
 //import kotlinx.coroutines.launch
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
@@ -64,6 +65,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.mensinator.app.R
+import com.mensinator.app.article.CardItem
+import com.mensinator.app.article.HeaderItem
+import com.mensinator.app.article.StickyHeaderPage
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
@@ -84,7 +88,8 @@ enum class Screen(@StringRes val titleRes: Int) {
     Settings(R.string.settings_page),
     Login(R.string.login_title),     // Add this
     SignUp(R.string.signup_title),
-    Article(R.string.article_title)
+    Article(R.string.article_title),
+    BrowseArticles(R.string.browse_articles_title)
 }
 
 /**
@@ -197,7 +202,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Article.name,
+                startDestination = Screen.BrowseArticles.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -247,7 +252,7 @@ private fun MainScaffold(
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         Column(modifier = Modifier.padding(topBarPadding)) {
-                            com.mensinator.app.article.ArticleNavScreen()
+//                            com.mensinator.app.article.ArticleNavScreen()
                         }
                     }
                 }
@@ -294,6 +299,33 @@ private fun MainScaffold(
                         StatisticsScreen(modifier = Modifier.padding(topBarPadding))
                     }
                 }
+                composable(Screen.BrowseArticles.name) {
+                    val headers = listOf(
+                        HeaderItem(
+                            title = "For You",
+                            cards = listOf(
+                                CardItem("Boost Your Sleep", "sleep"),
+                                CardItem("Hydration Myths", "hydration")
+                            )
+                        ),
+                        HeaderItem(
+                            title = "Popular Reads",
+                            cards = listOf(
+                                CardItem("Workout Tips", "workout"),
+                                CardItem("Mental Fitness", "mental")
+                            )
+                        )
+                    )
+
+                    StickyHeaderPage(
+                        headers = headers,
+                        onCardClick = {
+//                                        articleId ->
+//                            navController.navigate("articleDetail/$articleId")
+                        }
+                    )
+                }
+
                 composable(route = Screen.Symptoms.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
                     // Needed so that the action button can cause the dialog to be shown
@@ -359,19 +391,30 @@ private fun NavigationItemIcon(
     currentScreen: Screen,
     item: NavigationItem
 ) {
-    val image = if (currentScreen == item.screen) {
+    val imageResource = if (currentScreen == item.screen) {
         item.imageSelected
     } else {
         item.imageUnSelected
     }
+
+    // Log if the resource ID is invalid (0x0)
+    if (imageResource == 0) {
+        Log.e("NavigationItem", "Invalid resource ID: $imageResource for screen: ${item.screen}")
+    }
+
+    // Use a fallback if the resource is invalid
+    val validImageResource = if (imageResource != 0) imageResource else R.drawable.logo
+
+    // Render the icon with the resource ID
     Icon(
-        painter = painterResource(id = image),
+        painter = painterResource(id = validImageResource),
         contentDescription = stringResource(item.screen.titleRes),
         modifier = Modifier
             .size(42.dp)
             .padding(4.dp)
     )
 }
+
 
 private val navigationItems = listOf(
     NavigationItem(
@@ -385,7 +428,7 @@ private val navigationItems = listOf(
         R.drawable.icappstats2
     ),
     NavigationItem(
-        screen = Screen.Symptoms,
+        screen = Screen.BrowseArticles,
         R.drawable.icapparticle,
         R.drawable.icapparticle
     ),
