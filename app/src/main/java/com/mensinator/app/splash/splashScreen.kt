@@ -2,7 +2,13 @@ package com.mensinator.app.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +39,7 @@ fun SplashScreen(navController: NavController) {
                 popUpTo(Screen.Splash.name) { inclusive = true }
             }
         } else {
-            navController.navigate(Screen.Login.name) {
+            navController.navigate(Screen.LoginScreen.name) {
                 popUpTo(Screen.Splash.name) { inclusive = true }
             }
         }
@@ -76,6 +82,7 @@ fun SplashScreen(navController: NavController) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {

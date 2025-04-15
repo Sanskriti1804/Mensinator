@@ -40,9 +40,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.mensinator.app.R
-//import com.mensinator.app.ui.navigation.Screen
 import com.mensinator.app.ui.navigation.Screen
 
 @Composable
@@ -53,8 +53,8 @@ fun LoginLogo(
     isLooping: Boolean = true,
     isPlaying: Boolean = true
 ) {
-//    val  composition by rememberLottieComposition(
-//        LottieCompositionSpec.Asset(assetRes) )
+//    val composition by rememberLottieComposition(
+//        LottieCompositionSpec.Asset(assetRes))
 //    val progress by animateLottieCompositionAsState(
 //        composition = composition,
 //        isPlaying = isPlaying,
@@ -153,6 +153,7 @@ fun CustomButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    navController: NavHostController,
     authViewModel: AuthViewModel,
     onNavigateToSignUp: () -> Unit,
     onSignInSuccess: () -> Unit
@@ -175,8 +176,7 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LoginLogo(
-            assetRes = "heart_icon.json",
-//                assetRes = "smiley_icon.json",
+            assetRes = "heart_icon.json", // Change asset as required
             size = 120.dp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -236,42 +236,76 @@ fun LoginScreen(
             iconColor = Color.Red,
         )
 
+        // Show loading state if login is in progress
+        when (result) {
+            is Result.Loading -> {
+                CustomButton(
+                    text = "Signing In...",
+                    textColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    onClick = {}
+                )
+            }
 
-
-        CustomButton(
-            text = "SIGN IN",
-            textColor = Color.White,
-            shape = RoundedCornerShape(8.dp),
-            buttonColor = Color.Red,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp),
-            onClick = {
-//                if (FirebaseAuth.getInstance().currentUser != null){
-//                   // navController.na
-//                }
-                authViewModel.login(email, password)
-                when (result) {
-                    is Result.Success -> {
+            is Result.Success -> {
+                CustomButton(
+                    text = "SIGN IN",
+                    textColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    onClick = {
                         onSignInSuccess()
                     }
-
-                    is Result.Error -> {
-
-                    }
-
-                    else -> {
-
-                    }
-                }
+                )
             }
-        )
+
+            is Result.Error -> {
+                CustomButton(
+                    text = "SIGN IN",
+                    textColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    onClick = {
+                        // Retry logic if needed
+                    }
+                )
+                Text(
+                    text = "Login failed. Please try again.",
+                    color = Color.Red,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+
+            else -> {
+                CustomButton(
+                    text = "SIGN IN",
+                    textColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    onClick = {
+                        authViewModel.login(email, password)
+                    }
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         Text("Don't have an account? Sign up.",
             color = Color.Black,
             modifier = Modifier.clickable { onNavigateToSignUp() }
         )
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
+    Text("Don't have an account? Sign up.",
+        color = Color.Black,
+        modifier = Modifier.clickable { onNavigateToSignUp() }
+    )
 }
 
 fun isUserAlreadySignIn(navController: NavController) {
@@ -279,5 +313,3 @@ fun isUserAlreadySignIn(navController: NavController) {
         navController.navigate(Screen.Calendar)
     }
 }
-
-

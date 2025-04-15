@@ -75,8 +75,6 @@ import com.mensinator.app.statistics.HormoneCycleChart
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
-import com.mensinator.app.user.LoginScreen
-import com.mensinator.app.user.SignUpScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -87,10 +85,10 @@ enum class Screen(@StringRes val titleRes: Int) {
     HormoneGraph(R.string.hormone_chart_title),
     Statistic(R.string.statistics_title),
     Settings(R.string.settings_page),
-    Login(R.string.login_title),     // Add this
-    SignUp(R.string.signup_title),
     Article(R.string.article_title),
-    BrowsingArticle(R.string.browsing_article_title)
+    BrowsingArticle(R.string.browsing_article_title),
+    LoginScreen(R.string.login_title),  // New screen
+    SignUpScreen(R.string.signup_title)
 }
 
 /**
@@ -211,33 +209,9 @@ private fun MainScaffold(
                 composable(Screen.Splash.name) {
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
-                composable(route = Screen.Login.name) {
-                    LoginScreen(
-                        authViewModel = koinInject(), // if you're using Koin for DI
-                        onNavigateToSignUp = {
-                            navController.navigate(Screen.SignUp.name)
-                        },
-                        onSignInSuccess = {
-                            navController.navigate(Screen.Calendar.name) {
-                                popUpTo(Screen.Login.name) { inclusive = true }
-                            }
-                        }
-                    )
-                }
 
-                composable(route = Screen.SignUp.name) {
-                    SignUpScreen(
-                        authViewModel = koinInject(),
-                        onSignUpSuccess = {
-                            navController.navigate(Screen.Calendar.name) {
-                                popUpTo(Screen.SignUp.name) { inclusive = true }
-                            }
-                        },
-                        onNavigateToLogin = {
-                            navController.navigate(Screen.Login.name)
-                        }
-                    )
-                }
+
+
 
                 composable(route = Screen.Article.name) {
                     Scaffold(

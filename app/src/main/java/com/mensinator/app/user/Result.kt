@@ -6,8 +6,10 @@ package com.mensinator.app.user
 //out - out- projection modifier[only produce input no input]
 sealed class Result<out T> {
     data class Success<out T>(val data: T) : Result<T>()
+
     //<nothing> - doesnt prodiuce any value for result
-    data class Error(val exception: Exception) : Result<Nothing>()
+    data class Error(val exception: Throwable) : Result<Nothing>()
+    object Loading : Result<Nothing>()
 }
 
 //usage example
