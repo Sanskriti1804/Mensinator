@@ -69,6 +69,8 @@ import com.mensinator.app.article.ArticleBrowsingScreen
 import com.mensinator.app.article.headerItems
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
+import com.mensinator.app.questionnaire.Question
+import com.mensinator.app.questionnaire.QuestionnaireScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.splash.SplashScreen
 import com.mensinator.app.statistics.HormoneCycleChart
@@ -88,7 +90,8 @@ enum class Screen(@StringRes val titleRes: Int) {
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
     LoginScreen(R.string.login_title),  // New screen
-    SignUpScreen(R.string.signup_title)
+    SignUpScreen(R.string.signup_title),
+    Questionnaire(R.string.questionnaire_title)
 }
 
 /**
@@ -252,6 +255,28 @@ private fun MainScaffold(
                     }
                 }
 
+                composable(route = Screen.Questionnaire.name) {
+                    val questions = // Get or define a list of questions here
+                    val onSubmit: (List<Question>) -> Unit = { submittedQuestions ->
+                        // Handle the form submission logic
+                    }
+
+                    Scaffold(
+                        topBar = {
+                            MensinatorTopBar(
+                                titleStringId = currentScreen.titleRes,
+                                textColor = Color.Red
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        QuestionnaireScreen(
+                            modifier = Modifier.padding(topBarPadding),
+                            questions = questions, // Pass questions
+                            onSubmit = onSubmit // Pass onSubmit
+                        )
+                    }
+                }
 
                 composable(route = Screen.Calendar.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578

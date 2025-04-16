@@ -35,6 +35,7 @@
     <string name="settings_page">Settings</string>
     <string name="article_title">Article</string>
     <string name="browsing_article_title">Browse Articles</string>
+    <string name="questionnaire_title">Questionnaire</string>
 
 
     <!-- symptoms page -->

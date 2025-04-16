@@ -1,7 +1,7 @@
 package com.mensinator.app.questionnaire
 
 object Constants {
-    
+
     fun getQuestions(): ArrayList<Question> {
         val questionsList = ArrayList<Question>()
 
@@ -53,7 +53,7 @@ object Constants {
         // Q8 - Mood swings (yes/no)
         questionsList.add(
             Question(
-                id = 8,
+                id = 6,
                 question = "Do you experience mood swings before or during your period?",
                 type = QuestionType.MULTIPLE_CHOICE,
                 options = listOf("Yes", "No")
@@ -63,7 +63,7 @@ object Constants {
         // Q6 - Diagnosed conditions (short answer)
         questionsList.add(
             Question(
-                id = 6,
+                id = 7,
                 question = "Have you ever been diagnosed with any reproductive health conditions? (e.g., PCOS, Endometriosis, Fibroids, etc.)",
                 type = QuestionType.SHORT_ANSWER
             )
@@ -72,7 +72,7 @@ object Constants {
         // Q7 - Medication related to menstrual/hormonal health (yes/no + specify)
         questionsList.add(
             Question(
-                id = 7,
+                id = 8,
                 question = "Are you currently taking any medication related to your menstrual or hormonal health? If yes, please specify.",
                 type = QuestionType.SHORT_ANSWER
             )
@@ -81,7 +81,7 @@ object Constants {
         // Q8 - Mood swings (yes/no)
         questionsList.add(
             Question(
-                id = 8,
+                id = 9,
                 question = "Do you experience mood swings before or during your period?",
                 type = QuestionType.MULTIPLE_CHOICE,
                 options = listOf("Yes", "No")

@@ -12,6 +12,6 @@ data class Question(
     val id: Int,
     val question: String,
     val type: QuestionType,
-    val options: List<String>? = null,  // Only used for MULTIPLE_CHOICE & DROPDOWN
+    val options: List<String>? = null,
     val isRequired: Boolean = true
 )

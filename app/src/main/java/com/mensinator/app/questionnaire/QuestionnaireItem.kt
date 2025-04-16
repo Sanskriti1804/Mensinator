@@ -28,7 +28,11 @@ import androidx.compose.ui.unit.dp
 import java.util.Calendar
 
 @Composable
-fun QuestionItem(question: Question) {
+fun QuestionItemWithAnswerCapture(
+    question: Question,
+    initialAnswer: String,
+    onAnswerChanged: (String) -> Unit
+) {
     Text(
         text = question.question,
         style = MaterialTheme.typography.titleMedium,
@@ -36,40 +40,40 @@ fun QuestionItem(question: Question) {
     )
 
     when (question.type) {
-        QuestionType.SHORT_ANSWER -> {
-            var answer by remember { mutableStateOf("") }
+        QuestionType.SHORT_ANSWER, QuestionType.NUMBER -> {
+            var answer by remember { mutableStateOf(initialAnswer) }
             OutlinedTextField(
                 value = answer,
-                onValueChange = { answer = it },
+                onValueChange = {
+                    answer =
+                        if (question.type == QuestionType.NUMBER) it.filter { char -> char.isDigit() } else it
+                    onAnswerChanged(answer)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Answer") }
             )
         }
 
-        QuestionType.NUMBER -> {
-            var numberAnswer by remember { mutableStateOf("") }
-            OutlinedTextField(
-                value = numberAnswer,
-                onValueChange = { numberAnswer = it.filter { char -> char.isDigit() } },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Enter number") }
-            )
-        }
-
         QuestionType.MULTIPLE_CHOICE -> {
-            var selectedOption by remember { mutableStateOf("") }
+            var selectedOption by remember { mutableStateOf(initialAnswer) }
             Column {
                 question.options?.forEach { option ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { selectedOption = option }
+                            .clickable {
+                                selectedOption = option
+                                onAnswerChanged(option)
+                            }
                             .padding(vertical = 4.dp)
                     ) {
                         RadioButton(
                             selected = selectedOption == option,
-                            onClick = { selectedOption = option }
+                            onClick = {
+                                selectedOption = option
+                                onAnswerChanged(option)
+                            }
                         )
                         Text(text = option)
                     }
@@ -79,7 +83,7 @@ fun QuestionItem(question: Question) {
 
         QuestionType.DROPDOWN -> {
             var expanded by remember { mutableStateOf(false) }
-            var selectedText by remember { mutableStateOf("") }
+            var selectedText by remember { mutableStateOf(initialAnswer) }
 
             Box {
                 OutlinedTextField(
@@ -106,6 +110,7 @@ fun QuestionItem(question: Question) {
                             onClick = {
                                 selectedText = option
                                 expanded = false
+                                onAnswerChanged(option)
                             }
                         )
                     }
@@ -120,12 +125,13 @@ fun QuestionItem(question: Question) {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            var selectedDate by remember { mutableStateOf("") }
+            var selectedDate by remember { mutableStateOf(initialAnswer) }
 
             val datePickerDialog = DatePickerDialog(
                 context,
                 { _, selectedYear, selectedMonth, selectedDay ->
                     selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    onAnswerChanged(selectedDate)
                 },
                 year, month, day
             )
