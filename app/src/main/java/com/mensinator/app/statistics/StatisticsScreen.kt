@@ -3,6 +3,7 @@ package com.mensinator.app.statistics
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,14 +59,14 @@ private fun StatisticsScreenContent(
         state.ovulationPredictionDate to stringResource(id = R.string.next_predicted_ovulation),
         state.averageLutealLength to stringResource(id = R.string.average_luteal_length)
     )
-    
+
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
             .displayCutoutExcludingStatusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        val dynamicHeight = maxHeight * 0.75f
+        val dynamicHeight = maxHeight * 1f
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -81,6 +81,7 @@ private fun StatisticsScreenContent(
                         .fillMaxWidth()
                         .height(dynamicHeight)
                 )
+                Spacer(modifier = Modifier.height(48.dp))
             }
 
             // Optional title

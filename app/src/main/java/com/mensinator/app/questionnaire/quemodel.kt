@@ -1,94 +1,92 @@
 package com.mensinator.app.questionnaire
 
-import com.google.android.gms.common.util.CollectionUtils.listOf
-import java.util.ArrayList
-
 object Constants {
-
-    const val USER_NAME: String = "user_name"
-
+    
     fun getQuestions(): ArrayList<Question> {
         val questionsList = ArrayList<Question>()
 
-        val q1 = Question(
-            1,
-            "What property of aluminium makes it ideal for use in heat-dissipating applications?",
-            0,
-            listOf("Good Thermal Conductivity", "High electrical resistance", "high melting point", "low density")
+        // Q1 - Name (short answer)
+        questionsList.add(
+            Question(
+                id = 1,
+                question = "What's your name?",
+                type = QuestionType.SHORT_ANSWER
+            )
         )
-        questionsList.add(q1)
 
-        val q2 = Question(
-            2,
-            "What characteristic of boron is linked to its ability to form covalent bonds?",
-            0,
-            listOf("excellent conductor of electricity", "poor conductor of electricity", "forms ionic bonds", "has a metallic luster")
+        // Q2 - Last period date (calendar input)
+        questionsList.add(
+            Question(
+                id = 2,
+                question = "When did your last period start?",
+                type = QuestionType.DATE
+            )
         )
-        questionsList.add(q2)
 
-        val q3 = Question(
-            3,
-            "Which material is primarily used in pencils due to its carbon content?",
-            0,
-            listOf("Graphite", "Clay", "Plastic", "Wood")
+        // Q3 - Period length (dropdown)
+        questionsList.add(
+            Question(
+                id = 3,
+                question = "How long does your period usually last?",
+                type = QuestionType.SHORT_ANSWER,
+            )
         )
-        questionsList.add(q3)
 
-        val q4 = Question(
-            4,
-            "What is the primary purpose of adding fluoride to public water supplies?",
-            0,
-            listOf("To improve water taste", "To increase water hardness", "To reduce the incidence of cavities", "to remove contaminants from water")
+        // Q4 - Average menstrual cycle length (dropdown)
+        questionsList.add(
+            Question(
+                id = 4,
+                question = "What is your average menstrual cycle length (from one period to the next)?",
+                type = QuestionType.SHORT_ANSWER,
+            )
         )
-        questionsList.add(q4)
 
-        val q5 = Question(
-            5,
-            "Which property of lead allows it to be easily shaped into sheets or other forms?",
-            0,
-            listOf("Conductivity", "Malleability", "Brittleness", "Rigidity")
+        // Q5 - Menstrual cramps (multiple choice)
+        questionsList.add(
+            Question(
+                id = 5,
+                question = "Do you experience menstrual cramps?",
+                type = QuestionType.MULTIPLE_CHOICE,
+                options = listOf("None", "Mild", "Moderate", "Severe")
+            )
         )
-        questionsList.add(q5)
+        // Q8 - Mood swings (yes/no)
+        questionsList.add(
+            Question(
+                id = 8,
+                question = "Do you experience mood swings before or during your period?",
+                type = QuestionType.MULTIPLE_CHOICE,
+                options = listOf("Yes", "No")
+            )
+        )
 
-        val q6 = Question(
-            6,
-            "What are the sensory characteristics of oxygen under standard conditions?",
-            0,
-            listOf("Colorless, with a distinct odor and taste", "Greenish, with a strong smell", "Blue, odorless, and tasteless", "Colorless, odorless, and tasteless")
+        // Q6 - Diagnosed conditions (short answer)
+        questionsList.add(
+            Question(
+                id = 6,
+                question = "Have you ever been diagnosed with any reproductive health conditions? (e.g., PCOS, Endometriosis, Fibroids, etc.)",
+                type = QuestionType.SHORT_ANSWER
+            )
         )
-        questionsList.add(q6)
 
-        val q7 = Question(
-            7,
-            "Which of the following characteristics is true for sodium?",
-            0,
-            listOf("It remains stable in water", "It reacts explosively with water", "It forms a protective oxide layer", "It is used in jewelry due to its luster")
+        // Q7 - Medication related to menstrual/hormonal health (yes/no + specify)
+        questionsList.add(
+            Question(
+                id = 7,
+                question = "Are you currently taking any medication related to your menstrual or hormonal health? If yes, please specify.",
+                type = QuestionType.SHORT_ANSWER
+            )
         )
-        questionsList.add(q7)
 
-        val q8 = Question(
-            8,
-            "What is the typical color of elemental sulfur in its natural form?",
-            0,
-            listOf("Red", "Black", "Dark Green", "Bright Yellow")
+        // Q8 - Mood swings (yes/no)
+        questionsList.add(
+            Question(
+                id = 8,
+                question = "Do you experience mood swings before or during your period?",
+                type = QuestionType.MULTIPLE_CHOICE,
+                options = listOf("Yes", "No")
+            )
         )
-        questionsList.add(q8)
-
-        val q9 = Question(
-            9,
-            "What is notable about xenon compared to other noble gases?",
-            0,
-            listOf("Lightest noble gas", "reactive noble gas", "heaviest noble gas", "least dense noble gas")
-        )
-        questionsList.add(q9)
-
-        val q10 = Question(
-            10,
-            "What does it mean for neon to be chemically inert?",
-            0,
-            listOf("It does not react with other elements or compounds", "It reacts readily with other elements", "It forms compounds with most other gases", "It is highly reactive and combustible")
-        )
-        questionsList.add(q10)
 
         return questionsList
     }

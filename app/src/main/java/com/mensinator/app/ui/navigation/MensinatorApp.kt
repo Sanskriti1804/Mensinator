@@ -201,7 +201,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Statistic.name,
+                startDestination = Screen.BrowsingArticle.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -210,7 +210,27 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
-
+//                composable(route = Screen.LoginScreen.name) {
+//                    LoginScreen(
+//                        navController = navController,
+//                        authViewModel = authViewModel,
+//                        onNavigateToSignUp = {
+//                            navController.navigate(Screen.SignUpScreen.name)
+//                        },
+//                        onSignInSuccess = {
+//                            navController.navigate(Screen.HomeScreen.name) // Redirect to Home or any other screen after successful login
+//                        }
+//                    )
+//                }
+//
+//                composable(route = Screen.SignUpScreen.name) {
+//                    SignUpScreen(navController, authViewModel,
+//                        onNavigateToLogin = {
+//                        navController.navigate(Screen.LoginScreen.name)
+//                    }, onSignUpSuccess = {
+//                        navController.navigate(Screen.HomeScreen.name) // Or any screen you want
+//                    })
+//                }
 
 
                 composable(route = Screen.Article.name) {
