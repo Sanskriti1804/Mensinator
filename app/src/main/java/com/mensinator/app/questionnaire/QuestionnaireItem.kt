@@ -45,8 +45,8 @@ fun QuestionItemWithAnswerCapture(
             OutlinedTextField(
                 value = answer,
                 onValueChange = {
-                    answer =
-                        if (question.type == QuestionType.NUMBER) it.filter { char -> char.isDigit() } else it
+                    answer = if (question.type == QuestionType.NUMBER)
+                        it.filter { char -> char.isDigit() } else it
                     onAnswerChanged(answer)
                 },
                 modifier = Modifier.fillMaxWidth(),

@@ -69,7 +69,7 @@ import com.mensinator.app.article.ArticleBrowsingScreen
 import com.mensinator.app.article.headerItems
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
-import com.mensinator.app.questionnaire.Question
+import com.mensinator.app.questionnaire.Constants
 import com.mensinator.app.questionnaire.QuestionnaireScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.splash.SplashScreen
@@ -204,7 +204,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.BrowsingArticle.name,
+                startDestination = Screen.Questionnaire.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -256,9 +256,16 @@ private fun MainScaffold(
                 }
 
                 composable(route = Screen.Questionnaire.name) {
-                    val questions = // Get or define a list of questions here
-                    val onSubmit: (List<Question>) -> Unit = { submittedQuestions ->
-                        // Handle the form submission logic
+                    // Get or define your list of questions here
+                    val questions = Constants.getQuestions() // Or however you retrieve them
+
+                    // Handle the submission: Map<QuestionId, Answer>
+                    val onSubmit: (Map<String, String>) -> Unit = { answers ->
+                        // Handle the form submission logic here
+                        answers.forEach { (questionId, answer) ->
+                            Log.d("FormSubmission", "QID: $questionId -> Ans: $answer")
+                        }
+                        // You can navigate to a success screen, store in DB, or whatever you need
                     }
 
                     Scaffold(
@@ -272,8 +279,8 @@ private fun MainScaffold(
                     ) { topBarPadding ->
                         QuestionnaireScreen(
                             modifier = Modifier.padding(topBarPadding),
-                            questions = questions, // Pass questions
-                            onSubmit = onSubmit // Pass onSubmit
+                            questions = questions,
+                            onSubmit = onSubmit
                         )
                     }
                 }
