@@ -1,6 +1,7 @@
 package com.mensinator.app.ui.navigation
 
 //import kotlinx.coroutines.launch
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.LocalActivity
@@ -153,6 +154,7 @@ fun MensinatorApp(
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -163,6 +165,7 @@ private fun MainScaffold(
     isMediumExpandedWWSC: Boolean,
     onItemClick: (NavigationItem) -> Unit
 ) {
+
     Row {
         if (isMediumExpandedWWSC) {
             NavigationRail(
@@ -204,7 +207,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Questionnaire.name,
+                startDestination = Screen.Calendar.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -213,27 +216,8 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
-//                composable(route = Screen.LoginScreen.name) {
-//                    LoginScreen(
-//                        navController = navController,
-//                        authViewModel = authViewModel,
-//                        onNavigateToSignUp = {
-//                            navController.navigate(Screen.SignUpScreen.name)
-//                        },
-//                        onSignInSuccess = {
-//                            navController.navigate(Screen.HomeScreen.name) // Redirect to Home or any other screen after successful login
-//                        }
-//                    )
-//                }
-//
-//                composable(route = Screen.SignUpScreen.name) {
-//                    SignUpScreen(navController, authViewModel,
-//                        onNavigateToLogin = {
-//                        navController.navigate(Screen.LoginScreen.name)
-//                    }, onSignUpSuccess = {
-//                        navController.navigate(Screen.HomeScreen.name) // Or any screen you want
-//                    })
-//                }
+
+
 
 
                 composable(route = Screen.Article.name) {
@@ -459,7 +443,7 @@ private val navigationItems = listOf(
     NavigationItem(
         screen = Screen.Calendar,
         R.drawable.icappcalendar,
-        R.drawable.icappcalendar //here you can add not_field icon if you want. when its not selected
+        R.drawable.icappcalendar
     ),
     NavigationItem(
         screen = Screen.Statistic,

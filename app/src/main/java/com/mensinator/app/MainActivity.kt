@@ -34,7 +34,9 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MensinatorTheme {
                 KoinAndroidContext {
-                    MensinatorApp(onScreenProtectionChanged = ::handleScreenProtection)
+                    MensinatorApp(
+                        onScreenProtectionChanged = ::handleScreenProtection
+                    )
                 }
             }
         }
