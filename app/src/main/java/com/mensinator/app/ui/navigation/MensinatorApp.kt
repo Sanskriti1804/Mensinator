@@ -1,6 +1,7 @@
 package com.mensinator.app.ui.navigation
 
 //import kotlinx.coroutines.launch
+import SignUpScreen
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
@@ -58,6 +59,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -78,6 +80,8 @@ import com.mensinator.app.statistics.HormoneCycleChart
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
+import com.mensinator.app.user.AuthViewModel
+import com.mensinator.app.user.LoginScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -216,7 +220,32 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
-                
+                composable(Screen.LoginScreen.name) {
+                    val authViewModel: AuthViewModel = viewModel()
+
+                    LoginScreen(
+                        viewModel = authViewModel,
+                        onNavigateToCalender = {
+                            navController.navigate(Screen.Calendar.name)
+                        },
+                        onNavigateToSignUp = {
+                            navController.navigate(Screen.SignUpScreen.name)
+                        }
+                    )
+                }
+
+                composable(Screen.SignUpScreen.name) {
+                    val authViewModel: AuthViewModel = viewModel()
+
+                    SignUpScreen(
+                        viewModel = authViewModel,
+                        onNavigateToCalender = {
+                            navController.navigate(Screen.Calendar.name)
+                        },
+                    )
+                }
+
+
 
 
                 composable(route = Screen.Article.name) {

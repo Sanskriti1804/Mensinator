@@ -22,10 +22,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel,
-    onNavigateToHome: () -> Unit,
+    onNavigateToCalender: () -> Unit,
     onNavigateToSignUp: () -> Unit
 ) {
     val context = LocalContext.current
@@ -78,7 +79,7 @@ fun LoginScreen(
         if (viewModel.isSuccess) {
             LaunchedEffect(Unit) {
                 Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-                onNavigateToHome()
+                onNavigateToCalender()
             }
         }
     }

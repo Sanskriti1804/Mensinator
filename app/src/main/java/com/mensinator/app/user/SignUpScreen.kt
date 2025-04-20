@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.mensinator.app.user.AuthViewModel
 
 @Composable
-fun SignUpScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit) {
+fun SignUpScreen(viewModel: AuthViewModel, onNavigateToCalender: () -> Unit) {
     val context = LocalContext.current
 
     Column(
@@ -62,7 +62,7 @@ fun SignUpScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit) {
             Text(if (viewModel.isLoading) "Signing up..." else "Sign Up")
         }
 
-        TextButton(onClick = onNavigateToLogin) {
+        TextButton(onClick = onNavigateToCalender) {
             Text("Already have an account? Login")
         }
 
@@ -73,7 +73,7 @@ fun SignUpScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit) {
         if (viewModel.isSuccess) {
             LaunchedEffect(Unit) {
                 Toast.makeText(context, "Sign-up successful!", Toast.LENGTH_SHORT).show()
-                onNavigateToLogin()
+                onNavigateToCalender()
             }
         }
     }
