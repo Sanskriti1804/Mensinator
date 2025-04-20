@@ -216,8 +216,7 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
-
-
+                
 
 
                 composable(route = Screen.Article.name) {
