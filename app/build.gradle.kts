@@ -118,9 +118,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
-    implementation("com.google.firebase:firebase-firestore-ktx:25.1.1")
+//    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+//    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
+//    implementation("com.google.firebase:firebase-firestore-ktx:25.1.1")
 
     // To be used to profile performance. Don't include in release builds
     // implementation("androidx.compose.runtime:runtime-tracing")

@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -293,31 +294,62 @@ private fun PeriodButton(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var selectedIsPeriod = false
     val isPeriodButtonEnabled by remember {
         derivedStateOf { state.value.selectedDays.isNotEmpty() }
     }
     val successSaved = stringResource(id = R.string.successfully_saved_alert)
-    Button(
-        onClick = {
-            onAction(
-                UiAction.UpdatePeriodDates(
-                    currentPeriodDays = state.value.periodDates,
-                    selectedDays = state.value.selectedDays
-                )
-            )
-            Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
-        },
-        enabled = isPeriodButtonEnabled,
-        modifier = modifier
-    ) {
-        for (selectedDate in state.value.selectedDays) {
-            if (selectedDate in state.value.periodDates) {
-                selectedIsPeriod = true
-                break
-            }
-        }
+    var isRecentlyClicked by remember { mutableStateOf(false) }
 
+    val selectedIsPeriod by remember {
+        derivedStateOf {
+            state.value.selectedDays.any { it in state.value.periodDates }
+        }
+    }
+
+    // Reset recentlyClicked state when selected days change (unless the new selection contains period dates)
+    LaunchedEffect(state.value.selectedDays) {
+        if (!selectedIsPeriod) {
+            isRecentlyClicked = false
+        }
+    }
+
+    // Colors
+    val defaultBorderColor = com.mensinator.app.ui.theme.appDRed.copy(alpha = 0.3f)
+    val defaultTextColor = com.mensinator.app.ui.theme.appDRed
+    val activeColor = com.mensinator.app.ui.theme.appDRed
+    val activeTextColor = Color.White
+
+    // Determine if button should appear active
+    val isActive = isRecentlyClicked || selectedIsPeriod
+
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                if (isActive) activeColor else Color.Transparent,
+                RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                color = if (isActive) activeColor else defaultBorderColor,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable(
+                enabled = isPeriodButtonEnabled,
+                onClick = {
+                    onAction(
+                        UiAction.UpdatePeriodDates(
+                            currentPeriodDays = state.value.periodDates,
+                            selectedDays = state.value.selectedDays
+                        )
+                    )
+                    Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
+                    isRecentlyClicked = true
+                }
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
         val text = when {
             selectedIsPeriod && isPeriodButtonEnabled -> {
                 stringResource(id = R.string.period_button_selected)
@@ -329,7 +361,16 @@ private fun PeriodButton(
 
             else -> stringResource(id = R.string.period_button)
         }
-        ButtonText(text)
+
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = if (isActive) activeTextColor else defaultTextColor
+            ),
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
+        )
     }
 }
 
@@ -339,12 +380,53 @@ private fun SymptomButton(
     state: State<CalendarViewModel.ViewState>,
     modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = { showSymptomsDialog.value = true },
-        enabled = state.value.selectedDays.isNotEmpty(),
+    val isButtonEnabled by remember {
+        derivedStateOf { state.value.selectedDays.isNotEmpty() }
+    }
+
+    // Check if any selected date has symptoms
+    val hasSymptoms by remember {
+        derivedStateOf {
+            state.value.selectedDays.any { date ->
+                state.value.symptomDates.containsKey(date)
+            }
+        }
+    }
+
+    // Colors
+    val defaultBorderColor = com.mensinator.app.ui.theme.appDRed.copy(alpha = 0.3f)
+    val defaultTextColor = com.mensinator.app.ui.theme.appDRed
+    val activeColor = com.mensinator.app.ui.theme.appDRed
+    val activeTextColor = Color.White
+
+    Box(
         modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                if (hasSymptoms) activeColor else Color.Transparent,
+                RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                color = if (hasSymptoms) activeColor else defaultBorderColor,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable(
+                enabled = isButtonEnabled,
+                onClick = { showSymptomsDialog.value = true }
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        contentAlignment = Alignment.Center
     ) {
-        ButtonText(stringResource(id = R.string.symptoms_button))
+        Text(
+            text = stringResource(id = R.string.symptoms_button),
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = if (hasSymptoms) activeTextColor else defaultTextColor
+            ),
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
+        )
     }
 }
 
@@ -355,38 +437,62 @@ private fun OvulationButton(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
-    var selectedIsOvulation = false
-    val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
     val ovulationButtonEnabled by remember {
         derivedStateOf { state.value.selectedDays.size == 1 }
     }
-    Button(
-        onClick = {
-            onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
-            Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
-        },
-        enabled = ovulationButtonEnabled,
-        modifier = modifier
-    ) {
-        for (selectedDate in state.value.selectedDays) {
-            if (selectedDate in state.value.ovulationDates) {
-                selectedIsOvulation = true
-                break
-            }
+    val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
+
+    // Check if selected date is an ovulation date
+    val isOvulationDate by remember {
+        derivedStateOf {
+            state.value.selectedDays.size == 1 &&
+                    state.value.selectedDays.first() in state.value.ovulationDates
         }
+    }
+
+    // Colors
+    val defaultBorderColor = com.mensinator.app.ui.theme.appDRed.copy(alpha = 0.3f)
+    val defaultTextColor = com.mensinator.app.ui.theme.appDRed
+    val activeColor = com.mensinator.app.ui.theme.appDRed
+    val activeTextColor = Color.White
+
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                if (isOvulationDate) activeColor else Color.Transparent,
+                RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                color = if (isOvulationDate) activeColor else defaultBorderColor,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable(
+                enabled = ovulationButtonEnabled,
+                onClick = {
+                    onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
+                    Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
+                }
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
         val text = when {
-            selectedIsOvulation && ovulationButtonEnabled -> {
-                stringResource(id = R.string.ovulation_button_selected)
-            }
-
-            !selectedIsOvulation && ovulationButtonEnabled -> {
-                stringResource(id = R.string.ovulation_button_not_selected)
-            }
-
+            isOvulationDate -> stringResource(id = R.string.ovulation_button_selected)
+            ovulationButtonEnabled -> stringResource(id = R.string.ovulation_button_not_selected)
             else -> stringResource(id = R.string.ovulation_button)
         }
-        ButtonText(text)
+
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = if (isOvulationDate) activeTextColor else defaultTextColor
+            ),
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2
+        )
     }
 }
 
