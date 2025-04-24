@@ -95,9 +95,12 @@ enum class Screen(@StringRes val titleRes: Int) {
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
 
-    //    LoginScreen(R.string.login_title),  // New screen
-//    SignUpScreen(R.string.signup_title),
-    Questionnaire(R.string.questionnaire_title)
+    LoginScreen(R.string.login_title),  // New screen
+
+    //    SignUpScreen(R.string.signup_title),
+    Questionnaire(R.string.questionnaire_title);
+
+
 }
 
 /**
@@ -211,7 +214,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Splash.name,
+                startDestination = Screen.Calendar.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
