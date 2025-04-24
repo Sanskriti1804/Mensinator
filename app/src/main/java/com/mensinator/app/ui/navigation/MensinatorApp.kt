@@ -1,7 +1,10 @@
 package com.mensinator.app.ui.navigation
 
 //import kotlinx.coroutines.launch
-import SignUpScreen
+//import SignUpScreen
+//import com.mensinator.app.user.AuthViewModel
+//import com.mensinator.app.user.LoginScreen
+//import com.google.android.gms.common.util.CollectionUtils.listOf
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
@@ -59,14 +62,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.mensinator.app.R
 import com.mensinator.app.article.ArticleBrowsingScreen
 import com.mensinator.app.article.headerItems
@@ -80,10 +81,9 @@ import com.mensinator.app.statistics.HormoneCycleChart
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
-import com.mensinator.app.user.AuthViewModel
-import com.mensinator.app.user.LoginScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+
 
 enum class Screen(@StringRes val titleRes: Int) {
     Splash(R.string.app_name),
@@ -94,8 +94,9 @@ enum class Screen(@StringRes val titleRes: Int) {
     Settings(R.string.settings_page),
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
-    LoginScreen(R.string.login_title),  // New screen
-    SignUpScreen(R.string.signup_title),
+
+    //    LoginScreen(R.string.login_title),  // New screen
+//    SignUpScreen(R.string.signup_title),
     Questionnaire(R.string.questionnaire_title)
 }
 
@@ -196,7 +197,6 @@ private fun MainScaffold(
             bottomBar = {
                 if (!isMediumExpandedWWSC) {
                     NavigationBar(
-                        //modifier = Modifier.consumeWindowInsets(NavigationBarDefaults.windowInsets)
                     ) {
                         navigationItems.forEach { item ->
                             NavigationBarItem(
@@ -211,7 +211,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.SignUpScreen.name,
+                startDestination = Screen.Splash.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -220,32 +220,30 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
-                composable(Screen.LoginScreen.name) {
-                    val authViewModel: AuthViewModel = viewModel()
+//                composable(Screen.LoginScreen.name) {
+//                    val authViewModel: AuthViewModel = viewModel()
+//
+//                    LoginScreen(
+//                        viewModel = authViewModel,
+//                        onNavigateToCalender = {
+//                            navController.navigate(Screen.Calendar.name)
+//                        },
+//                        onNavigateToSignUp = {
+//                            navController.navigate(Screen.SignUpScreen.name)
+//                        }
+//                    )
+//                }
 
-                    LoginScreen(
-                        viewModel = authViewModel,
-                        onNavigateToCalender = {
-                            navController.navigate(Screen.Calendar.name)
-                        },
-                        onNavigateToSignUp = {
-                            navController.navigate(Screen.SignUpScreen.name)
-                        }
-                    )
-                }
-
-                composable(Screen.SignUpScreen.name) {
-                    val authViewModel: AuthViewModel = viewModel()
-
-                    SignUpScreen(
-                        viewModel = authViewModel,
-                        onNavigateToCalender = {
-                            navController.navigate(Screen.Calendar.name)
-                        },
-                    )
-                }
-
-
+//                composable(Screen.SignUpScreen.name) {
+//                    val authViewModel: AuthViewModel = viewModel()
+//
+//                    SignUpScreen(
+//                        viewModel = authViewModel,
+//                        onNavigateToCalender = {
+//                            navController.navigate(Screen.Calendar.name)
+//                        },
+//                    )
+//                }
 
 
                 composable(route = Screen.Article.name) {
@@ -268,16 +266,11 @@ private fun MainScaffold(
                 }
 
                 composable(route = Screen.Questionnaire.name) {
-                    // Get or define your list of questions here
-                    val questions = Constants.getQuestions() // Or however you retrieve them
-
-                    // Handle the submission: Map<QuestionId, Answer>
+                    val questions = Constants.getQuestions()
                     val onSubmit: (Map<String, String>) -> Unit = { answers ->
-                        // Handle the form submission logic here
                         answers.forEach { (questionId, answer) ->
                             Log.d("FormSubmission", "QID: $questionId -> Ans: $answer")
                         }
-                        // You can navigate to a success screen, store in DB, or whatever you need
                     }
 
                     Scaffold(

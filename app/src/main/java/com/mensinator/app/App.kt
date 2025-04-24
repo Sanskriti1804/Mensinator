@@ -2,7 +2,16 @@ package com.mensinator.app
 
 import android.app.AlarmManager
 import android.app.Application
-import com.mensinator.app.business.*
+import com.mensinator.app.business.CalculationsHelper
+import com.mensinator.app.business.ExportImport
+import com.mensinator.app.business.ICalculationsHelper
+import com.mensinator.app.business.IExportImport
+import com.mensinator.app.business.IOvulationPrediction
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.IPeriodPrediction
+import com.mensinator.app.business.OvulationPrediction
+import com.mensinator.app.business.PeriodDatabaseHelper
+import com.mensinator.app.business.PeriodPrediction
 import com.mensinator.app.business.notifications.AndroidNotificationScheduler
 import com.mensinator.app.business.notifications.IAndroidNotificationScheduler
 import com.mensinator.app.business.notifications.INotificationScheduler
@@ -43,6 +52,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+//        if (FirebaseApp.getApps(this).isEmpty()) {
+//            FirebaseApp.initializeApp(this)
+//        }
 
         startKoin {
             androidLogger()
