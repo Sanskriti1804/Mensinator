@@ -95,7 +95,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
 
-    LoginScreen(R.string.login_title),  // New screen
+//    LoginScreen(R.string.login_title),  // New screen
 
     //    SignUpScreen(R.string.signup_title),
     Questionnaire(R.string.questionnaire_title);
