@@ -1,20 +1,21 @@
 package com.mensinator.app.statistics
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,56 +61,84 @@ private fun StatisticsScreenContent(
         state.averageLutealLength to stringResource(id = R.string.average_luteal_length)
     )
 
-    BoxWithConstraints(
-        modifier = modifier
-            .fillMaxSize()
-            .displayCutoutExcludingStatusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        val dynamicHeight = maxHeight * 1f
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxSize()
+                .displayCutoutExcludingStatusBarsPadding()
         ) {
-            // Chart full width
-            item(span = { GridItemSpan(2) }) {
-                HormoneCycleChart(
+            val chartHeight = this.maxHeight * 0.3f
+            val minChartHeight = 250.dp
+
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                // Graph section - full width Card
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(dynamicHeight)
-                )
-                Spacer(modifier = Modifier.height(48.dp))
-            }
+                        .height(maxOf(chartHeight, minChartHeight)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(1.dp)
+                    ) {
+                        HormoneCycleChart(
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
 
-            // Optional title
-            item(span = { GridItemSpan(2) }) {
+                // Title
                 Text(
                     text = "Your Stats",
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
                 )
-            }
 
-            // Stat cards in 2-column grid
-            items(stats.size) { index ->
-                val (value, label) = stats[index]
-                StatCard(value = value ?: "-", label = label)
+                // Horizontal scrolling stats using LazyRow
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp)
+                ) {
+                    items(stats) { (value, label) ->
+                        StatCard(
+                            value = value ?: "-",
+                            label = label,
+                            isHighlighted = label == stringResource(id = R.string.period_count),
+                            modifier = Modifier
+                                .width(110.dp)  // Reduced width
+                                .height(160.dp) // Increased height
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-
 @Composable
-fun StatCard(value: String, label: String) {
+fun StatCard(
+    value: String,
+    label: String,
+    isHighlighted: Boolean = false,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.4f),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(
             modifier = Modifier
@@ -127,28 +156,28 @@ fun StatCard(value: String, label: String) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun StatisticsScreenPreview() {
     MensinatorTheme {
         StatisticsScreenContent(
             state = StatisticsViewModel.ViewState(
-                trackedPeriods = "3",
-                averageCycleLength = "28.5 days",
-                averagePeriodLength = "5.0 days",
-                periodPredictionDate = "28 Feb 2024",
-                ovulationCount = "4",
-                ovulationPredictionDate = "20 Mar 2024",
-                follicleGrowthDays = "14.0",
-                averageLutealLength = "15.0 days"
+                trackedPeriods = "2",
+                averageCycleLength = "27.0 days",
+                averagePeriodLength = "1.0 days",
+                periodPredictionDate = "May 18, 2025",
+                ovulationCount = "2",
+                ovulationPredictionDate = "-",
+                follicleGrowthDays = "0.0",
+                averageLutealLength = "7.0 days"
             )
         )
     }
 }
-
