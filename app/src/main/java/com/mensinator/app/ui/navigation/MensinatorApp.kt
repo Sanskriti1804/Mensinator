@@ -224,7 +224,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Splash.name,
+                startDestination = Screen.Calendar.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -459,7 +459,7 @@ private val navigationItems = listOf(
         R.drawable.icappstats2
     ),
     NavigationItem(
-        screen = Screen.Symptoms,
+        screen = Screen.BrowsingArticle,
         R.drawable.icapparticle,
         R.drawable.icapparticle
     ),

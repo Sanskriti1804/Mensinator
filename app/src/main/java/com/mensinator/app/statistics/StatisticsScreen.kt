@@ -70,7 +70,7 @@ private fun StatisticsScreenContent(
                 .fillMaxSize()
                 .displayCutoutExcludingStatusBarsPadding()
         ) {
-            val chartHeight = this.maxHeight * 0.3f
+            val chartHeight = this.maxHeight * 0.65f
             val minChartHeight = 250.dp
 
             Column(
