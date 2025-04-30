@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -38,8 +40,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -157,6 +158,7 @@ fun MensinatorApp(
         }
     )
 }
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -227,7 +229,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Calendar.name,
+                startDestination = Screen.Questionnaire.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -344,16 +346,28 @@ private fun MainScaffold(
 //                }
 
                 composable(route = Screen.BrowsingArticle.name) {
-                    ArticleBrowsingScreen(
-                        headers = headerItems,
-                        onCardClick = { itemTitle ->
-                            // Find the matching article by title
-                            val article = articles.find { it.heading == itemTitle }
-                            article?.let {
-                                navController.navigate("articleDetail/${it.articleId}")
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        // Add the heading
+                        Text(
+                            text = "FAQ and Guides",
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+
+                        ArticleBrowsingScreen(
+                            headers = headerItems,
+                            onCardClick = { itemTitle ->
+                                // Find the matching article by title
+                                val article = articles.find { it.heading == itemTitle }
+                                article?.let {
+                                    navController.navigate("articleDetail/${it.articleId}")
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
 
                 composable(route = Screen.Symptoms.name) {
