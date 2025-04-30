@@ -20,7 +20,7 @@ data class HeaderItem(
 
 val headerItems = listOf(
     HeaderItem(
-        title = ".Body & Physical Health",
+        title = "Body & Physical Health",
         items = listOf(
             ArticleOne.heading,
             ArticleFour.heading,
@@ -50,7 +50,7 @@ val headerItems = listOf(
             )
     ),
     HeaderItem(
-        title = ".Sexual & Reproductive Health",
+        title = "Sexual & Reproductive Health",
         items = listOf(
             ArticleTwelve.heading,
             ArticleFour.heading,

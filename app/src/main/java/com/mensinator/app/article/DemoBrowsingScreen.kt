@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,14 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mensinator.app.ui.theme.appBlack
+import com.mensinator.app.ui.theme.appLRed
+import com.mensinator.app.ui.theme.appWhite
 
 @Composable
 fun ArticleBrowsingScreen(
     headers: List<HeaderItem>,
     onCardClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    headerBackgroundColor: Color = MaterialTheme.colorScheme.primary,
-    cardBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    headerBackgroundColor: Color = appWhite,
+    cardBackgroundColor: Color = appLRed, // Changed to appDRed
     contentPadding: PaddingValues = PaddingValues(16.dp)
 ) {
     LazyColumn(modifier = modifier) {
@@ -64,16 +69,35 @@ fun StickyHeader(
     headerTitle: String,
     backgroundColor: Color
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(backgroundColor)
-            .padding(16.dp)
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = headerTitle,
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge
+        // Top divider
+        Divider(
+            color = Color.Gray,
+            thickness = 1.dp,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(backgroundColor)
+                .padding(vertical = 12.dp, horizontal = 16.dp)
+        ) {
+            Text(
+                text = headerTitle.uppercase(),
+                color = appBlack,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+
+        // Bottom divider
+        Divider(
+            color = Color.Gray,
+            thickness = 1.dp,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 }
@@ -83,7 +107,7 @@ fun RectangularCard(
     item: String,
     backgroundColor: Color,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
@@ -106,8 +130,8 @@ fun RectangularCard(
         ) {
             Text(
                 text = item,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
+                color = appWhite, // Changed to appWhite
+                fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.bodyLarge
             )
         }
