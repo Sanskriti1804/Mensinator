@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mensinator.app.ui.theme.appBlack
 import com.mensinator.app.ui.theme.appLRed
@@ -51,12 +52,26 @@ fun ArticleBrowsingScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(header.items) { item ->
-                        RectangularCard(
-                            item = item,
-                            backgroundColor = cardBackgroundColor,
-                            onClick = { onCardClick(item) }
-                        )
+                    items(header.items) {cardItem ->
+                        Card(
+                            modifier = Modifier
+                                .clickable { onCardClick(cardItem.articleId) }
+                                .padding(8.dp)
+                                .width(180.dp),
+                            elevation = CardDefaults.cardElevation(4.dp)
+                        ) {
+                            Text(
+                                text = cardItem.title,
+                                modifier = Modifier.padding(16.dp),
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis
+                            )
+//                        item ->
+//                        RectangularCard(
+//                            item = item,
+//                            backgroundColor = cardBackgroundColor,
+//                            onClick = { onCardClick(item) }
+//                        )
                     }
                 }
             }

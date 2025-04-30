@@ -236,16 +236,49 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
+//                composable(route = Screen.BrowsingArticle.name) {
+//                    ArticleBrowsingScreen(
+//                        headers = headerItems,
+//                        onCardClick = { itemTitle ->
+//                            // Find the matching article by title
+//                            val article = articles.find { it.heading == itemTitle }
+//                            article?.let {
+//                                navController.navigate("articleDetail/${it.articleId}")
+//                            }
+//                        }
+//                    )
+//                }
+//
+//
+//                composable(
+//                    "articleDetail/{articleId}",
+//                    arguments = listOf(navArgument("articleId") { type = NavType.StringType })
+//                ) { backStackEntry ->
+//                    val articleId = backStackEntry.arguments?.getString("articleId")
+//                    val article = articles.find { it.articleId == articleId }
+//
+//                    // Use your existing ArticleLayout
+//                    ArticleLayout(articles = listOf(article ?: return@composable))
+//                }
+
+                composable(route = Screen.BrowsingArticle.name) {
+                    ArticleBrowsingScreen(
+                        headers = headerItems,
+                        onCardClick = { articleId ->
+                            navController.navigate("articleDetail/$articleId")
+                        }
+                    )
+                }
+
                 composable(
                     "articleDetail/{articleId}",
-                    arguments = listOf(navArgument("articleId") { type = NavType.StringType })
-                ) { backStackEntry ->
-                    val articleId = backStackEntry.arguments?.getString("articleId")
-                    val article = articles.find { it.articleId == articleId }
+                    arguments = listOf(navArgument("articleId") { type = NavType.StringType }
+                    ) { backStackEntry ->
+                        val articleId = backStackEntry.arguments?.getString("articleId")
+                        val article = articles.find { it.articleId == articleId }
 
-                    // Use your existing ArticleLayout
-                    ArticleLayout(articles = listOf(article ?: return@composable))
-                }
+                        ArticleLayout(articles = listOf(article ?: return@composable))
+                    }
 
                 composable(route = Screen.Questionnaire.name) {
                     val questions = Constants.getQuestions()
@@ -343,18 +376,6 @@ private fun MainScaffold(
 //                    )
 //                }
 
-                composable(route = Screen.BrowsingArticle.name) {
-                    ArticleBrowsingScreen(
-                        headers = headerItems,
-                        onCardClick = { itemTitle ->
-                            // Find the matching article by title
-                            val article = articles.find { it.heading == itemTitle }
-                            article?.let {
-                                navController.navigate("articleDetail/${it.articleId}")
-                            }
-                        }
-                    )
-                }
 
                 composable(route = Screen.Symptoms.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
