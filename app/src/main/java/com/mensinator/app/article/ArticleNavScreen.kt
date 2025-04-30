@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 //@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 //@Composable
@@ -50,11 +51,16 @@ import androidx.compose.ui.unit.dp
 //}
 
 @Composable
-fun CardView(card: CardItem, onCardClick: (String) -> Unit) {
+fun CardView(card: CardItem,
+             onCardClick: (String) -> Unit,
+             navController: NavHostController
+             ) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onCardClick(card.articleId) }
+            .clickable {
+                navController.navigate("articleDetail/${card.articleId}")
+            }
             .width(180.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

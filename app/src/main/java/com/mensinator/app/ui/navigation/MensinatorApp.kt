@@ -269,16 +269,15 @@ private fun MainScaffold(
                         }
                     )
                 }
+// Add this special composable route
+                // In your NavHost setup:
+                composable("articleDetail/{articleId}") { backStackEntry ->
+                    val articleId = backStackEntry.arguments?.getString("articleId")
+                    val article = articles.find { it.articleId == articleId }
 
-                composable(
-                    "articleDetail/{articleId}",
-                    arguments = listOf(navArgument("articleId") { type = NavType.StringType }
-                    ) { backStackEntry ->
-                        val articleId = backStackEntry.arguments?.getString("articleId")
-                        val article = articles.find { it.articleId == articleId }
-
-                        ArticleLayout(articles = listOf(article ?: return@composable))
-                    }
+                    // Your existing article display
+                    ArticleLayout(articles = listOf(article ?: return@composable))
+                }
 
                 composable(route = Screen.Questionnaire.name) {
                     val questions = Constants.getQuestions()

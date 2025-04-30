@@ -31,6 +31,7 @@ import com.mensinator.app.ui.theme.appWhite
 
 @Composable
 fun ArticleBrowsingScreen(
+    navController = navController,
     headers: List<HeaderItem>,
     onCardClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -55,7 +56,9 @@ fun ArticleBrowsingScreen(
                     items(header.items) {cardItem ->
                         Card(
                             modifier = Modifier
-                                .clickable { onCardClick(cardItem.articleId) }
+                                .clickable {
+                                    navController.navigate("articleDetail/${cardItem.articleId}")
+                                }
                                 .padding(8.dp)
                                 .width(180.dp),
                             elevation = CardDefaults.cardElevation(4.dp)
