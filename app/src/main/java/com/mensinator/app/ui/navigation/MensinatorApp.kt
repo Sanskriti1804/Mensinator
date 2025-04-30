@@ -62,12 +62,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.mensinator.app.R
 import com.mensinator.app.article.ArticleBrowsingScreen
+import com.mensinator.app.article.ArticleLayout
+import com.mensinator.app.article.articles
 import com.mensinator.app.article.headerItems
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
@@ -153,7 +157,6 @@ fun MensinatorApp(
         }
     )
 }
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -233,23 +236,15 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
-                composable(route = Screen.Article.name) {
-                    Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                title = { /* No text, just leave this empty */ },
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = Color.White, // or your custom white from Color.kt
-                                    titleContentColor = Color.Transparent // makes sure even accidental title stays invisible
-                                )
-                            )
-                        },
-                        contentWindowInsets = WindowInsets(0.dp),
-                    ) { topBarPadding ->
-                        Column(modifier = Modifier.padding(topBarPadding)) {
-//                            com.mensinator.app.article.ArticleNavScreen()
-                        }
-                    }
+                composable(
+                    "articleDetail/{articleId}",
+                    arguments = listOf(navArgument("articleId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val articleId = backStackEntry.arguments?.getString("articleId")
+                    val article = articles.find { it.articleId == articleId }
+
+                    // Use your existing ArticleLayout
+                    ArticleLayout(articles = listOf(article ?: return@composable))
                 }
 
                 composable(route = Screen.Questionnaire.name) {
@@ -351,8 +346,12 @@ private fun MainScaffold(
                 composable(route = Screen.BrowsingArticle.name) {
                     ArticleBrowsingScreen(
                         headers = headerItems,
-                        onCardClick = { item ->
-                            // Handle card click here
+                        onCardClick = { itemTitle ->
+                            // Find the matching article by title
+                            val article = articles.find { it.heading == itemTitle }
+                            article?.let {
+                                navController.navigate("articleDetail/${it.articleId}")
+                            }
                         }
                     )
                 }
