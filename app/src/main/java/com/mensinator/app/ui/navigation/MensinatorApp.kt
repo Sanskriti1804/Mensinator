@@ -1,10 +1,5 @@
 package com.mensinator.app.ui.navigation
 
-//import kotlinx.coroutines.launch
-//import SignUpScreen
-//import com.mensinator.app.user.AuthViewModel
-//import com.mensinator.app.user.LoginScreen
-//import com.google.android.gms.common.util.CollectionUtils.listOf
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
@@ -23,6 +18,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -38,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
@@ -53,6 +50,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -94,10 +92,6 @@ enum class Screen(@StringRes val titleRes: Int) {
     Settings(R.string.settings_page),
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
-
-//    LoginScreen(R.string.login_title),  // New screen
-
-    //    SignUpScreen(R.string.signup_title),
     Questionnaire(R.string.questionnaire_title);
 
 
@@ -124,8 +118,6 @@ fun MensinatorApp(
 
     LaunchedEffect(Unit) {
         launch {
-            // If protectScreen is 1, it should protect the screen
-            // If protectScreen is 0, should not protect screen (allows screenshots and screen visibility in recent apps)
             val protectScreen =
                 (dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1) == 1
             onScreenProtectionChanged(protectScreen)
@@ -200,21 +192,39 @@ private fun MainScaffold(
             bottomBar = {
                 if (!isMediumExpandedWWSC) {
                     NavigationBar(
+                        containerColor = com.mensinator.app.ui.theme.appDRed, // Red background
+                        modifier = Modifier
+                            .height(70.dp) // Smaller height
+                            .shadow(elevation = 8.dp) // Add elevation
                     ) {
                         navigationItems.forEach { item ->
                             NavigationBarItem(
                                 selected = currentScreen == item.screen,
                                 onClick = { onItemClick(item) },
-                                icon = { NavigationItemIcon(currentScreen, item) }
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(
+                                            id = if (currentScreen == item.screen) item.imageSelected
+                                            else item.imageUnSelected
+                                        ),
+                                        contentDescription = stringResource(item.screen.titleRes),
+                                        modifier = Modifier.size(24.dp) // Smaller icons
+                                    )
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = Color.White, // White when selected
+                                    unselectedIconColor = Color.White.copy(alpha = 0.7f), // Slightly transparent when unselected
+                                    indicatorColor = Color.Red.copy(alpha = 0.5f) // Selection indicator
+                                )
                             )
                         }
                     }
                 }
-            },
+            }
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Calendar.name,
+                startDestination = Screen.Splash.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -222,32 +232,6 @@ private fun MainScaffold(
                 composable(Screen.Splash.name) {
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
-
-//                composable(Screen.LoginScreen.name) {
-//                    val authViewModel: AuthViewModel = viewModel()
-//
-//                    LoginScreen(
-//                        viewModel = authViewModel,
-//                        onNavigateToCalender = {
-//                            navController.navigate(Screen.Calendar.name)
-//                        },
-//                        onNavigateToSignUp = {
-//                            navController.navigate(Screen.SignUpScreen.name)
-//                        }
-//                    )
-//                }
-
-//                composable(Screen.SignUpScreen.name) {
-//                    val authViewModel: AuthViewModel = viewModel()
-//
-//                    SignUpScreen(
-//                        viewModel = authViewModel,
-//                        onNavigateToCalender = {
-//                            navController.navigate(Screen.Calendar.name)
-//                        },
-//                    )
-//                }
-
 
                 composable(route = Screen.Article.name) {
                     Scaffold(
@@ -280,7 +264,7 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 titleStringId = currentScreen.titleRes,
-                                textColor = Color.Red
+                                textColor = com.mensinator.app.ui.theme.appDRed
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -305,7 +289,7 @@ private fun MainScaffold(
                             MensinatorTopBar(
                                 titleStringId = currentScreen.titleRes,
                                 onTitleClick = toolbarOnClick,
-                                textColor = Color.Red,
+                                textColor = com.mensinator.app.ui.theme.appDRed,
                                 textStyle = TextStyle(
                                     fontFamily = FontFamily(Font(R.font.appfont)),
                                     fontSize = 36.sp,

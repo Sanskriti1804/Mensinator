@@ -212,7 +212,7 @@ private fun CalendarTopHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(horizontal = 24.dp, vertical = 12.dp)
+            .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
         // Weekday name
         Text(
@@ -222,7 +222,7 @@ private fun CalendarTopHeader(
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = headingFont,
                 color = Color.Gray,
-                fontSize = 25.sp
+                fontSize = 20.sp
             )
         )
 
@@ -247,8 +247,8 @@ private fun CalendarTopHeader(
                     text = todayDate.month.name,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp, // Increased font size
-                        letterSpacing = 2.sp,
+                        fontSize = 25.sp, // Increased font size
+                        letterSpacing = 1.sp,
                         fontFamily = headingFont,
                         color = com.mensinator.app.ui.theme.appDRed
                     )
@@ -274,7 +274,7 @@ private fun CalendarTopHeader(
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = Color.Red,
                         fontFamily = headingFont,
-                        fontSize = 25.sp
+                        fontSize = 15.sp
                     )
                 )
             }
