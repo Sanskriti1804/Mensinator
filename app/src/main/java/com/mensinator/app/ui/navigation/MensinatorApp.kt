@@ -1,5 +1,6 @@
 package com.mensinator.app.ui.navigation
 
+import ArticleListScreen
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
@@ -69,6 +70,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.R
 import com.mensinator.app.article.ArticleBrowsingScreen
+import com.mensinator.app.article.ArticleLayout
+import com.mensinator.app.article.articles
 import com.mensinator.app.article.headers
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
@@ -118,9 +121,9 @@ fun MensinatorApp(
     }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = Screen.valueOf(
-        backStackEntry?.destination?.route ?: Screen.Calendar.name
-    )
+    val currentScreen = backStackEntry?.destination?.route?.let { route ->
+        Screen.values().find { it.name == route.substringBefore('/') } ?: Screen.Calendar
+    } ?: Screen.Calendar
 
     val activity = LocalActivity.current ?: return
     val windowSizeClass = calculateWindowSizeClass(activity)

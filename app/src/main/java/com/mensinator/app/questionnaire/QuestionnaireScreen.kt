@@ -4,13 +4,16 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,6 +23,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,7 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mensinator.app.ui.theme.appDRed
+import com.mensinator.app.ui.theme.appGray
 
 @Composable
 fun QuestionnaireScreen(
@@ -50,36 +59,74 @@ fun QuestionnaireScreen(
         label = "ProgressAnimation"
     )
 
-    Column(modifier = Modifier.padding(16.dp, top = 78.dp)) {
-        AnimatedProgressBar(progress = progress)
-        Spacer(modifier = Modifier.height(16.dp))
+    Column(
+        modifier = Modifier
+            .padding(16.dp, top = 78.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Progress bar with centered width (not full width)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.9f) // 90% of screen width
+                .padding(horizontal = 20.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            AnimatedProgressBar(progress = progress)
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
 
         if (currentQuestionIndex < questions.size) {
             val question = questions[currentQuestionIndex]
 
-            QuestionItemWithAnswerCapture(
-                question = question,
-                initialAnswer = answers[question.id.toString()] ?: "",
-                onAnswerChanged = { newAnswer ->
-                    answers[question.id.toString()] = newAnswer
-                }
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp) // Add horizontal padding
+            ) {
+                // Question text - centered and bold
+                Text(
+                    text = question.question,
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 24.dp),
+                    textAlign = TextAlign.Center // Ensure text is centered
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                // Text field with red border
+                var answer by remember { mutableStateOf(answers[question.id.toString()] ?: "") }
+                OutlinedTextField(
+                    value = answer,
+                    onValueChange = {
+                        answer = it
+                        answers[question.id.toString()] = it
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f), // 90% of available width
+                    shape = RoundedCornerShape(8.dp),
+                )
+            }
 
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Navigation buttons row
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 22.dp), // Add horizontal padding
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 if (currentQuestionIndex > 0) {
                     NavigationButton(
                         onClick = { currentQuestionIndex-- },
                         icon = Icons.Default.ArrowBack,
-                        text = "Back",
-                        containerColor = Color.Gray,
-                        modifier = Modifier.weight(1f)
+                        containerColor = appGray,
+                        modifier = Modifier.size(56.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                } else {
+                    Spacer(modifier = Modifier.size(56.dp)) // Maintain spacing
                 }
 
                 NavigationButton(
@@ -92,10 +139,8 @@ fun QuestionnaireScreen(
                     },
                     icon = if (currentQuestionIndex < questions.size - 1)
                         Icons.Default.ArrowForward else Icons.Default.Check,
-                    text = if (currentQuestionIndex < questions.size - 1) "Next" else "Submit",
-                    containerColor = if (currentQuestionIndex < questions.size - 1)
-                        Color.Blue else Color.Green,
-                    modifier = Modifier.weight(1f)
+                    containerColor = appDRed,
+                    modifier = Modifier.size(56.dp)
                 )
             }
         }
@@ -108,10 +153,10 @@ fun AnimatedProgressBar(progress: Float) {
         progress = { progress },
         modifier = Modifier
             .fillMaxWidth()
-            .height(8.dp)
+            .height(14.dp)
             .clip(RoundedCornerShape(4.dp)),
-        color = Color(0xFFFF5252),
-        trackColor = Color(0xFFEEEEEE),
+        color = appDRed,
+        trackColor = appGray,
     )
 }
 
@@ -119,20 +164,21 @@ fun AnimatedProgressBar(progress: Float) {
 fun NavigationButton(
     onClick: () -> Unit,
     icon: ImageVector,
-    text: String,
     containerColor: Color,
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
+        shape = CircleShape, // Make button circular
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(0.dp) // Remove internal padding
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = text, tint = Color.White)
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = text, color = Color.White)
-        }
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = Color.White,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }
