@@ -31,6 +31,7 @@ fun ArticleBrowsingScreen(
     navController: NavController,
     headers: List<HeaderItem>,
     modifier: Modifier = Modifier,
+    onCardClick: (String) -> Unit,
     headerBackgroundColor: Color = MaterialTheme.colorScheme.primary,
     cardBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentPadding: PaddingValues = PaddingValues(16.dp)
@@ -54,8 +55,7 @@ fun ArticleBrowsingScreen(
                             card = card,
                             backgroundColor = cardBackgroundColor,
                             onClick = {
-                                navController.navigate("articleDetail/${card.articleId}")
-                            }
+                                onCardClick(card.articleId)                       }
                         )
                     }
                 }
