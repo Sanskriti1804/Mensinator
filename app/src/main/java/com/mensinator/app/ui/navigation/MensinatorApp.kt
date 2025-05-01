@@ -310,7 +310,10 @@ private fun MainScaffold(
 
                         ArticleBrowsingScreen(
                             navController = navController,
-                            headers = headers  // Make sure 'headers' is available in this scope
+                            headers = headers,
+                            onCardClick = { articleId ->  // Add this parameter
+                                navController.navigate("${Screen.Article.name}/$articleId")
+                            }
                         )
                     }
                 }
