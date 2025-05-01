@@ -238,6 +238,7 @@ private fun MainScaffold(
                     SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
                 }
 
+<<<<<<< HEAD
 //                composable(route = Screen.BrowsingArticle.name) {
 //                    ArticleBrowsingScreen(
 //                        headers = headerItems,
@@ -278,6 +279,16 @@ private fun MainScaffold(
                     val article = articles.find { it.articleId == articleId }
 
                     // Your existing article display
+=======
+                composable(
+                    "articleDetail/{articleId}",
+                    arguments = listOf(navArgument("articleId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val articleId = backStackEntry.arguments?.getString("articleId")
+                    val article = articles.find { it.articleId == articleId }
+
+                    // Use your existing ArticleLayout
+>>>>>>> parent of 9c955de (check error)
                     ArticleLayout(articles = listOf(article ?: return@composable))
                 }
 
@@ -378,6 +389,7 @@ private fun MainScaffold(
 //                }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 composable(route = Screen.BrowsingArticle.name) {
                     Column(modifier = Modifier.fillMaxSize()) {
                         // Add the heading
@@ -404,6 +416,20 @@ private fun MainScaffold(
                 }
 =======
 >>>>>>> 7f8a21ea243d73dd326868197306f453780ec871
+=======
+                composable(route = Screen.BrowsingArticle.name) {
+                    ArticleBrowsingScreen(
+                        headers = headerItems,
+                        onCardClick = { itemTitle ->
+                            // Find the matching article by title
+                            val article = articles.find { it.heading == itemTitle }
+                            article?.let {
+                                navController.navigate("articleDetail/${it.articleId}")
+                            }
+                        }
+                    )
+                }
+>>>>>>> parent of 9c955de (check error)
 
                 composable(route = Screen.Symptoms.name) {
                     // Adapted from https://stackoverflow.com/a/71191082/3991578
