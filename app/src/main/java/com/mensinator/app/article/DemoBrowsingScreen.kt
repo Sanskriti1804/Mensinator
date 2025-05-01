@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.mensinator.app.ui.theme.appDRed
+import com.mensinator.app.ui.theme.appWhite
 
 @Composable
 fun ArticleBrowsingScreen(
@@ -40,7 +43,7 @@ fun ArticleBrowsingScreen(
             item {
                 StickyHeader(
                     headerTitle = header.title,
-                    backgroundColor = headerBackgroundColor
+                    backgroundColor = appWhite
                 )
             }
             item {
@@ -78,7 +81,7 @@ fun ArticleCard(
             .padding(8.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
+            containerColor = appDRed
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -104,17 +107,41 @@ fun StickyHeader(
     headerTitle: String,
     backgroundColor: Color
 ) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(backgroundColor)
-            .padding(16.dp)
     ) {
-        Text(
-            text = headerTitle,
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+        // Top Divider 🖤
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Black)
+        )
+
+        // Header Title 📛 (center aligned vertically)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp), // fixed height for proper vertical centering
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = headerTitle,
+                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        // Bottom Divider 🖤
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Black)
         )
     }
 }
+
