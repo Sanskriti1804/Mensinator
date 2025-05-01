@@ -1,6 +1,7 @@
 package com.mensinator.app.article
 
 object ArticleOne {
+    val id = 1
     val heading = "How Does the Menstrual Cycle Affect Skin Health?\n"
     val article = """
 ❓ Why does my skin change during my period?
@@ -54,6 +55,7 @@ Yes. Conditions like eczema, rosacea, and psoriasis can also flare around the me
 }
 
 object ArticleTwo {
+    val id = 2
     val heading = "How Does Food Affect the Menstrual Cycle?\n"
     val article = """
 ❓ What is PMS (Premenstrual Syndrome)?
@@ -125,6 +127,7 @@ Yes! A healthy diet rich in vitamins (like B vitamins, magnesium, and omega-3s) 
 }
 
 object ArticleThree {
+    val id = 3
     val heading = "How Does PMS and Mood Change Throughout the Menstrual Cycle?\n"
     val article = """
 ❓ What is PMS (Premenstrual Syndrome)?
@@ -196,6 +199,7 @@ Yes! A healthy diet rich in vitamins (like B vitamins, magnesium, and omega-3s) 
 }
 
 object ArticleFour {
+    val id = 4
     val heading = "What Happens During Ovulation?\n"
     val article = """
 ❓ What is ovulation?
@@ -244,12 +248,6 @@ Let me know if you'd like another topic covered in this style!
 
 
 
-You said:
-in this add sexual health too
-
-
-ChatGPT said:
-Certainly! Here's the updated FAQ-style explanation on ovulation, incorporating sexual health as well:
 
 FAQ: What Happens During Ovulation?
 ❓ What is ovulation?
@@ -305,6 +303,7 @@ Age: As people age, particularly after 35, ovulation may become less frequent, a
     """.trimIndent()
 
     object ArticleTwenty {
+        val id = 20
         val heading = "Why Track Your Periods?"
         val article = """
 ❓ Why should I track my periods?
@@ -338,6 +337,7 @@ When you track your period, you're taking charge of your health. You’re empowe
 }
 
 object ArticleFive {
+    val id = 5
     val heading = "Why Track Your Periods? "
     val article = """
 ❓ Why should I track my periods?
@@ -370,6 +370,7 @@ When you track your period, you're taking charge of your health. You’re empowe
 }
 
 object ArticleSix {
+    val id = 6
     val heading = "Contraception and Periods – What You Need to Know\n"
     val article = """
 ❓ How do contraceptives affect periods?
@@ -438,6 +439,7 @@ Using contraception to manage or skip periods is generally safe, but it’s impo
 }
 
 object ArticleSeven {
+    val id = 7
     val heading = "Contraception Education: A Quick Guide to Methods and Choosing the Right One\n"
     val article = """
 What is Contraception?
@@ -497,6 +499,7 @@ Choosing the right contraception helps you prevent unwanted pregnancies, regulat
 }
 
 object ArticleEight {
+    val id = 8
     val heading = "How Discharge Changes According to the Menstrual Cycle\n"
     val article = """
 Vaginal discharge is a natural and healthy part of the menstrual cycle. It helps keep the vagina clean and plays a role in fertility. The consistency, amount, and color of discharge change throughout the cycle, and these changes can give important insights into your overall health. Let’s break it down by each phase of the menstrual cycle.
@@ -575,6 +578,7 @@ Monitor the impact of lifestyle or medication changes.
 }
 
 object ArticleNine {
+    val id = 9
     val heading = "Period Color: What Does It Mean and Should You Be Worried?\n"
     val article = """
 ❓ What does the color of my period blood mean? Should I be worried?
@@ -630,6 +634,7 @@ Tracking helps you understand what's normal for your body, making it easier to i
 }
 
 object ArticleTen {
+    val id = 10
     val heading = "Irregular Periods and Abnormal Blood Flow: What You Should Know"
     val article = """
 ❓ What does it mean if my period doesn't stop or lasts longer than usual?
@@ -690,6 +695,7 @@ These could be signs of conditions like PCOS, endometriosis, fibroids, or other 
 }
 
 object ArticleEleven {
+    val id = 11
     val heading = "Self-Care During Your Period: How to Take Care of Yourself\n"
     val article = """
 ❓ Why is self-care important during my period?
@@ -740,6 +746,7 @@ Work-life balance: If you’re able, adjust your schedule to include some self-c
 }
 
 object ArticleTwelve {
+    val id = 12
     val heading = "Fertility, Periods, and Sexual Health: Understanding the Connection\n"
     val article = """
         Fertility, Periods, and Sexual Health: Understanding the Connection
@@ -802,6 +809,7 @@ object ArticleTwelve {
 }
 
 object ArticleOneThree {
+    val id = 13
     val heading = "PCOS and Other Health Conditions: What You Need to Know\n"
     val article = """
        PCOS and Other Health Conditions: What You Need to Know
@@ -888,6 +896,7 @@ object ArticleOneThree {
 }
 
 object ArticleOneFour {
+    val id = 14
     val heading = "Cramps During Your Period: What’s Normal and When to Worry\n"
     val article = """
        Cramps During Your Period: What’s Normal and When to Worry
@@ -953,6 +962,7 @@ object ArticleOneFour {
 }
 
 object ArticleOneFive {
+    val id = 15
     val heading = "Debunking Common Period Myths\n"
     val article = """
        Debunking Common Period Myths
@@ -992,6 +1002,7 @@ object ArticleOneFive {
 }
 
 object ArticleOneSix {
+    val id = 16
     val heading = "Debunking Period Myths and Superstitions in Desi Culture\n"
     val article = """
        Debunking Period Myths and Superstitions in Desi Culture
@@ -1031,6 +1042,7 @@ object ArticleOneSix {
 }
 
 object ArticleOneSeven {
+    val id = 17
     val heading = "What It Is, What It Feels Like, and What You Should Know\n"
     val article = """
        🌸 FAQ: Menopause — What It Is, What It Feels Like, and What You Should Know
@@ -1159,6 +1171,7 @@ object ArticleOneSeven {
 }
 
 object ArticleOneEight {
+    val id = 18
     val heading = "Physical Effects on the Body During Your Period — What’s Really Happening?\n"
     val article = """
        🩸 FAQ: Physical Effects on the Body During Your Period — What’s Really Happening?
@@ -1251,6 +1264,7 @@ object ArticleOneEight {
 }
 
 object ArticleOneNine {
+    val id = 19
     val heading = "Period Products, Hygiene, and How to Choose the Best Option for You\n"
     val article = """
        When it comes to period products, choosing the right option not only affects your comfort and convenience but also your hygiene. Maintaining proper hygiene during your period is crucial for preventing irritation, infections, and discomfort. Here's a breakdown of popular period products, hygiene practices, and tips for choosing the best option for your needs.

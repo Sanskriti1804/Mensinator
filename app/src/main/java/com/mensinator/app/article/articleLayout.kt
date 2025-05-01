@@ -22,15 +22,10 @@ import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.appWhite
 
 @Composable
-fun ArticleLayout(
-    articles: List<Article>
-) {
-    val headingFont = FontFamily(
-        Font(R.font.secfont) // use your actual file
-    )
-    val contentFont = FontFamily(
-        Font(R.font.textfont) // use your actual file
-    )
+fun ArticleLayout(article: Article) {  // Takes a SINGLE article, not a list
+    val headingFont = FontFamily(Font(R.font.secfont))
+    val contentFont = FontFamily(Font(R.font.textfont))
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +33,7 @@ fun ArticleLayout(
             .padding(8.dp),
         contentPadding = PaddingValues(bottom = 8.dp)
     ) {
-        items(articles) { article ->
+        item {  // Only one item since we're showing a single article
             Text(
                 text = article.heading,
                 fontFamily = headingFont,
@@ -56,10 +51,7 @@ fun ArticleLayout(
                 fontSize = 24.sp,
                 lineHeight = 30.sp,
                 color = appBlack,
-
-//                modifier = Modifier.padding(bottom = 8.dp)
             )
         }
     }
 }
-

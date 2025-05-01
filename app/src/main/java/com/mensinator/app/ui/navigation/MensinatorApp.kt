@@ -90,6 +90,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     HormoneGraph(R.string.hormone_chart_title),
     Statistic(R.string.statistics_title),
     Settings(R.string.settings_page),
+    ArticleList(R.string.article_list_title),
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
     Questionnaire(R.string.questionnaire_title)
@@ -308,6 +309,25 @@ private fun MainScaffold(
                             navController = navController,
                             headers = headers  // Make sure 'headers' is available in this scope
                         )
+                    }
+                }
+
+                composable(Screen.ArticleList.name) {
+                    ArticleListScreen(
+                        articles = articles,  // Your predefined list of articles
+                        onArticleClick = { articleId ->
+                            navController.navigate("${Screen.Article.name}/$articleId")
+                        }
+                    )
+                }
+
+                composable("${Screen.Article.name}/{articleId}") { backStackEntry ->
+                    val articleId = backStackEntry.arguments?.getString("articleId")
+                    val article = articles.find { it.articleId == articleId }
+                    if (article != null) {
+                        ArticleLayout(article = article)
+                    } else {
+                        Text("Article not found!")
                     }
                 }
 

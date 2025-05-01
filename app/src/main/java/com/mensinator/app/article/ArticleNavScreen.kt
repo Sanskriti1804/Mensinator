@@ -19,37 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
-//@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
-//@Composable
-//fun StickyHeaderPage(headers: List<HeaderItem>, onCardClick: (String) -> Unit) {
-//    LazyColumn {
-//        headers.forEach { header ->
-//            stickyHeader {
-//                // Sticky Header Layout
-//                Text(
-//                    text = header.title,
-//                    style = MaterialTheme.typography.headlineSmall,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(16.dp)
-//                )
-//            }
-//            item {
-//                // Horizontal list of cards for each header
-//                LazyRow(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(horizontal = 8.dp)
-//                ) {
-//                    items(header.cards) { card ->
-//                        CardView(card, onCardClick)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
 @Composable
 fun CardView(card: CardItem,
              onCardClick: (String) -> Unit,
