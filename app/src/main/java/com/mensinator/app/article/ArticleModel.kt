@@ -117,7 +117,7 @@ val articles = listOf(
 
 val headers = listOf(
     HeaderItem(
-        title = "1.Body & Physical Health\n",
+        title = "Body & Physical Health\n",
         cards = listOf(
             CardItem("1", ArticleOne.heading),
             CardItem("4", ArticleFour.heading),
@@ -130,7 +130,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "2.Mood, PMS & Mental Health\n",
+        title = "Mood, PMS & Mental Health\n",
         cards = listOf(
             CardItem("3", ArticleThree.heading),
             CardItem("11", ArticleEleven.heading),
@@ -139,7 +139,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "3.Food & Lifestyle\n",
+        title = "Food & Lifestyle\n",
         cards = listOf(
             CardItem("2", ArticleTwo.heading),
             CardItem("11", ArticleEleven.heading),
@@ -147,7 +147,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "4.Sexual & Reproductive Health\n",
+        title = "Sexual & Reproductive Health\n",
         cards = listOf(
             CardItem("12", ArticleTwelve.heading),
             CardItem("4", ArticleFour.heading),
@@ -156,7 +156,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "5.Contraception & Protection\n",
+        title = "Contraception & Protection\n",
         cards = listOf(
             CardItem("6", ArticleSix.heading),
             CardItem("7", ArticleSeven.heading),
@@ -164,7 +164,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "6.Period Tracking & Awareness\n",
+        title = "Period Tracking & Awareness\n",
         cards = listOf(
             CardItem("20", ArticleFour.ArticleTwenty.heading),  // Fixed reference
             CardItem("10", ArticleTen.heading),
@@ -172,7 +172,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "7.Skin, Glow & Beauty\n",
+        title = "Skin, Glow & Beauty\n",
         cards = listOf(
             CardItem("1", ArticleOne.heading),
             CardItem("2", ArticleTwo.heading),
@@ -180,7 +180,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "8.Hygiene & Products\n",
+        title = "Hygiene & Products\n",
         cards = listOf(
             CardItem("19", ArticleOneNine.heading),
             CardItem("8", ArticleEight.heading),
@@ -188,7 +188,7 @@ val headers = listOf(
         )
     ),
     HeaderItem(
-        title = "9.Culture, Myths & Beliefs\n",
+        title = "Culture, Myths & Beliefs\n",
         cards = listOf(
             CardItem("15", ArticleOneFive.heading),
             CardItem("16", ArticleOneSix.heading)

@@ -83,6 +83,7 @@ import com.mensinator.app.statistics.HormoneCycleChart
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
+import com.mensinator.app.ui.theme.appDRed
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -303,6 +304,7 @@ private fun MainScaffold(
                             text = "FAQ and Guides",
                             style = MaterialTheme.typography.headlineLarge,
                             fontWeight = FontWeight.Bold,
+                            color = appDRed,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp)

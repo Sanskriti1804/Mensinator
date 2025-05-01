@@ -58,7 +58,8 @@ fun ArticleBrowsingScreen(
                             card = card,
                             backgroundColor = cardBackgroundColor,
                             onClick = {
-                                onCardClick(card.articleId)                       }
+                                onCardClick(card.articleId)
+                            }
                         )
                     }
                 }
@@ -96,7 +97,8 @@ fun ArticleCard(
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = Color.White
             )
         }
     }
@@ -112,20 +114,19 @@ fun StickyHeader(
             .fillMaxWidth()
             .background(backgroundColor)
     ) {
-        // Top Divider 🖤
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
                 .background(Color.Black)
         )
-
-        // Header Title 📛 (center aligned vertically)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp), // fixed height for proper vertical centering
-            contentAlignment = Alignment.Center
+                .height(48.dp)
+                .padding(top = 8.dp, start = 16.dp),
+            contentAlignment = Alignment.CenterStart
         ) {
             Text(
                 text = headerTitle,
@@ -135,7 +136,6 @@ fun StickyHeader(
             )
         }
 
-        // Bottom Divider 🖤
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -144,4 +144,3 @@ fun StickyHeader(
         )
     }
 }
-
