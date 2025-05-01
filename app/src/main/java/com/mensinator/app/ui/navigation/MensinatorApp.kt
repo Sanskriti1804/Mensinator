@@ -63,17 +63,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.mensinator.app.R
 import com.mensinator.app.article.ArticleBrowsingScreen
-import com.mensinator.app.article.ArticleLayout
-import com.mensinator.app.article.articles
-import com.mensinator.app.article.headerItems
+import com.mensinator.app.article.headers
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.questionnaire.Constants
@@ -87,7 +83,6 @@ import com.mensinator.app.ui.theme.UiConstants
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-
 enum class Screen(@StringRes val titleRes: Int) {
     Splash(R.string.app_name),
     Calendar(R.string.calendar_title),
@@ -97,17 +92,9 @@ enum class Screen(@StringRes val titleRes: Int) {
     Settings(R.string.settings_page),
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
-    Questionnaire(R.string.questionnaire_title);
-
-
+    Questionnaire(R.string.questionnaire_title)
 }
 
-/**
- * The displayCutout insets are necessary for landscape usage, so that the UI is not behind the camera.
- *
- * At MensinatorTopBar, the statusBars insets are used. But as it's only a siblings view,
- * it is not treated as consumed. Thus, on the individual screens, we have to exclude it.
- */
 @Composable
 fun Modifier.displayCutoutExcludingStatusBarsPadding() =
     windowInsetsPadding(WindowInsets.displayCutout.exclude(WindowInsets.statusBars))
@@ -117,7 +104,7 @@ fun Modifier.displayCutoutExcludingStatusBarsPadding() =
 @Composable
 fun MensinatorApp(
     navController: NavHostController = rememberNavController(),
-    onScreenProtectionChanged: (Boolean) -> Unit?,
+    onScreenProtectionChanged: (Boolean) -> Unit?
 ) {
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
@@ -170,7 +157,6 @@ private fun MainScaffold(
     isMediumExpandedWWSC: Boolean,
     onItemClick: (NavigationItem) -> Unit
 ) {
-
     Row {
         if (isMediumExpandedWWSC) {
             NavigationRail(
@@ -197,10 +183,10 @@ private fun MainScaffold(
             bottomBar = {
                 if (!isMediumExpandedWWSC) {
                     NavigationBar(
-                        containerColor = com.mensinator.app.ui.theme.appDRed, // Red background
+                        containerColor = com.mensinator.app.ui.theme.appDRed,
                         modifier = Modifier
-                            .height(70.dp) // Smaller height
-                            .shadow(elevation = 8.dp) // Add elevation
+                            .height(70.dp)
+                            .shadow(elevation = 8.dp)
                     ) {
                         navigationItems.forEach { item ->
                             NavigationBarItem(
@@ -213,13 +199,13 @@ private fun MainScaffold(
                                             else item.imageUnSelected
                                         ),
                                         contentDescription = stringResource(item.screen.titleRes),
-                                        modifier = Modifier.size(24.dp) // Smaller icons
+                                        modifier = Modifier.size(24.dp)
                                     )
                                 },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Color.White, // White when selected
-                                    unselectedIconColor = Color.White.copy(alpha = 0.7f), // Slightly transparent when unselected
-                                    indicatorColor = Color.Red.copy(alpha = 0.5f) // Selection indicator
+                                    selectedIconColor = Color.White,
+                                    unselectedIconColor = Color.White.copy(alpha = 0.7f),
+                                    indicatorColor = Color.Red.copy(alpha = 0.5f)
                                 )
                             )
                         }
@@ -235,64 +221,10 @@ private fun MainScaffold(
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
             ) {
                 composable(Screen.Splash.name) {
-                    SplashScreen(navController) // 👈 THIS LINE, cutie! Your splash is HERE 🫦
+                    SplashScreen(navController)
                 }
 
-<<<<<<< HEAD
-//                composable(route = Screen.BrowsingArticle.name) {
-//                    ArticleBrowsingScreen(
-//                        headers = headerItems,
-//                        onCardClick = { itemTitle ->
-//                            // Find the matching article by title
-//                            val article = articles.find { it.heading == itemTitle }
-//                            article?.let {
-//                                navController.navigate("articleDetail/${it.articleId}")
-//                            }
-//                        }
-//                    )
-//                }
-//
-//
-//                composable(
-//                    "articleDetail/{articleId}",
-//                    arguments = listOf(navArgument("articleId") { type = NavType.StringType })
-//                ) { backStackEntry ->
-//                    val articleId = backStackEntry.arguments?.getString("articleId")
-//                    val article = articles.find { it.articleId == articleId }
-//
-//                    // Use your existing ArticleLayout
-//                    ArticleLayout(articles = listOf(article ?: return@composable))
-//                }
-
-                composable(route = Screen.BrowsingArticle.name) {
-                    ArticleBrowsingScreen(
-                        headers = headerItems,
-                        onCardClick = { articleId ->
-                            navController.navigate("articleDetail/$articleId")
-                        }
-                    )
-                }
-// Add this special composable route
-                // In your NavHost setup:
-                composable("articleDetail/{articleId}") { backStackEntry ->
-                    val articleId = backStackEntry.arguments?.getString("articleId")
-                    val article = articles.find { it.articleId == articleId }
-
-                    // Your existing article display
-=======
-                composable(
-                    "articleDetail/{articleId}",
-                    arguments = listOf(navArgument("articleId") { type = NavType.StringType })
-                ) { backStackEntry ->
-                    val articleId = backStackEntry.arguments?.getString("articleId")
-                    val article = articles.find { it.articleId == articleId }
-
-                    // Use your existing ArticleLayout
->>>>>>> parent of 9c955de (check error)
-                    ArticleLayout(articles = listOf(article ?: return@composable))
-                }
-
-                composable(route = Screen.Questionnaire.name) {
+                composable(Screen.Questionnaire.name) {
                     val questions = Constants.getQuestions()
                     val onSubmit: (Map<String, String>) -> Unit = { answers ->
                         answers.forEach { (questionId, answer) ->
@@ -317,12 +249,9 @@ private fun MainScaffold(
                     }
                 }
 
-                composable(route = Screen.Calendar.name) {
-                    // Adapted from https://stackoverflow.com/a/71191082/3991578
+                composable(Screen.Calendar.name) {
                     val (toolbarOnClick, setToolbarOnClick) = remember {
-                        mutableStateOf<(() -> Unit)?>(
-                            null
-                        )
+                        mutableStateOf<(() -> Unit)?>(null)
                     }
                     Scaffold(
                         topBar = {
@@ -345,10 +274,12 @@ private fun MainScaffold(
                         )
                     }
                 }
-                composable(route = Screen.HormoneGraph.name) {
+
+                composable(Screen.HormoneGraph.name) {
                     HormoneCycleChart()
                 }
-                composable(route = Screen.Statistic.name) {
+
+                composable(Screen.Statistic.name) {
                     Scaffold(
                         topBar = {
                             MensinatorTopBar(
@@ -361,38 +292,9 @@ private fun MainScaffold(
                         StatisticsScreen(modifier = Modifier.padding(topBarPadding))
                     }
                 }
-//                composable(Screen.BrowseArticles.name) {
-//                    val headers = listOf(
-//                        HeaderItem(
-//                            title = "For You",
-//                            cards = listOf(
-//                                CardItem("Boost Your Sleep", "sleep"),
-//                                CardItem("Hydration Myths", "hydration")
-//                            )
-//                        ),
-//                        HeaderItem(
-//                            title = "Popular Reads",
-//                            cards = listOf(
-//                                CardItem("Workout Tips", "workout"),
-//                                CardItem("Mental Fitness", "mental")
-//                            )
-//                        )
-//                    )
-//
-//                    StickyHeaderPage(
-//                        headers = headers,
-//                        onCardClick = {
-////                                        articleId ->
-////                            navController.navigate("articleDetail/$articleId")
-//                        }
-//                    )
-//                }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-                composable(route = Screen.BrowsingArticle.name) {
+                composable(Screen.BrowsingArticle.name) {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        // Add the heading
                         Text(
                             text = "FAQ and Guides",
                             style = MaterialTheme.typography.headlineLarge,
@@ -403,37 +305,13 @@ private fun MainScaffold(
                         )
 
                         ArticleBrowsingScreen(
-                            headers = headerItems,
-                            onCardClick = { itemTitle ->
-                                // Find the matching article by title
-                                val article = articles.find { it.heading == itemTitle }
-                                article?.let {
-                                    navController.navigate("articleDetail/${it.articleId}")
-                                }
-                            }
+                            navController = navController,
+                            headers = headers  // Make sure 'headers' is available in this scope
                         )
                     }
                 }
-=======
->>>>>>> 7f8a21ea243d73dd326868197306f453780ec871
-=======
-                composable(route = Screen.BrowsingArticle.name) {
-                    ArticleBrowsingScreen(
-                        headers = headerItems,
-                        onCardClick = { itemTitle ->
-                            // Find the matching article by title
-                            val article = articles.find { it.heading == itemTitle }
-                            article?.let {
-                                navController.navigate("articleDetail/${it.articleId}")
-                            }
-                        }
-                    )
-                }
->>>>>>> parent of 9c955de (check error)
 
-                composable(route = Screen.Symptoms.name) {
-                    // Adapted from https://stackoverflow.com/a/71191082/3991578
-                    // Needed so that the action button can cause the dialog to be shown
+                composable(Screen.Symptoms.name) {
                     val (fabOnClick, setFabOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }
                     Scaffold(
                         floatingActionButton = {
@@ -466,7 +344,8 @@ private fun MainScaffold(
                         )
                     }
                 }
-                composable(route = Screen.Settings.name) {
+
+                composable(Screen.Settings.name) {
                     Scaffold(
                         topBar = {
                             MensinatorTopBar(
@@ -502,15 +381,12 @@ private fun NavigationItemIcon(
         item.imageUnSelected
     }
 
-    // Log if the resource ID is invalid (0x0)
     if (imageResource == 0) {
         Log.e("NavigationItem", "Invalid resource ID: $imageResource for screen: ${item.screen}")
     }
 
-    // Use a fallback if the resource is invalid
     val validImageResource = if (imageResource != 0) imageResource else R.drawable.logo
 
-    // Render the icon with the resource ID
     Icon(
         painter = painterResource(id = validImageResource),
         contentDescription = stringResource(item.screen.titleRes),
@@ -519,7 +395,6 @@ private fun NavigationItemIcon(
             .padding(4.dp)
     )
 }
-
 
 private val navigationItems = listOf(
     NavigationItem(
