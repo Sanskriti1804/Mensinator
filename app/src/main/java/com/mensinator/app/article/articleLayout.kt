@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mensinator.app.R
@@ -22,7 +22,7 @@ import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.appWhite
 
 @Composable
-fun ArticleLayout(article: Article) {  // Takes a SINGLE article, not a list
+fun ArticleLayout(article: Article) {
     val headingFont = FontFamily(Font(R.font.secfont))
     val contentFont = FontFamily(Font(R.font.textfont))
 
@@ -30,10 +30,10 @@ fun ArticleLayout(article: Article) {  // Takes a SINGLE article, not a list
         modifier = Modifier
             .fillMaxSize()
             .background(appWhite)
-            .padding(8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         contentPadding = PaddingValues(bottom = 8.dp)
     ) {
-        item {  // Only one item since we're showing a single article
+        item {
             Text(
                 text = article.heading,
                 fontFamily = headingFont,
@@ -41,7 +41,9 @@ fun ArticleLayout(article: Article) {  // Takes a SINGLE article, not a list
                 fontWeight = FontWeight.Bold,
                 color = appDRed,
                 lineHeight = 64.sp,
-                modifier = Modifier.padding(bottom = 8.dp, top = 2.dp)
+                modifier = Modifier
+                    .padding(top = 32.dp, bottom = 8.dp)  // Added top padding here
+                    .fillParentMaxWidth(),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -51,6 +53,7 @@ fun ArticleLayout(article: Article) {  // Takes a SINGLE article, not a list
                 fontSize = 24.sp,
                 lineHeight = 30.sp,
                 color = appBlack,
+                textAlign = TextAlign.Justify
             )
         }
     }
