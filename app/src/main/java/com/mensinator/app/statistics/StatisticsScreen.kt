@@ -74,30 +74,33 @@ fun StatisticsScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    // Horizontal scroll for the chart only
-                    LazyRow(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    Box(
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        item {
-                            HormoneCycleChart(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(this@BoxWithConstraints.maxWidth * 3), // Wider than screen
-                                periodStartDate = LocalDate.now()
-                            )
+                        // Horizontal scroll for the chart only
+                        LazyRow(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        ) {
+                            item {
+                                HormoneCycleChart(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .width(this@BoxWithConstraints.maxWidth * 3), // Keep 3x for visibility
+                                    periodStartDate = LocalDate.now()
+                                )
+                            }
                         }
                     }
                 }
 
-                // Title
+                // Rest of your content remains unchanged
                 Text(
                     text = "Your Stats",
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
                 )
 
-                // Horizontal scrolling stats cards
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -120,6 +123,7 @@ fun StatisticsScreen(
         }
     }
 }
+
 @Composable
 fun StatCard(
     value: String,
