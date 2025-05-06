@@ -1,10 +1,13 @@
 package com.mensinator.app.statistics
 
+import HormoneCycleChart
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,23 +33,10 @@ import com.mensinator.app.R
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
 import org.koin.androidx.compose.koinViewModel
+import java.time.LocalDate
 
 @Composable
 fun StatisticsScreen(
-    modifier: Modifier = Modifier,
-    viewModel: StatisticsViewModel = koinViewModel(),
-) {
-    val state = viewModel.viewState.collectAsStateWithLifecycle().value
-
-    LaunchedEffect(Unit) {
-        viewModel.refreshData()
-    }
-
-    StatisticsScreenContent(modifier, state)
-}
-
-@Composable
-private fun StatisticsScreenContent(
     modifier: Modifier = Modifier,
     state: StatisticsViewModel.ViewState
 ) {
@@ -76,7 +66,7 @@ private fun StatisticsScreenContent(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Graph section - full width Card
+                // Graph section - fixed card with scrollable content
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,14 +74,19 @@ private fun StatisticsScreenContent(
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(1.dp)
+                    // Horizontal scroll for the chart only
+                    LazyRow(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
-                        HormoneCycleChart(
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        item {
+                            HormoneCycleChart(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(this@BoxWithConstraints.maxWidth * 3), // Wider than screen
+                                periodStartDate = LocalDate.now()
+                            )
+                        }
                     }
                 }
 
@@ -102,7 +97,7 @@ private fun StatisticsScreenContent(
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
                 )
 
-                // Horizontal scrolling stats using LazyRow
+                // Horizontal scrolling stats cards
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,8 +111,8 @@ private fun StatisticsScreenContent(
                             label = label,
                             isHighlighted = label == stringResource(id = R.string.period_count),
                             modifier = Modifier
-                                .width(110.dp)  // Reduced width
-                                .height(160.dp) // Increased height
+                                .width(110.dp)
+                                .height(160.dp)
                         )
                     }
                 }
@@ -125,7 +120,6 @@ private fun StatisticsScreenContent(
         }
     }
 }
-
 @Composable
 fun StatCard(
     value: String,
@@ -167,7 +161,7 @@ fun StatCard(
 @Composable
 private fun StatisticsScreenPreview() {
     MensinatorTheme {
-        StatisticsScreenContent(
+        StatisticsScreen(
             state = StatisticsViewModel.ViewState(
                 trackedPeriods = "2",
                 averageCycleLength = "27.0 days",

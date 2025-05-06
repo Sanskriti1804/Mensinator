@@ -1,6 +1,7 @@
 package com.mensinator.app.ui.navigation
 
 import ArticleListScreen
+import HormoneCycleChart
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
@@ -62,6 +63,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -79,13 +81,15 @@ import com.mensinator.app.questionnaire.Constants
 import com.mensinator.app.questionnaire.QuestionnaireScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.splash.SplashScreen
-import com.mensinator.app.statistics.HormoneCycleChart
 import com.mensinator.app.statistics.StatisticsScreen
+import com.mensinator.app.statistics.StatisticsViewModel
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
 import com.mensinator.app.ui.theme.appDRed
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import java.time.LocalDate
 
 enum class Screen(@StringRes val titleRes: Int) {
     Splash(R.string.app_name),
@@ -188,7 +192,7 @@ private fun MainScaffold(
             bottomBar = {
                 if (!isMediumExpandedWWSC) {
                     NavigationBar(
-                        containerColor = com.mensinator.app.ui.theme.appDRed,
+                        containerColor = appDRed,
                         modifier = Modifier
                             .height(70.dp)
                             .shadow(elevation = 8.dp)
@@ -220,7 +224,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Questionnaire.name,
+                startDestination = Screen.Splash.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -241,7 +245,7 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 titleStringId = currentScreen.titleRes,
-                                textColor = com.mensinator.app.ui.theme.appDRed
+                                textColor = appDRed
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -263,7 +267,7 @@ private fun MainScaffold(
                             MensinatorTopBar(
                                 titleStringId = currentScreen.titleRes,
                                 onTitleClick = toolbarOnClick,
-                                textColor = com.mensinator.app.ui.theme.appDRed,
+                                textColor = appDRed,
                                 textStyle = TextStyle(
                                     fontFamily = FontFamily(Font(R.font.appfont)),
                                     fontSize = 36.sp,
@@ -281,10 +285,16 @@ private fun MainScaffold(
                 }
 
                 composable(Screen.HormoneGraph.name) {
-                    HormoneCycleChart()
+                    HormoneCycleChart(
+                        periodStartDate = LocalDate.now(),
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
 
                 composable(Screen.Statistic.name) {
+                    val viewModel: StatisticsViewModel = koinViewModel()
+                    val state by viewModel.viewState.collectAsStateWithLifecycle()
+
                     Scaffold(
                         topBar = {
                             MensinatorTopBar(
@@ -294,7 +304,10 @@ private fun MainScaffold(
                         },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
-                        StatisticsScreen(modifier = Modifier.padding(topBarPadding))
+                        StatisticsScreen(
+                            modifier = Modifier.padding(topBarPadding),
+                            state = state
+                        )
                     }
                 }
 
