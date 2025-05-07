@@ -34,7 +34,7 @@ fun MensinatorTopBar(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 25.dp, vertical = 16.dp)
+                .padding(horizontal = 22.dp, vertical = 12.dp)
                 .fillMaxWidth()
         ) {
             val modifier = onTitleClick?.let {

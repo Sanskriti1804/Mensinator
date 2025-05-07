@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -190,7 +191,7 @@ private fun MainScaffold(
 
         Scaffold(
             bottomBar = {
-                if (!isMediumExpandedWWSC) {
+                if (!isMediumExpandedWWSC && currentScreen != Screen.Splash) {
                     NavigationBar(
                         containerColor = appDRed,
                         modifier = Modifier
@@ -230,7 +231,7 @@ private fun MainScaffold(
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
             ) {
                 composable(Screen.Splash.name) {
-                    SplashScreen(navController)
+                        SplashScreen(navController)
                 }
 
                 composable(Screen.Questionnaire.name) {
@@ -272,7 +273,8 @@ private fun MainScaffold(
                                     fontFamily = FontFamily(Font(R.font.appfont)),
                                     fontSize = 36.sp,
                                     fontWeight = FontWeight.Bold
-                                )
+                                ),
+                                backgroundColor = Color.White
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),

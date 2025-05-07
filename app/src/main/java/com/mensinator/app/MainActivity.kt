@@ -28,6 +28,12 @@ object NotificationChannelConstants {
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
+//        / Remove splash screen before setContentView()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            splashScreen.setOnExitAnimationListener { splashScreenView ->
+                splashScreenView.remove() // Remove immediately
+            }
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

@@ -125,8 +125,8 @@ fun CalendarScreen(
     ) {
         CalendarTopHeader(
             todayDate = LocalDate.now(),
-            time = "08:00",
-            location = "India"// Pass the menstrual phase as needed
+            location = "India",
+            state = state
         )
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
@@ -202,11 +202,25 @@ fun CalendarScreen(
 private fun CalendarTopHeader(
     todayDate: LocalDate = LocalDate.now(),
     location: String = "Indonesia",
-    time: String = "10:00 AM"
+    state: State<CalendarViewModel.ViewState>
+//    time: String = "10:00 AM"
 ) {
     val headingFont = FontFamily(
         Font(R.font.secfont) // Your custom font
     )
+
+    // Determine current menstrual phase
+    val currentPhase = remember(todayDate, state.value) {
+        when {
+            todayDate in state.value.periodDates.keys -> "Menstrual"
+            state.value.ovulationPredictionDate?.isEqual(todayDate) == true -> "Ovulation"
+            todayDate in state.value.ovulationDates -> "Ovulation"
+            state.value.periodPredictionDate?.let { predDate ->
+                todayDate.isAfter(predDate.minusDays(5)) && todayDate.isBefore(predDate)
+            } == true -> "Premenstrual"
+            else -> "Follicular"
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -226,7 +240,7 @@ private fun CalendarTopHeader(
             )
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(2.dp))
 
         Row(
             modifier = Modifier
@@ -262,7 +276,7 @@ private fun CalendarTopHeader(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = time,
+                    text = currentPhase,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = headingFont,
@@ -554,7 +568,7 @@ private fun MonthTitle(yearMonth: YearMonth) {
             )
         )
         HorizontalDivider(
-            color = MaterialTheme.colorScheme.primary,
+            color = Color.LightGray,
             thickness = 2.dp,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
