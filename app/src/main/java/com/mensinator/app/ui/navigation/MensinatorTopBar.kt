@@ -11,26 +11,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
+import com.mensinator.app.ui.theme.appDRed
 
 @Composable
 fun MensinatorTopBar(
     @StringRes titleStringId: Int,
     onTitleClick: (() -> Unit)? = null,
-    textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground,
-    textStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.headlineMedium,
-    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.background // <-- NEW PARAM
+    textColor: androidx.compose.ui.graphics.Color = appDRed, // Changed to appDRed
+    textStyle: TextStyle = TextStyle(
+        fontFamily = FontFamily(Font(R.font.textfont)),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.background
 ) {
     androidx.compose.foundation.layout.Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = backgroundColor) // <-- APPLY BACKGROUND
+            .background(color = backgroundColor)
     ) {
         Column(
             modifier = Modifier
@@ -48,7 +59,7 @@ fun MensinatorTopBar(
                 modifier = modifier,
                 style = textStyle,
                 color = textColor,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.SemiBold
             )
         }
     }
@@ -65,6 +76,10 @@ private fun MensinatorTopBarPreview(
     @PreviewParameter(ScreenTitleProvider::class) stringId: Int,
 ) {
     MensinatorTheme {
-        MensinatorTopBar(stringId)
+        MensinatorTopBar(
+            stringId,
+            textColor = appDRed, // Ensure appDRed is used in preview
+            backgroundColor = Color.White // Optional: Set background for better preview visibility
+        )
     }
 }

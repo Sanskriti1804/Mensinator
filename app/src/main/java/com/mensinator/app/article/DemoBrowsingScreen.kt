@@ -36,7 +36,7 @@ fun ArticleBrowsingScreen(
     modifier: Modifier = Modifier,
     onCardClick: (String) -> Unit,
     headerBackgroundColor: Color = MaterialTheme.colorScheme.primary,
-    cardBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    cardBackgroundColor: Color = Color.White,
     contentPadding: PaddingValues = PaddingValues(16.dp)
 ) {
     LazyColumn(modifier = modifier) {

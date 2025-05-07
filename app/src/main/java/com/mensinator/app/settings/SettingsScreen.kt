@@ -32,8 +32,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,12 +47,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,6 +67,7 @@ import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
+import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.appGray
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
@@ -70,6 +80,14 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
     onSwitchProtectionScreen: (Boolean) -> Unit,
 ) {
+    val textAppStyle = TextStyle(
+        fontFamily = FontFamily(Font(R.font.textfont)),
+        fontSize = MaterialTheme.typography.titleMedium.fontSize,
+        fontWeight = FontWeight.Bold
+    )
+
+    val cardColor = Color(0xFFFFEDED)
+
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
     val isDarkMode = isDarkMode()
@@ -89,6 +107,8 @@ fun SettingsScreen(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
             .displayCutoutExcludingStatusBarsPadding()
@@ -99,7 +119,7 @@ fun SettingsScreen(
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)
+            colors = CardDefaults.elevatedCardColors(containerColor = cardColor)
         ) {
             Column(Modifier.padding(16.dp)) {
                 ColorSection(viewState, viewModel)
@@ -112,7 +132,7 @@ fun SettingsScreen(
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = Color.LightGray)
+            colors = CardDefaults.elevatedCardColors(containerColor = cardColor)
         ) {
             Column(Modifier.padding(16.dp)) {
                 SettingNumberSelection(
@@ -154,7 +174,7 @@ fun SettingsScreen(
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = appGray)
+            colors = CardDefaults.elevatedCardColors(containerColor = cardColor)
         ) {
             Column(Modifier.padding(16.dp)) {
                 SettingSwitch(
@@ -190,7 +210,7 @@ fun SettingsScreen(
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = appGray)
+            colors = CardDefaults.elevatedCardColors(containerColor = cardColor)
         ) {
             Column(Modifier.padding(16.dp)) {
                 ImportExportRow(viewModel)
@@ -333,8 +353,13 @@ private fun SettingSectionHeader(
         text = text,
         modifier = modifier
             .fillMaxWidth()
+            .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
             .semantics { heading() },
-        style = MaterialTheme.typography.titleMedium,
+        style = TextStyle(
+            fontFamily = FontFamily(Font(R.font.textfont)),
+            fontSize = 24.sp,  // Increased from default size
+            fontWeight = FontWeight.Bold
+        ),
         fontWeight = FontWeight.Bold
     )
 }
@@ -358,6 +383,7 @@ private fun SettingColorSelection(
     onOpenColorPicker: (setting: ColorSetting) -> Unit,
 ) {
     Row(
+
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
@@ -472,11 +498,15 @@ private fun SettingText(
     ) {
         Text(text = text, modifier = Modifier.weight(1f), maxLines = 1)
         Spacer(Modifier.width(4.dp))
-        TextButton(
+        IconButton(
             onClick = onClick,
-            colors = ButtonDefaults.filledTonalButtonColors()
+            modifier = Modifier.size(48.dp)
         ) {
-            Text(text = stringResource(id = R.string.change_text))
+            Icon(
+                painter = painterResource(R.drawable.ic_reminder),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
@@ -499,13 +529,15 @@ private fun SettingNumberSelection(
     ) {
         Text(text = stringResource(intSetting.stringResId), modifier = Modifier.weight(1f))
         Spacer(Modifier.width(4.dp))
-        TextButton(
+        IconButton(
             onClick = { onOpenIntPicker(intSetting) },
-            colors = ButtonDefaults.filledTonalButtonColors()
+            modifier = Modifier.size(48.dp)
         ) {
-            //Cannot have days since this function is also used for period/ovulation history
-            //Text("$currentNumber ${stringResource(R.string.days)}")
-            Text(text)
+            Icon(
+                painter = painterResource(R.drawable.ic_edit),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
         }
 
         if (openIntPickerForSetting != intSetting) return
@@ -575,7 +607,11 @@ private fun SettingSwitch(
         Spacer(Modifier.width(4.dp))
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = appDRed,
+                checkedTrackColor = appDRed.copy(alpha = 0.5f)
+            )
         )
     }
 }
@@ -597,16 +633,20 @@ private fun SettingLanguagePicker() {
     ) {
         Text(text = stringResource(R.string.language), modifier = Modifier.weight(1f))
         Spacer(Modifier.width(4.dp))
-        TextButton(
+        IconButton(
             onClick = {
                 val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
                 val uri = Uri.fromParts("package", context.packageName, null)
                 intent.data = uri
                 context.startActivity(intent)
             },
-            colors = ButtonDefaults.filledTonalButtonColors()
+            modifier = Modifier.size(48.dp)
         ) {
-            Text(stringResource(R.string.change_language))
+            Icon(
+                painter = painterResource(R.drawable.ic_language),
+                contentDescription = stringResource(R.string.change_language),
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
@@ -628,15 +668,31 @@ private fun ImportExportRow(viewModel: SettingsViewModel) {
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         ) {
-            TextButton(
+            OutlinedButton(
                 onClick = { viewModel.showImportDialog(true) },
-                colors = ButtonDefaults.filledTonalButtonColors()
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Black,
+                    containerColor = Color.White
+                ),
+                border = ButtonDefaults.outlinedButtonBorder.copy(
+                    width = 1.dp,
+//                    borderColor = Color.Black
+                )
             ) {
                 Text(text = stringResource(R.string.Import))
             }
-            TextButton(
+
+            // Export Button
+            OutlinedButton(
                 onClick = { viewModel.showExportDialog(true) },
-                colors = ButtonDefaults.filledTonalButtonColors()
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Black,
+                    containerColor = Color.White
+                ),
+                border = ButtonDefaults.outlinedButtonBorder.copy(
+                    width = 1.dp,
+//                    color = Color.Black
+                )
             ) {
                 Text(text = stringResource(R.string.data_export))
             }
