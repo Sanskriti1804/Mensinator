@@ -82,7 +82,7 @@ fun HormoneCycleChart(
 
                 data = LineData(estrogenDataSet, progesteroneDataSet, lhDataSet, fshDataSet, testosteroneDataSet)
 
-                // X-axis configuration
+                // X-axis configuration (only visible axis)
                 xAxis.apply {
                     position = XAxis.XAxisPosition.BOTTOM
                     setDrawAxisLine(true)
@@ -91,8 +91,8 @@ fun HormoneCycleChart(
                     textColor = Color.DKGRAY
                     textSize = 10f
                     granularity = 1f
-                    setCenterAxisLabels(false) // Prevents label jumping
-                    yOffset = 10f // Space between axis and labels
+                    setCenterAxisLabels(false)
+                    yOffset = 10f
 
                     valueFormatter = object : ValueFormatter() {
                         override fun getFormattedValue(value: Float): String {
@@ -107,27 +107,28 @@ fun HormoneCycleChart(
 
                 // Chart configuration
                 description.isEnabled = false
-                legend.isEnabled = false // Completely removed legend
+                legend.isEnabled = false
 
-                axisLeft.apply {
-                    isEnabled = true
-                    setDrawGridLines(true)
-                    gridColor = Color.LTGRAY
-                }
+                // Disable both left and right Y axes completely
+                axisLeft.isEnabled = false
                 axisRight.isEnabled = false
 
+                // Remove all Y-axis grid lines
+                setDrawGridBackground(false)
+                setDrawBorders(false)
+
                 // Padding and scrolling fixes
-                extraBottomOffset = 80f // Proper padding below X-axis
-                setViewPortOffsets(30f, 30f, 30f, 100f) // Balanced padding
+                extraBottomOffset = 30f
+                setViewPortOffsets(30f, 30f, 30f, 80f)
 
                 // Scrolling behavior
                 setTouchEnabled(true)
                 setDragEnabled(true)
                 isDragXEnabled = true
                 isDragYEnabled = false
-                setScaleEnabled(false) // Disable zooming
+                setScaleEnabled(false)
 
-                invalidate() // Force redraw
+                invalidate()
             }
         },
         modifier = modifier

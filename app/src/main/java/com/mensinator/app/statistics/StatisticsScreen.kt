@@ -38,8 +38,25 @@ import java.time.LocalDate
 @Composable
 fun StatisticsScreen(
     modifier: Modifier = Modifier,
-    state: StatisticsViewModel.ViewState
+    state: StatisticsViewModel.ViewState,
+    viewModel: StatisticsViewModel = koinViewModel()
 ) {
+    val state = viewModel.viewState.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        viewModel.refreshData()
+    }
+
+    StatisticsScreenContent(modifier, state)
+}
+
+
+
+@Composable
+fun StatisticsScreenContent(
+    modifier: Modifier,
+    state: StatisticsViewModel.ViewState)
+{
     val stats = listOf(
         state.trackedPeriods to stringResource(id = R.string.period_count),
         state.averageCycleLength to stringResource(id = R.string.average_cycle_length),
@@ -122,6 +139,7 @@ fun StatisticsScreen(
             }
         }
     }
+
 }
 
 @Composable
