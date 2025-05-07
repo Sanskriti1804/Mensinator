@@ -24,7 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,25 +42,32 @@ import java.time.LocalDate
 @Composable
 fun StatisticsScreen(
     modifier: Modifier = Modifier,
-    state: StatisticsViewModel.ViewState,
     viewModel: StatisticsViewModel = koinViewModel()
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle().value
+
+    val textApp = FontFamily(Font(R.font.textfont))
+    val subTextApp = FontFamily(Font(R.font.secfont, FontWeight.SemiBold))
 
     LaunchedEffect(Unit) {
         viewModel.refreshData()
     }
 
-    StatisticsScreenContent(modifier, state)
+    StatisticsScreenContent(
+        modifier = modifier,
+        state = state,
+        textApp = textApp,
+        subTextApp = subTextApp
+    )
 }
-
-
 
 @Composable
 fun StatisticsScreenContent(
     modifier: Modifier,
-    state: StatisticsViewModel.ViewState)
-{
+    state: StatisticsViewModel.ViewState,
+    textApp: FontFamily,
+    subTextApp: FontFamily
+) {
     val stats = listOf(
         state.trackedPeriods to stringResource(id = R.string.period_count),
         state.averageCycleLength to stringResource(id = R.string.average_cycle_length),
@@ -83,18 +94,21 @@ fun StatisticsScreenContent(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Graph section - fixed card with scrollable content
+                // Graph section
                 Card(
                     modifier = Modifier
+                        .padding(15.dp)
                         .fillMaxWidth()
                         .height(maxOf(chartHeight, minChartHeight)),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     shape = MaterialTheme.shapes.medium
+
+
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        // Horizontal scroll for the chart only
+                    Box(modifier = Modifier.fillMaxSize()) {
                         LazyRow(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(horizontal = 16.dp)
@@ -103,7 +117,7 @@ fun StatisticsScreenContent(
                                 HormoneCycleChart(
                                     modifier = Modifier
                                         .fillMaxHeight()
-                                        .width(this@BoxWithConstraints.maxWidth * 3), // Keep 3x for visibility
+                                        .width(this@BoxWithConstraints.maxWidth * 3),
                                     periodStartDate = LocalDate.now()
                                 )
                             }
@@ -111,13 +125,17 @@ fun StatisticsScreenContent(
                     }
                 }
 
-                // Rest of your content remains unchanged
+                // Header
                 Text(
                     text = "Your Stats",
-                    style = MaterialTheme.typography.headlineSmall,
+                    fontFamily = textApp,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
                 )
 
+                // Stats cards
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -129,6 +147,8 @@ fun StatisticsScreenContent(
                         StatCard(
                             value = value ?: "-",
                             label = label,
+                            textFont = textApp,
+                            subTextFont = subTextApp,
                             isHighlighted = label == stringResource(id = R.string.period_count),
                             modifier = Modifier
                                 .width(110.dp)
@@ -139,13 +159,14 @@ fun StatisticsScreenContent(
             }
         }
     }
-
 }
 
 @Composable
 fun StatCard(
     value: String,
     label: String,
+    textFont: FontFamily,
+    subTextFont: FontFamily,
     isHighlighted: Boolean = false,
     modifier: Modifier = Modifier
 ) {
@@ -165,12 +186,16 @@ fun StatCard(
         ) {
             Text(
                 text = value,
-                style = MaterialTheme.typography.headlineSmall,
+                fontFamily = textFont,
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal
+                ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
                 text = label,
+                fontFamily = subTextFont,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
@@ -183,7 +208,8 @@ fun StatCard(
 @Composable
 private fun StatisticsScreenPreview() {
     MensinatorTheme {
-        StatisticsScreen(
+        StatisticsScreenContent(
+            modifier = Modifier,
             state = StatisticsViewModel.ViewState(
                 trackedPeriods = "2",
                 averageCycleLength = "27.0 days",
@@ -193,7 +219,9 @@ private fun StatisticsScreenPreview() {
                 ovulationPredictionDate = "-",
                 follicleGrowthDays = "0.0",
                 averageLutealLength = "7.0 days"
-            )
+            ),
+            textApp = FontFamily.Default,
+            subTextApp = FontFamily.Default
         )
     }
 }

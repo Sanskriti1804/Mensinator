@@ -1,4 +1,4 @@
-import android.graphics.Color
+
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollBy
@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,15 @@ fun HormoneCycleChart(
     periodStartDate: LocalDate,
     modifier: Modifier = Modifier
 ) {
+
+    val EstrogenColor = Color(0xFF7F1F0E)
+    val FSHColor = Color(0xFF003049)
+    val LHColor = Color(0xFF3D0A05)
+    val ProgesteroneColor = Color(0xFFDAC181)
+    val TestosteroneColor = Color(0xFF669BBC)
+    val LGrayColor = Color(0xFFCCCCCC)
+    val DGrayColor = Color(0xFF444444)
+
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     val chartWidth = remember { 3600.dp } // Wide enough to show all days
@@ -73,38 +83,38 @@ fun HormoneCycleChart(
 
                     // Configure datasets (keep existing styles)
                     val estrogenDataSet = LineDataSet(estrogenLevels, "").apply {
-                        color = Color.rgb(255, 102, 178)
+                        color = EstrogenColor.toArgb()
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         setDrawCircles(false)
-                        lineWidth = 3f
+                        lineWidth = 5f
                     }
 
                     val progesteroneDataSet = LineDataSet(progesteroneLevels, "").apply {
-                        color = Color.rgb(156, 39, 176)
+                        color = ProgesteroneColor.toArgb()
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         setDrawCircles(false)
-                        lineWidth = 3f
+                        lineWidth = 5f
                     }
 
                     val lhDataSet = LineDataSet(lhLevels, "").apply {
-                        color = Color.rgb(33, 150, 243)
+                        color = LHColor.toArgb()
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         setDrawCircles(false)
-                        lineWidth = 3f
+                        lineWidth = 5f
                     }
 
                     val fshDataSet = LineDataSet(fshLevels, "").apply {
-                        color = Color.rgb(76, 175, 80)
+                        color = FSHColor.toArgb()
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         setDrawCircles(false)
-                        lineWidth = 3f
+                        lineWidth = 5f
                     }
 
                     val testosteroneDataSet = LineDataSet(testosteroneLevels, "").apply {
-                        color = Color.rgb(255, 152, 0)
+                        color = TestosteroneColor.toArgb()
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         setDrawCircles(false)
-                        lineWidth = 3f
+                        lineWidth = 5f
                     }
 
                     data = LineData(estrogenDataSet, progesteroneDataSet, lhDataSet, fshDataSet, testosteroneDataSet)
@@ -114,8 +124,8 @@ fun HormoneCycleChart(
                         position = XAxis.XAxisPosition.BOTTOM
                         setDrawAxisLine(true)
                         setDrawGridLines(false)
-                        axisLineColor = Color.LTGRAY
-                        textColor = Color.DKGRAY
+                        axisLineColor = Color.LightGray.toArgb()
+                        textColor = Color.DarkGray.toArgb()
                         textSize = 10f
                         granularity = 1f
                         setCenterAxisLabels(false)

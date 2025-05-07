@@ -308,7 +308,6 @@ private fun MainScaffold(
                     ) { topBarPadding ->
                         StatisticsScreen(
                             modifier = Modifier.padding(topBarPadding),
-                            state = state
                         )
                     }
                 }
