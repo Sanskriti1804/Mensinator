@@ -218,6 +218,7 @@ private fun CalendarTopHeader(
             state.value.periodPredictionDate?.let { predDate ->
                 todayDate.isAfter(predDate.minusDays(5)) && todayDate.isBefore(predDate)
             } == true -> "Premenstrual"
+
             else -> "Follicular"
         }
     }
@@ -278,19 +279,19 @@ private fun CalendarTopHeader(
                 Text(
                     text = currentPhase,
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         fontFamily = headingFont,
-                        fontSize = 30.sp
+                        fontSize = 31.sp
                     )
                 )
-                Text(
-                    text = location,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = Color.Red,
-                        fontFamily = headingFont,
-                        fontSize = 15.sp
-                    )
-                )
+//                Text(
+//                    text = location,
+//                    style = MaterialTheme.typography.bodySmall.copy(
+//                        color = Color.Red,
+//                        fontFamily = headingFont,
+//                        fontSize = 15.sp
+//                    )
+//                )
             }
         }
 

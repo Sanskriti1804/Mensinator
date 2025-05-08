@@ -11,7 +11,6 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -231,7 +229,7 @@ private fun MainScaffold(
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
             ) {
                 composable(Screen.Splash.name) {
-                        SplashScreen(navController)
+                    SplashScreen(navController)
                 }
 
                 composable(Screen.Questionnaire.name) {
@@ -301,7 +299,9 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 currentScreen.titleRes,
-                                textColor = Color.Red
+                                textColor = appDRed,
+                                backgroundColor = Color.White
+
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -312,27 +312,52 @@ private fun MainScaffold(
                     }
                 }
 
-                composable(Screen.BrowsingArticle.name) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = "FAQ and Guides",
-                            style = MaterialTheme.typography.headlineLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = appDRed,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        )
-
-                        ArticleBrowsingScreen(
-                            navController = navController,
-                            headers = headers,
-                            onCardClick = { articleId ->  // Add this parameter
-                                navController.navigate("${Screen.Article.name}/$articleId")
-                            }
-                        )
+                composable(Screen.Settings.name) {
+                    Scaffold(
+                        topBar = {
+                            MensinatorTopBar(
+                                currentScreen.titleRes,
+                                textColor = appDRed,  // Changed from Color.Red to appDRed
+                                backgroundColor = Color.White  // Added white background
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        Column {
+                            SettingsScreen(
+                                onSwitchProtectionScreen = { newValue ->
+                                    onScreenProtectionChanged(newValue)
+                                },
+                                modifier = Modifier.padding(topBarPadding)
+                            )
+                        }
                     }
                 }
+
+                composable(Screen.BrowsingArticle.name) {
+                    Scaffold(
+                        // Added Scaffold to properly handle top bar
+                        topBar = {
+                            MensinatorTopBar(
+                                R.string.article_list_title,  // Using the article list title
+                                textColor = appDRed,
+                                backgroundColor = Color.White
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        Column(modifier = Modifier.padding(topBarPadding)) {
+                            ArticleBrowsingScreen(
+                                navController = navController,
+                                headers = headers,
+                                onCardClick = { articleId ->
+                                    navController.navigate("${Screen.Article.name}/$articleId")
+                                }
+                            )
+                        }
+                    }
+                }
+
 
                 composable(Screen.ArticleList.name) {
                     ArticleListScreen(
@@ -392,8 +417,10 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 currentScreen.titleRes,
-                                textColor = Color.Red
-                            )
+                                textColor = appDRed,
+                                backgroundColor = Color.White,
+
+                                )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
