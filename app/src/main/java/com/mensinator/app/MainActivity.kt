@@ -3,6 +3,7 @@ package com.mensinator.app
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.auth0.android.Auth0
+import com.auth0.android.provider.WebAuthProvider
 import com.mensinator.app.NotificationChannelConstants.channelDescription
 import com.mensinator.app.NotificationChannelConstants.channelId
 import com.mensinator.app.NotificationChannelConstants.channelName
@@ -26,6 +29,8 @@ object NotificationChannelConstants {
 }
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var account: Auth0
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
 //        / Remove splash screen before setContentView()
@@ -35,6 +40,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         super.onCreate(savedInstanceState)
+        account = Auth0(
+            "H3Ef5JXQUiWrCriYFHRNkIORsoSilqoj",
+            "dev-at7fp1npd0avhgjf.us.auth0.com"
+        )
         enableEdgeToEdge()
 
         setContent {
@@ -47,6 +56,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         createNotificationChannel(this)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.action == Intent.ACTION_VIEW) {
+            WebAuthProvider.resume(intent)
+        }
     }
 
     private fun createNotificationChannel(context: Context) {

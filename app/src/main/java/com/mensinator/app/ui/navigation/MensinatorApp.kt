@@ -2,6 +2,7 @@ package com.mensinator.app.ui.navigation
 
 import ArticleListScreen
 import HormoneCycleChart
+import LoginScreen
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
@@ -69,6 +70,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.auth0.android.Auth0
 import com.mensinator.app.R
 import com.mensinator.app.article.ArticleBrowsingScreen
 import com.mensinator.app.article.ArticleLayout
@@ -100,7 +102,8 @@ enum class Screen(@StringRes val titleRes: Int) {
     ArticleList(R.string.article_list_title),
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
-    Questionnaire(R.string.questionnaire_title)
+    Questionnaire(R.string.questionnaire_title),
+    Login(R.string.login_title)
 }
 
 @Composable
@@ -223,7 +226,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Splash.name,
+                startDestination = Screen.Login.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -231,6 +234,18 @@ private fun MainScaffold(
                 composable(Screen.Splash.name) {
                     SplashScreen(navController)
                 }
+
+                composable(Screen.Login.name) {
+                    val account = remember {
+                        Auth0(
+                            "H3Ef5JXQUiWrCriYFHRNkIORsoSilqoj",
+                            "dev-at7fp1npd0avhgjf.us.auth0.com"
+                        )
+                    }
+//                    LoginScreen(navController, account)
+                    LoginScreen(account)
+                }
+
 
                 composable(Screen.Questionnaire.name) {
                     val questions = Constants.getQuestions()

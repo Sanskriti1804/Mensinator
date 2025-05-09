@@ -14,6 +14,13 @@ android {
         targetSdk = 35
         versionCode = 24
         versionName = "2.0"
+        manifestPlaceholders.putAll(
+            mapOf(
+                "auth0Domain" to "@string/com_auth0_domain",
+                "auth0Scheme" to "demo"
+            )
+        )
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -105,6 +112,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.androidx.runtime.livedata)
+//    implementation("com.auth0.android:auth0:2.11.0")
+    implementation("com.auth0.android:auth0:2.0.0")
+
+
 //    implementation(libs.androidx.biometric.ktx)
 
     testImplementation(libs.junit)
@@ -118,6 +129,7 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 
     //Firebase
 //    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
