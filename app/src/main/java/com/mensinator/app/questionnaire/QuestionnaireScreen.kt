@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,10 +44,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mensinator.app.R
-import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.appGray
 
@@ -78,9 +75,11 @@ private fun QuestionnaireHeader(
     ) {
         // Replace with your actual logo component
         Image(
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.rlogo),
             contentDescription = "App Icon",
-            modifier = Modifier.size(150.dp).padding(bottom = 56.dp)
+            modifier = Modifier
+                .size(150.dp)
+                .padding(bottom = 56.dp)
         )
         Text(
             text = "Let’s get to know your cycle – enter your period and health info below.",
@@ -193,6 +192,7 @@ private fun QuestionnaireNavigationButtons(
         )
     }
 }
+
 @Composable
 fun QuestionnaireScreen(
     viewModel: QuestionnaireViewModel,

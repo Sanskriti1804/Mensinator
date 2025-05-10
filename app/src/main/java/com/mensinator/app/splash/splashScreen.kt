@@ -5,12 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,23 +40,18 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    // Bina Firebase ke chill scene 🍹
     LaunchedEffect(Unit) {
         delay(3000)
-        // Direct Login page pe bhej do
         navController.navigate(Screen.Calendar.name) {
             popUpTo(Screen.Splash.name) { inclusive = true }
         }
     }
 
-    val customFont = FontFamily(
-        Font(R.font.appfont, FontWeight.Normal)
-    )
+    val customFont = FontFamily(Font(R.font.appfont, FontWeight.Normal))
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets(0.dp))
             .background(appDRed),
         contentAlignment = Alignment.Center
     ) {
@@ -67,13 +68,42 @@ fun SplashScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-//                text = "महावरी",
                 text = "Mahavari",
                 fontFamily = customFont,
                 fontSize = 56.sp,
                 fontWeight = FontWeight.Normal,
                 color = appWhite
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Google Sign-In Button
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Calendar.name)
+                },
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = appWhite,
+                    contentColor = appDRed
+                ),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_google_logo),
+                        contentDescription = "Google Logo",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Login with Google")
+                }
+            }
         }
     }
 }

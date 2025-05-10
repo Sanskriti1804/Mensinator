@@ -81,7 +81,6 @@ import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.questionnaire.AnswerStorage
 import com.mensinator.app.questionnaire.AnswersScreen
-import com.mensinator.app.questionnaire.Constants
 import com.mensinator.app.questionnaire.QuestionnaireScreen
 import com.mensinator.app.questionnaire.QuestionnaireViewModel
 import com.mensinator.app.settings.SettingsScreen
@@ -231,7 +230,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Statistic.name,
+                startDestination = Screen.Questionnaire.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
