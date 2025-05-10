@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonDefaults
@@ -102,93 +103,125 @@ fun StatisticsScreenContent(
             val chartHeight = this.maxHeight * 0.65f
             val minChartHeight = 250.dp
 
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // Graph section
-                Card(
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .fillMaxWidth()
-                        .height(maxOf(chartHeight, minChartHeight)),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    shape = MaterialTheme.shapes.medium
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            )  {
+
+                item {
+                    // Graph section
+                    Card(
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .fillMaxWidth()
+                            .height(maxOf(chartHeight, minChartHeight)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                        shape = MaterialTheme.shapes.medium
 
 
-                ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        LazyRow(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(horizontal = 16.dp)
-                        ) {
-                            item {
-                                HormoneCycleChart(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .width(this@BoxWithConstraints.maxWidth * 3),
-                                    periodStartDate = LocalDate.now()
-                                )
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            LazyRow(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
+                            ) {
+                                item {
+                                    HormoneCycleChart(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(this@BoxWithConstraints.maxWidth * 3),
+                                        periodStartDate = LocalDate.now()
+                                    )
+                                }
                             }
                         }
                     }
                 }
 
-                OutlinedButton(
-                    onClick = { showDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 15.dp)
-                        .height(48.dp),
-                    shape = MaterialTheme.shapes.medium,
-                    border = BorderStroke(1.dp, appDRed),
-                    colors = ButtonDefaults.outlinedButtonColors(
+                item {
+                    OutlinedButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp, vertical = 12.dp)
+                            .height(48.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        border = BorderStroke(1.dp, appDRed),
+                        colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = appDRed // Text color set to appDRed
-                    )
-                ) {
+                        )
+                    ) {
+                        Text(
+                            text = "View Hormone Information",
+                            fontFamily = textApp,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+
+                item {
+                    OutlinedButton(
+                        onClick = {  },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp)
+                            .height(48.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        border = BorderStroke(1.dp, appDRed),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = appDRed // Text color set to appDRed
+                        )
+                    ) {
+                        Text(
+                            text = "User Information",
+                            fontFamily = textApp,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+
+                item {
+                    // Header
                     Text(
-                        text = "View Hormone Information",
+                        text = "Your Stats",
                         fontFamily = textApp,
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
                     )
                 }
 
-                // Header
-                Text(
-                    text = "Your Stats",
-                    fontFamily = textApp,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
-                )
-
-                // Stats cards
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(horizontal = 8.dp)
-                ) {
-                    items(stats) { (value, label) ->
-                        StatCard(
-                            value = value ?: "-",
-                            label = label,
-                            textFont = textApp,
-                            subTextFont = subTextApp,
-                            isHighlighted = label == stringResource(id = R.string.period_count),
-                            modifier = Modifier
-                                .width(110.dp)
-                                .height(160.dp)
-                        )
+                item {
+                    // Stats cards
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    ) {
+                        items(stats) { (value, label) ->
+                            StatCard(
+                                value = value ?: "-",
+                                label = label,
+                                textFont = textApp,
+                                subTextFont = subTextApp,
+                                isHighlighted = label == stringResource(id = R.string.period_count),
+                                modifier = Modifier
+                                    .width(110.dp)
+                                    .height(160.dp)
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
     if (showDialog) {
         ScrollableDialog(
             onDismissRequest = { showDialog = false },
