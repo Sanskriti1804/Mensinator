@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         }
         super.onCreate(savedInstanceState)
         account = Auth0(
-            "H3Ef5JXQUiWrCriYFHRNkIORsoSilqoj",
-            "dev-at7fp1npd0avhgjf.us.auth0.com"
+            "3nCGZ0BEBp0CxJbMG3pJKIwmcMqMkvlM",
+            "dev-0dxbgg5m1x35jduc.us.auth0.com"
         )
         enableEdgeToEdge()
 
