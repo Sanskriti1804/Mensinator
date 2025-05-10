@@ -37,6 +37,8 @@
     <string name="article_title">Article</string>
     <string name="browsing_article_title">Browse Articles</string>
     <string name="questionnaire_title">Questionnaire</string>
+    <string name="answers_title">Answers</string>
+
 
 
     <!-- symptoms page -->

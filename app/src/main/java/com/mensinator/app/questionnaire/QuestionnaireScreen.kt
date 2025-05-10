@@ -25,8 +25,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,19 +41,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.appGray
-
+// QuestionnaireScreen.kt
 @Composable
 fun QuestionnaireScreen(
-    questions: List<Question>,
-    onSubmit: (Map<String, String>) -> Unit,
-    modifier: Modifier = Modifier,
+    viewModel: QuestionnaireViewModel,
+    onComplete: () -> Unit, // Navigation callback
+    modifier: Modifier = Modifier
 ) {
+    val questions = remember { Constants.getQuestions() }
+    val answers by viewModel.answers.collectAsState()
     var currentQuestionIndex by remember { mutableStateOf(0) }
-    val answers = remember { mutableStateMapOf<String, String>() }
-
     val progress by animateFloatAsState(
         targetValue = if (questions.isEmpty()) 1f
         else (currentQuestionIndex + 1).toFloat() / questions.size,
@@ -65,12 +69,11 @@ fun QuestionnaireScreen(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Progress bar with centered width (not full width)
+        // Progress bar
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.9f) // 90% of screen width
-                .padding(horizontal = 20.dp),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth(0.9f)
+                .padding(horizontal = 20.dp)
         ) {
             AnimatedProgressBar(progress = progress)
         }
@@ -80,42 +83,21 @@ fun QuestionnaireScreen(
         if (currentQuestionIndex < questions.size) {
             val question = questions[currentQuestionIndex]
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp) // Add horizontal padding
-            ) {
-                // Question text - centered and bold
-                Text(
-                    text = question.question,
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 24.dp),
-                    textAlign = TextAlign.Center // Ensure text is centered
-                )
-
-                // Text field with red border
-                var answer by remember { mutableStateOf(answers[question.id.toString()] ?: "") }
-                OutlinedTextField(
-                    value = answer,
-                    onValueChange = {
-                        answer = it
-                        answers[question.id.toString()] = it
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f), // 90% of available width
-                    shape = RoundedCornerShape(8.dp),
-                )
-            }
+            QuestionItemWithAnswerCapture(
+                question = question,
+                initialAnswer = answers[question.id] ?: "",
+                onAnswerChanged = { answer ->
+                    viewModel.updateAnswer(question.id, answer)
+                }
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Navigation buttons row
+            // Navigation buttons
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 22.dp), // Add horizontal padding
+                    .padding(horizontal = 22.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 if (currentQuestionIndex > 0) {
@@ -123,10 +105,9 @@ fun QuestionnaireScreen(
                         onClick = { currentQuestionIndex-- },
                         icon = Icons.Default.ArrowBack,
                         containerColor = appGray,
-                        modifier = Modifier.size(56.dp)
-                    )
+                        modifier = Modifier.size(56.dp))
                 } else {
-                    Spacer(modifier = Modifier.size(56.dp)) // Maintain spacing
+                    Spacer(modifier = Modifier.size(56.dp))
                 }
 
                 NavigationButton(
@@ -134,7 +115,7 @@ fun QuestionnaireScreen(
                         if (currentQuestionIndex < questions.size - 1) {
                             currentQuestionIndex++
                         } else {
-                            onSubmit(answers)
+                            onComplete() // Trigger navigation
                         }
                     },
                     icon = if (currentQuestionIndex < questions.size - 1)
@@ -146,7 +127,6 @@ fun QuestionnaireScreen(
         }
     }
 }
-
 @Composable
 fun AnimatedProgressBar(progress: Float) {
     LinearProgressIndicator(

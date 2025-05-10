@@ -55,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -78,8 +79,11 @@ import com.mensinator.app.article.articles
 import com.mensinator.app.article.headers
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
+import com.mensinator.app.questionnaire.AnswerStorage
+import com.mensinator.app.questionnaire.AnswersScreen
 import com.mensinator.app.questionnaire.Constants
 import com.mensinator.app.questionnaire.QuestionnaireScreen
+import com.mensinator.app.questionnaire.QuestionnaireViewModel
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.splash.SplashScreen
 import com.mensinator.app.statistics.StatisticsScreen
@@ -103,6 +107,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     Article(R.string.article_title),
     BrowsingArticle(R.string.browsing_article_title),
     Questionnaire(R.string.questionnaire_title),
+    Answers(R.string.answers_title),
     Login(R.string.login_title)
 }
 
@@ -226,7 +231,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Calendar.name,
+                startDestination = Screen.Questionnaire.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -246,13 +251,14 @@ private fun MainScaffold(
                     LoginScreen(account)
                 }
 
+// In the NavHost composable, update the Questionnaire and Answers routes:
 
                 composable(Screen.Questionnaire.name) {
-                    val questions = Constants.getQuestions()
-                    val onSubmit: (Map<String, String>) -> Unit = { answers ->
-                        answers.forEach { (questionId, answer) ->
-                            Log.d("FormSubmission", "QID: $questionId -> Ans: $answer")
-                        }
+                    val context = LocalContext.current
+                    val viewModel = remember {
+                        QuestionnaireViewModel(
+                            AnswerStorage(context)
+                        )
                     }
 
                     Scaffold(
@@ -265,13 +271,42 @@ private fun MainScaffold(
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
                         QuestionnaireScreen(
-                            modifier = Modifier.padding(topBarPadding),
-                            questions = questions,
-                            onSubmit = onSubmit
+                            viewModel = viewModel,
+                            onComplete = {
+                                navController.navigate(Screen.Answers.name) {
+                                    popUpTo(Screen.Questionnaire.name) {
+                                        inclusive = true
+                                    }
+                                }
+                            },
+                            modifier = Modifier.padding(topBarPadding)
                         )
                     }
                 }
 
+                composable(Screen.Answers.name) {
+                    val context = LocalContext.current
+                    val viewModel = remember {
+                        QuestionnaireViewModel(
+                            AnswerStorage(context)
+                        )
+                    }
+
+                    Scaffold(
+                        topBar = {
+                            MensinatorTopBar(
+                                titleStringId = Screen.Answers.titleRes,
+                                textColor = appDRed
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        AnswersScreen(
+                            viewModel = viewModel,
+                            modifier = Modifier.padding(topBarPadding)
+                        )
+                    }
+                }
                 composable(Screen.Calendar.name) {
                     val (toolbarOnClick, setToolbarOnClick) = remember {
                         mutableStateOf<(() -> Unit)?>(null)

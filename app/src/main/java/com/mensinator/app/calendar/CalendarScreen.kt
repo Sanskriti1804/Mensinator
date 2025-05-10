@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,6 +65,7 @@ import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
+import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.appWhite
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.PersistentList
@@ -722,4 +724,18 @@ fun calculateCycleNumber(day: LocalDate, now: LocalDate, dbHelper: IPeriodDataba
     val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day) ?: return null
 
     return ChronoUnit.DAYS.between(lastPeriodStartDate, day).toInt() + 1
+}
+
+
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
+@Composable
+fun CalendarScreenPreview() {
+    MensinatorTheme {
+        Surface {
+            CalendarScreen(
+                modifier = Modifier,
+                setToolbarOnClick = {}
+            )
+        }
+    }
 }
