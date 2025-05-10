@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class QuestionnaireViewModel(private val storage: AnswerStorage) : ViewModel() {
+open class QuestionnaireViewModel(private val storage: AnswerStorage) : ViewModel() {
     private val _answers = mutableStateMapOf<Int, String>()
     private val _answersFlow = MutableStateFlow(_answers.toMap())
-    val answers: StateFlow<Map<Int, String>> = _answersFlow.asStateFlow()
+    open val answers: StateFlow<Map<Int, String>> = _answersFlow.asStateFlow()
 
     init {
         viewModelScope.launch {

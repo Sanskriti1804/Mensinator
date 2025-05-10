@@ -10,7 +10,7 @@ class AnswerStorage(private val context: Context) {
     private val prefs = context.getSharedPreferences("user_answers", Context.MODE_PRIVATE)
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    fun saveAnswers(answers: Map<Int, String>) {
+    suspend fun saveAnswers(answers: Map<Int, String>) {
         prefs.edit().apply {
             answers.forEach { (id, answer) ->
                 putString("q_$id", answer)

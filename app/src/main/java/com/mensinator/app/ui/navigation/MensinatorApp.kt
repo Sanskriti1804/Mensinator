@@ -231,7 +231,7 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Questionnaire.name,
+                startDestination = Screen.Answers.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
@@ -265,7 +265,8 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 titleStringId = currentScreen.titleRes,
-                                textColor = appDRed
+                                textColor = appDRed,
+                                backgroundColor = Color.White
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -296,7 +297,8 @@ private fun MainScaffold(
                         topBar = {
                             MensinatorTopBar(
                                 titleStringId = Screen.Answers.titleRes,
-                                textColor = appDRed
+                                textColor = appDRed,
+                                backgroundColor = Color.White
                             )
                         },
                         contentWindowInsets = WindowInsets(0.dp),
@@ -307,6 +309,7 @@ private fun MainScaffold(
                         )
                     }
                 }
+
                 composable(Screen.Calendar.name) {
                     val (toolbarOnClick, setToolbarOnClick) = remember {
                         mutableStateOf<(() -> Unit)?>(null)
