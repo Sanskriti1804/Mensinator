@@ -283,7 +283,7 @@ private fun CalendarTopHeader(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontFamily = headingFont,
-                        fontSize = 31.sp
+                        fontSize = 28.sp
                     )
                 )
 //                Text(
