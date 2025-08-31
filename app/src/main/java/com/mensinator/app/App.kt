@@ -17,6 +17,12 @@ import com.mensinator.app.business.notifications.IAndroidNotificationScheduler
 import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.business.notifications.NotificationScheduler
 import com.mensinator.app.calendar.CalendarViewModel
+import com.mensinator.app.calendar.CalendarViewModelRefactored
+import com.mensinator.app.core.data.repository.PeriodRepositoryImpl
+import com.mensinator.app.core.data.repository.SettingsRepositoryImpl
+import com.mensinator.app.core.di.appModule
+import com.mensinator.app.core.domain.repository.IPeriodRepository
+import com.mensinator.app.core.domain.repository.ISettingsRepository
 import com.mensinator.app.settings.SettingsViewModel
 import com.mensinator.app.statistics.StatisticsViewModel
 import com.mensinator.app.symptoms.ManageSymptomsViewModel
@@ -32,8 +38,8 @@ import org.koin.dsl.module
 
 class App : Application() {
 
-    // Koin dependency injection definitions
-    private val appModule = module {
+    // Legacy business logic module (to be gradually migrated)
+    private val legacyBusinessModule = module {
         singleOf(::PeriodDatabaseHelper) { bind<IPeriodDatabaseHelper>() }
         singleOf(::CalculationsHelper) { bind<ICalculationsHelper>() }
         singleOf(::OvulationPrediction) { bind<IOvulationPrediction>() }
@@ -44,22 +50,41 @@ class App : Application() {
         singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }
         single { androidContext().getSystemService(ALARM_SERVICE) as AlarmManager }
 
+        // Legacy ViewModels (to be gradually replaced)
         viewModel { CalendarViewModel(get(), get(), get(), get()) }
         viewModel { ManageSymptomsViewModel(get()) }
         viewModel { SettingsViewModel(get(), get(), get(), get()) }
         viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }
     }
 
+    // New refactored ViewModels and dependencies
+    private val refactoredModule = module {
+        // Register the temporary repository implementations
+        single<IPeriodRepository> { PeriodRepositoryImpl() }
+        single<ISettingsRepository> { SettingsRepositoryImpl() }
+        
+        // Register the new refactored ViewModel
+        viewModel { CalendarViewModelRefactored(get(), get()) }
+        
+        // Note: More repository implementations will be added here as needed
+    }
+
     override fun onCreate() {
         super.onCreate()
-//        if (FirebaseApp.getApps(this).isEmpty()) {
-//            FirebaseApp.initializeApp(this)
-//        }
+        
+        // Initialize Firebase (commented out as per original code)
+        // if (FirebaseApp.getApps(this).isEmpty()) {
+        //     FirebaseApp.initializeApp(this)
+        // }
 
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(appModule)
+            modules(
+                appModule,                    // New core architecture
+                legacyBusinessModule,         // Legacy business logic (to be migrated)
+                refactoredModule              // New refactored ViewModels
+            )
         }
     }
 }
