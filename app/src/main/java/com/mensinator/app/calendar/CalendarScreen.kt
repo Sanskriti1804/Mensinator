@@ -21,10 +21,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +35,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -141,11 +144,13 @@ fun CalendarScreen(
                 .padding(top = 16.dp),
             state = calendarState,
             dayContent = { day ->
-                Day(
-                    viewState = state,
-                    onAction = onAction,
-                    day = day,
-                )
+                key(day.date) {
+                    Day(
+                        viewState = state,
+                        onAction = onAction,
+                        day = day,
+                    )
+                }
             },
             monthHeader = {
                 MonthTitle(yearMonth = it.yearMonth)
@@ -264,7 +269,7 @@ private fun CalendarTopHeader(
                     text = todayDate.month.name,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 25.sp, // Increased font size
+                        fontSize = 28.sp, // Increased font size
                         letterSpacing = 1.sp,
                         fontFamily = headingFont,
                         color = com.mensinator.app.ui.theme.appDRed
@@ -283,8 +288,10 @@ private fun CalendarTopHeader(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontFamily = headingFont,
-                        fontSize = 28.sp
-                    )
+                        fontSize = 16.sp
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 //                Text(
 //                    text = location,
@@ -316,10 +323,14 @@ private fun PeriodButton(
     }
     val successSaved = stringResource(id = R.string.successfully_saved_alert)
     var isRecentlyClicked by remember { mutableStateOf(false) }
+    var showPeriodConfirm by remember { mutableStateOf(false) }
 
+    val rangeSize by remember {
+        derivedStateOf { state.value.selectedDaysRange.size }
+    }
     val selectedIsPeriod by remember {
         derivedStateOf {
-            state.value.selectedDays.any { it in state.value.periodDates }
+            state.value.selectedDaysRange.any { it in state.value.periodDates }
         }
     }
 
@@ -335,9 +346,44 @@ private fun PeriodButton(
     val defaultTextColor = com.mensinator.app.ui.theme.appDRed
     val activeColor = com.mensinator.app.ui.theme.appDRed
     val activeTextColor = Color.White
-
-    // Determine if button should appear active
     val isActive = isRecentlyClicked || selectedIsPeriod
+
+    val performPeriodSave = {
+        onAction(
+            UiAction.UpdatePeriodDates(
+                currentPeriodDays = state.value.periodDates,
+                selectedDays = state.value.selectedDays,
+                selectedDaysRange = state.value.selectedDaysRange
+            )
+        )
+        Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
+        isRecentlyClicked = true
+    }
+
+    if (showPeriodConfirm) {
+        val message = when {
+            rangeSize < 2 -> stringResource(R.string.period_confirm_less_days, 2)
+            else -> stringResource(R.string.period_confirm_more_days, rangeSize)
+        }
+        AlertDialog(
+            onDismissRequest = { showPeriodConfirm = false },
+            title = { Text(stringResource(R.string.period_button)) },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = {
+                    performPeriodSave()
+                    showPeriodConfirm = false
+                }) {
+                    Text(stringResource(R.string.confirm), color = com.mensinator.app.ui.theme.appDRed)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPeriodConfirm = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
 
     Box(
         modifier = modifier
@@ -354,14 +400,13 @@ private fun PeriodButton(
             .clickable(
                 enabled = isPeriodButtonEnabled,
                 onClick = {
-                    onAction(
-                        UiAction.UpdatePeriodDates(
-                            currentPeriodDays = state.value.periodDates,
-                            selectedDays = state.value.selectedDays
-                        )
-                    )
-                    Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
-                    isRecentlyClicked = true
+                    when {
+                        rangeSize in 2..8 -> performPeriodSave()
+                        rangeSize < 2 || rangeSize > 8 -> {
+                            showPeriodConfirm = true
+                        }
+                        else -> { /* no selection */ }
+                    }
                 }
             )
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -455,16 +500,48 @@ private fun OvulationButton(
 ) {
     val context = LocalContext.current
     val ovulationButtonEnabled by remember {
-        derivedStateOf { state.value.selectedDays.size == 1 }
+        derivedStateOf { state.value.selectedDays.isNotEmpty() }
     }
     val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
+    var showOvulationConfirm by remember { mutableStateOf(false) }
 
-    // Check if selected date is an ovulation date
+    val rangeSize by remember {
+        derivedStateOf { state.value.selectedDaysRange.size }
+    }
     val isOvulationDate by remember {
         derivedStateOf {
-            state.value.selectedDays.size == 1 &&
-                    state.value.selectedDays.first() in state.value.ovulationDates
+            state.value.selectedDaysRange.any { it in state.value.ovulationDates }
         }
+    }
+
+    val performOvulationSave = {
+        if (state.value.selectedDaysRange.size == 1) {
+            onAction(UiAction.UpdateOvulationDay(state.value.selectedDaysRange.first()))
+        } else {
+            onAction(UiAction.UpdateOvulationDates(state.value.selectedDaysRange))
+        }
+        Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
+    }
+
+    if (showOvulationConfirm) {
+        AlertDialog(
+            onDismissRequest = { showOvulationConfirm = false },
+            title = { Text(stringResource(R.string.ovulation_button)) },
+            text = { Text(stringResource(R.string.ovulation_confirm_more_days, rangeSize)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    performOvulationSave()
+                    showOvulationConfirm = false
+                }) {
+                    Text(stringResource(R.string.confirm), color = com.mensinator.app.ui.theme.appDRed)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showOvulationConfirm = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 
     // Colors
@@ -488,8 +565,10 @@ private fun OvulationButton(
             .clickable(
                 enabled = ovulationButtonEnabled,
                 onClick = {
-                    onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
-                    Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
+                    when {
+                        rangeSize <= 7 -> performOvulationSave()
+                        else -> showOvulationConfirm = true
+                    }
                 }
             )
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -626,7 +705,7 @@ fun Day(
         ColorCombination(Color.Transparent, Black)
     }
     val dayColors = when {
-        day.date in state.selectedDays -> settingColors[ColorSetting.SELECTION]
+        day.date in state.selectedDaysRange -> settingColors[ColorSetting.SELECTION]
         day.date in state.periodDates.keys -> settingColors[ColorSetting.PERIOD]
         state.periodPredictionDate?.isEqual(day.date) == true -> settingColors[ColorSetting.EXPECTED_PERIOD]
         day.date in state.ovulationDates -> settingColors[ColorSetting.OVULATION]
@@ -643,8 +722,8 @@ fun Day(
         else -> FontWeight.Normal
     }
 
-    // Dates to track
-    val isSelected = day.date in state.selectedDays
+    // Dates to track (use range so all days between start and end are highlighted)
+    val isSelected = day.date in state.selectedDaysRange
     val hasSymptomDate = day.date in state.symptomDates
 
     val shape = MaterialTheme.shapes.small

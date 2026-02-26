@@ -26,6 +26,11 @@
     <string name="only_day_alert">Only one day can be ovulation!</string>
     <string name="success_saved_ovulation">Ovulation saved successfully</string>
     <string name="no_date_selected_ovulation">No date selected for ovulation</string>
+    <string name="period_confirm_less_days">Are you sure you want to add periods for less than %d days?</string>
+    <string name="period_confirm_more_days">Are you sure you want to add periods for more than %d days?</string>
+    <string name="ovulation_confirm_more_days">Are you sure you want to add ovulation for more than %d days? (Max 7 days is typical.)</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 
     <!-- navigation -->
     <string name="home_page">Home</string>
@@ -95,6 +100,7 @@
     <string name="next_predicted_ovulation">Next predicted ovulation: </string>
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Average luteal phase length: </string>
+    <string name="cycle_consistency">Cycle: </string>
     <string name="days"> days</string>
 
     <!-- Symptoms -->

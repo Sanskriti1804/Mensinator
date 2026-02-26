@@ -49,5 +49,16 @@ interface ICalculationsHelper {
      * @return The luteal phase length as an integer.
      */
     fun getLutealLengthForPeriod(date: LocalDate): Int
-    abstract fun getCycleLengths(): Any
+
+    fun getCycleLengths(): Any
+
+    /**
+     * Returns true if cycle lengths are consistent (low variance). Typically regular if std dev <= 2–3 days.
+     */
+    fun isCycleRegular(): Boolean
+
+    /**
+     * Cycle length variance (standard deviation in days). Higher = more irregular.
+     */
+    fun cycleLengthVariance(): Double
 }

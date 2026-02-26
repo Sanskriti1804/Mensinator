@@ -41,19 +41,24 @@ class StatisticsViewModel(
         val ovulationPredictionDate: String? = null,
         val periodPredictionDate: String? = null,
         val ovulationCount: String? = null,
+        val cycleConsistencyStatus: String? = null,
     )
 
     fun refreshData() {
         _viewState.update {
+            val regular = calcHelper.isCycleRegular()
             it.copy(
                 trackedPeriods = periodDatabaseHelper.getPeriodCount().toString(),
                 averageCycleLength = formatDays(calcHelper.averageCycleLength().formatToOneDecimalPoint()),
                 averagePeriodLength = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint()),
-                averageLutealLength =formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
+                averageLutealLength = formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
                 follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint(),
                 ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash,
                 periodPredictionDate = periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash,
-                ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
+                ovulationCount = periodDatabaseHelper.getOvulationCount().toString(),
+                cycleConsistencyStatus = if (periodDatabaseHelper.getPeriodCount() >= 2) {
+                    if (regular) "Regular" else "Irregular"
+                } else null
             )
         }
     }

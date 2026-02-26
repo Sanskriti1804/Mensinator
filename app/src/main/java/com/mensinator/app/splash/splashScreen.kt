@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.R
+import com.mensinator.app.questionnaire.AnswerStorage
 import com.mensinator.app.ui.navigation.Screen
 import com.mensinator.app.ui.theme.appDRed
 import com.mensinator.app.ui.theme.appWhite
@@ -40,9 +42,16 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         delay(3000)
-        navController.navigate(Screen.Calendar.name) {
+        val storage = AnswerStorage(context)
+        val destination = if (!storage.hasAnyAnswers()) {
+            "Questionnaire/first"
+        } else {
+            Screen.Calendar.name
+        }
+        navController.navigate(destination) {
             popUpTo(Screen.Splash.name) { inclusive = true }
         }
     }

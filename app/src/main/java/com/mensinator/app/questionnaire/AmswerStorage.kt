@@ -27,4 +27,13 @@ class AnswerStorage(private val context: Context) {
     fun clearAnswers() {
         prefs.edit().clear().apply()
     }
+
+    /**
+     * Returns true if at least one question has a non-empty saved answer.
+     * Used to determine first app launch vs returning user.
+     */
+    fun hasAnyAnswers(): Boolean {
+        val answers = loadAnswers()
+        return answers.values.any { it.isNotBlank() }
+    }
 }

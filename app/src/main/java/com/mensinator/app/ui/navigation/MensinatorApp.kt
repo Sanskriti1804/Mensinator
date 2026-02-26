@@ -71,6 +71,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import com.auth0.android.Auth0
 import com.mensinator.app.R
 import com.mensinator.app.article.ArticleBrowsingScreen
@@ -214,7 +216,9 @@ private fun MainScaffold(
                                             else item.imageUnSelected
                                         ),
                                         contentDescription = stringResource(item.screen.titleRes),
-                                        modifier = Modifier.size(24.dp)
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .padding(horizontal = 16.dp, vertical = 12.dp)
                                     )
                                 },
                                 colors = NavigationBarItemDefaults.colors(
@@ -230,13 +234,57 @@ private fun MainScaffold(
         ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Calendar.name,
+                startDestination = Screen.Splash.name,
                 modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
             ) {
                 composable(Screen.Splash.name) {
                     SplashScreen(navController)
+                }
+
+                composable(
+                    route = "Questionnaire/{openMode}",
+                    arguments = listOf(
+                        navArgument("openMode") {
+                            type = NavType.StringType
+                            defaultValue = "first"
+                        }
+                    )
+                ) { backStackEntry ->
+                    val openMode = backStackEntry.arguments?.getString("openMode") ?: "first"
+                    val loadFromStorage = (openMode == "edit")
+                    val context = LocalContext.current
+                    val viewModel = remember(openMode) {
+                        QuestionnaireViewModel(
+                            AnswerStorage(context),
+                            loadFromStorage = loadFromStorage
+                        )
+                    }
+                    Scaffold(
+                        topBar = {
+                            MensinatorTopBar(
+                                titleStringId = Screen.Questionnaire.titleRes,
+                                textColor = appDRed,
+                                backgroundColor = Color.White
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        QuestionnaireScreen(
+                            viewModel = viewModel,
+                            onComplete = {
+                                if (openMode == "first") {
+                                    navController.navigate(Screen.Answers.name) {
+                                        popUpTo("Questionnaire/$openMode") { inclusive = true }
+                                    }
+                                } else {
+                                    navController.popBackStack()
+                                }
+                            },
+                            modifier = Modifier.padding(topBarPadding)
+                        )
+                    }
                 }
 
                 composable(Screen.Login.name) {
@@ -248,40 +296,6 @@ private fun MainScaffold(
                     }
 //                    LoginScreen(navController, account)
                     LoginScreen(account)
-                }
-
-// In the NavHost composable, update the Questionnaire and Answers routes:
-
-                composable(Screen.Questionnaire.name) {
-                    val context = LocalContext.current
-                    val viewModel = remember {
-                        QuestionnaireViewModel(
-                            AnswerStorage(context)
-                        )
-                    }
-
-                    Scaffold(
-                        topBar = {
-                            MensinatorTopBar(
-                                titleStringId = currentScreen.titleRes,
-                                textColor = appDRed,
-                                backgroundColor = Color.White
-                            )
-                        },
-                        contentWindowInsets = WindowInsets(0.dp),
-                    ) { topBarPadding ->
-                        QuestionnaireScreen(
-                            viewModel = viewModel,
-                            onComplete = {
-                                navController.navigate(Screen.Answers.name) {
-                                    popUpTo(Screen.Questionnaire.name) {
-                                        inclusive = true
-                                    }
-                                }
-                            },
-                            modifier = Modifier.padding(topBarPadding)
-                        )
-                    }
                 }
 
                 composable(Screen.Answers.name) {
@@ -360,6 +374,9 @@ private fun MainScaffold(
                     ) { topBarPadding ->
                         StatisticsScreen(
                             modifier = Modifier.padding(topBarPadding),
+                            onUserInformationClick = {
+                                navController.navigate("Questionnaire/edit")
+                            }
                         )
                     }
                 }

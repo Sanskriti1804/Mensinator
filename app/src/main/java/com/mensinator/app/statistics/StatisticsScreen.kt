@@ -52,7 +52,8 @@ import java.time.LocalDate
 @Composable
 fun StatisticsScreen(
     modifier: Modifier = Modifier,
-    viewModel: StatisticsViewModel = koinViewModel()
+    viewModel: StatisticsViewModel = koinViewModel(),
+    onUserInformationClick: () -> Unit = {}
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle().value
 
@@ -67,7 +68,8 @@ fun StatisticsScreen(
         modifier = modifier,
         state = state,
         textApp = textApp,
-        subTextApp = subTextApp
+        subTextApp = subTextApp,
+        onUserInformationClick = onUserInformationClick
     )
 }
 
@@ -76,7 +78,8 @@ fun StatisticsScreenContent(
     modifier: Modifier,
     state: StatisticsViewModel.ViewState,
     textApp: FontFamily,
-    subTextApp: FontFamily
+    subTextApp: FontFamily,
+    onUserInformationClick: () -> Unit = {}
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -88,7 +91,8 @@ fun StatisticsScreenContent(
         state.ovulationCount to stringResource(id = R.string.ovulation_count),
         state.follicleGrowthDays to stringResource(id = R.string.average_ovulation_day),
         state.ovulationPredictionDate to stringResource(id = R.string.next_predicted_ovulation),
-        state.averageLutealLength to stringResource(id = R.string.average_luteal_length)
+        state.averageLutealLength to stringResource(id = R.string.average_luteal_length),
+        state.cycleConsistencyStatus to stringResource(id = R.string.cycle_consistency)
     )
 
     Surface(
@@ -164,7 +168,7 @@ fun StatisticsScreenContent(
 
                 item {
                     OutlinedButton(
-                        onClick = {  },
+                        onClick = onUserInformationClick,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp)

@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 
 class CalendarViewModel(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -75,58 +76,76 @@ class CalendarViewModel(
         }
     }
 
-    fun onAction(uiAction: UiAction): Unit = when (uiAction) {
-        is UiAction.UpdateFocusedYearMonth -> {
-            _viewState.update {
-                it.copy(focusedYearMonth = uiAction.focusedYearMonth)
-            }
-            deselectDatesIfFocusChangedTooMuch(uiAction.focusedYearMonth)
-            refreshData()
-        }
-        is UiAction.SelectDays -> {
-            viewModelScope.launch {
+    fun onAction(uiAction: UiAction): Unit {
+        when (uiAction) {
+            is UiAction.UpdateFocusedYearMonth -> {
                 _viewState.update {
-                    val activeSymptoms = if (uiAction.days.isEmpty()) {
-                        persistentSetOf()
-                    } else {
-                        dbHelper.getActiveSymptomIdsForDate(uiAction.days.last()).toPersistentSet()
+                    it.copy(focusedYearMonth = uiAction.focusedYearMonth)
+                }
+                deselectDatesIfFocusChangedTooMuch(uiAction.focusedYearMonth)
+                refreshData()
+            }
+            is UiAction.SelectDays -> {
+                viewModelScope.launch {
+                    _viewState.update {
+                        val activeSymptoms = if (uiAction.days.isEmpty()) {
+                            persistentSetOf()
+                        } else {
+                            dbHelper.getActiveSymptomIdsForDate(uiAction.days.last()).toPersistentSet()
+                        }
+                        val range = if (uiAction.days.size >= 2) {
+                            val min = uiAction.days.min()
+                            val max = uiAction.days.max()
+                            val daysBetween = ChronoUnit.DAYS.between(min, max).toInt()
+                            (0..daysBetween).map { min.plusDays(it.toLong()) }.toPersistentSet()
+                        } else {
+                            uiAction.days
+                        }
+                        it.copy(
+                            selectedDays = uiAction.days,
+                            selectedDaysRange = range,
+                            activeSymptomIdsForLatestSelectedDay = activeSymptoms
+                        )
                     }
-                    it.copy(
-                        selectedDays = uiAction.days,
-                        activeSymptomIdsForLatestSelectedDay = activeSymptoms
-                    )
                 }
+                Unit
             }
-            Unit
-        }
-        is UiAction.UpdateSymptomDates -> {
-            dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
-        }
-        is UiAction.UpdateOvulationDay -> {
-            dbHelper.updateOvulationDate(uiAction.ovulationDay)
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
-        }
-        is UiAction.UpdatePeriodDates -> {
-            /**
-             * Make sure that if two or more days are selected (and at least one is already marked as period),
-             * we should make sure that all days are removed.
-             */
-            val datesAlreadyMarkedAsPeriod =
-                uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
-            if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                uiAction.selectedDays.forEach {
-                    val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                    dbHelper.addDateToPeriod(it, periodId)
+            is UiAction.UpdateSymptomDates -> {
+                dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
+                onAction(UiAction.SelectDays(persistentSetOf()))
+                refreshData()
+            }
+            is UiAction.UpdateOvulationDay -> {
+                dbHelper.updateOvulationDate(uiAction.ovulationDay)
+                onAction(UiAction.SelectDays(persistentSetOf()))
+                refreshData()
+            }
+            is UiAction.UpdateOvulationDates -> {
+                uiAction.days.forEach { dbHelper.updateOvulationDate(it) }
+                onAction(UiAction.SelectDays(persistentSetOf()))
+                refreshData()
+            }
+            is UiAction.UpdatePeriodDates -> {
+                /**
+                 * Use the expanded range (all days between min and max selected).
+                 * Validate: do not persist empty or logically invalid ranges (e.g. > 14 days without UI confirmation).
+                 */
+                val datesToApply = uiAction.selectedDaysRange
+                if (datesToApply.isEmpty()) return Unit
+                val datesAlreadyMarkedAsPeriod =
+                    datesToApply.intersect(uiAction.currentPeriodDays.keys)
+                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                    datesToApply.forEach {
+                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                        dbHelper.addDateToPeriod(it, periodId)
+                    }
+                } else {
+                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
                 }
-            } else {
-                datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
+                onAction(UiAction.SelectDays(persistentSetOf()))
+                refreshData()
             }
-            viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
         }
     }
 
@@ -149,6 +168,7 @@ class CalendarViewModel(
         _viewState.update {
             it.copy(
                 selectedDays = persistentSetOf(),
+                selectedDaysRange = persistentSetOf(),
                 activeSymptomIdsForLatestSelectedDay = persistentSetOf()
             )
         }
@@ -188,6 +208,8 @@ class CalendarViewModel(
         val ovulationDates: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptoms: PersistentSet<Symptom> = persistentSetOf(),
         val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
+        /** All dates from min to max of selectedDays (for range selection display and period save). */
+        val selectedDaysRange: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
         val calendarColors: CalendarColors = CalendarColors(mapOf(), mapOf()),
     )
@@ -206,9 +228,11 @@ class CalendarViewModel(
         ) : UiAction()
 
         data class UpdateOvulationDay(val ovulationDay: LocalDate) : UiAction()
+        data class UpdateOvulationDates(val days: PersistentSet<LocalDate>) : UiAction()
         data class UpdatePeriodDates(
             val currentPeriodDays: PersistentMap<LocalDate, PeriodId>,
-            val selectedDays: PersistentSet<LocalDate>
+            val selectedDays: PersistentSet<LocalDate>,
+            val selectedDaysRange: PersistentSet<LocalDate>
         ) : UiAction()
     }
 }

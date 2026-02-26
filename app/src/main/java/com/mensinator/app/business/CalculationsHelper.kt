@@ -189,4 +189,19 @@ class CalculationsHelper(
 
         return cycleLengths
     }
+
+    override fun cycleLengthVariance(): Double {
+        val lengths = getCycleLengths()
+        if (lengths !is List<*> || lengths.size < 2) return 0.0
+        @Suppress("UNCHECKED_CAST")
+        val values = lengths as List<Long>
+        val mean = values.map { it.toDouble() }.average()
+        val variance = values.map { (it.toDouble() - mean).let { d -> d * d } }.average()
+        return kotlin.math.sqrt(variance)
+    }
+
+    override fun isCycleRegular(): Boolean {
+        val stdDev = cycleLengthVariance()
+        return stdDev <= 3.0
+    }
 }
