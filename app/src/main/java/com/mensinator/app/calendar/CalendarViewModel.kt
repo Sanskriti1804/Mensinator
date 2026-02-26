@@ -116,31 +116,35 @@ class CalendarViewModel(
                 refreshData()
             }
             is UiAction.UpdateOvulationDay -> {
+                val month = uiAction.ovulationDay.yearMonth
+                dbHelper.getOvulationDatesForMonth(month.year, month.monthValue).forEach { dbHelper.updateOvulationDate(it) }
                 dbHelper.updateOvulationDate(uiAction.ovulationDay)
                 onAction(UiAction.SelectDays(persistentSetOf()))
                 refreshData()
             }
             is UiAction.UpdateOvulationDates -> {
+                val monthsToClear = uiAction.days.map { it.yearMonth }.toSet()
+                for (ym in monthsToClear) {
+                    dbHelper.getOvulationDatesForMonth(ym.year, ym.monthValue).forEach { dbHelper.updateOvulationDate(it) }
+                }
                 uiAction.days.forEach { dbHelper.updateOvulationDate(it) }
                 onAction(UiAction.SelectDays(persistentSetOf()))
                 refreshData()
             }
             is UiAction.UpdatePeriodDates -> {
                 /**
-                 * Use the expanded range (all days between min and max selected).
-                 * Validate: do not persist empty or logically invalid ranges (e.g. > 14 days without UI confirmation).
+                 * Single entry per month: remove any existing period dates in the same month(s) as the new range, then add the new range.
                  */
                 val datesToApply = uiAction.selectedDaysRange
                 if (datesToApply.isEmpty()) return Unit
-                val datesAlreadyMarkedAsPeriod =
-                    datesToApply.intersect(uiAction.currentPeriodDays.keys)
-                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                    datesToApply.forEach {
-                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                        dbHelper.addDateToPeriod(it, periodId)
-                    }
-                } else {
-                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                val monthsToClear = datesToApply.map { it.yearMonth }.toSet()
+                for (ym in monthsToClear) {
+                    val existingInMonth = dbHelper.getPeriodDatesForMonth(ym.year, ym.monthValue)
+                    existingInMonth.keys.forEach { dbHelper.removeDateFromPeriod(it) }
+                }
+                datesToApply.forEach {
+                    val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                    dbHelper.addDateToPeriod(it, periodId)
                 }
                 viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
                 onAction(UiAction.SelectDays(persistentSetOf()))

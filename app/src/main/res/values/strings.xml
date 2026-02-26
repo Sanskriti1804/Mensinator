@@ -62,6 +62,8 @@
     <string name="expected_ovulation_color">Expected Ovulation</string>
     <string name="reminders">Reminders</string>
     <string name="days_before_reminder">Days Before Reminder</string>
+    <string name="test_notification">Test Notification</string>
+    <string name="export_periods_pdf">Export Periods to PDF</string>
     <string name="period_notification_title">Period Notification Message</string>
     <string name="period_notification_message">Your period is about to start</string>
     <string name="change_text">Change text</string>

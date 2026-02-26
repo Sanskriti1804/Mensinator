@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.mensinator.app.NotificationReceiver
 import java.time.LocalDate
 import java.time.ZoneId
@@ -33,6 +34,16 @@ class AndroidNotificationScheduler(
     override fun cancelScheduledNotification() {
         alarmManager.cancel(getPendingIntent(messageText = null))
         Log.d("NotificationScheduler", "Notification cancelled")
+    }
+
+    override fun showTestNotification(messageText: String) {
+        val pendingIntent = getPendingIntent(messageText)
+        try {
+            pendingIntent.send()
+            Log.d("NotificationScheduler", "Test notification triggered")
+        } catch (e: PendingIntent.CanceledException) {
+            Log.e("NotificationScheduler", "Failed to send test notification", e)
+        }
     }
 
     private fun getPendingIntent(messageText: String?): PendingIntent {

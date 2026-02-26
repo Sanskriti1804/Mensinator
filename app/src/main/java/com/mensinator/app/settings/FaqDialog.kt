@@ -130,18 +130,6 @@ private fun FAQDialogContent() {
         )
         Spacer(modifier = Modifier.height(16.dp)) // Space between sections
 
-        // Our Story Header
-        Text(
-            text = stringResource(id = R.string.our_story_header),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = stringResource(id = R.string.our_story),
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(modifier = Modifier.height(16.dp)) // Space between sections
-
         // Disclaimer Header
         Text(
             text = stringResource(id = R.string.disclaimer_header),

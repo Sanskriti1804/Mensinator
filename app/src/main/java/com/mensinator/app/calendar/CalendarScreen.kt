@@ -60,6 +60,7 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
+import com.kizitonwose.calendar.core.yearMonth
 import com.mensinator.app.R
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarViewModel.UiAction
@@ -401,8 +402,8 @@ private fun PeriodButton(
                 enabled = isPeriodButtonEnabled,
                 onClick = {
                     when {
-                        rangeSize in 2..8 -> performPeriodSave()
-                        rangeSize < 2 || rangeSize > 8 -> {
+                        rangeSize in 2..9 -> performPeriodSave()
+                        rangeSize < 2 || rangeSize > 9 -> {
                             showPeriodConfirm = true
                         }
                         else -> { /* no selection */ }
@@ -722,6 +723,13 @@ fun Day(
         else -> FontWeight.Normal
     }
 
+    val nextMonth = YearMonth.now().plusMonths(1)
+    val isPredictedPeriodNextMonth = remember(state.periodPredictionDate, day.date, nextMonth) {
+        state.periodPredictionDate?.isEqual(day.date) == true &&
+                state.periodPredictionDate?.yearMonth == nextMonth
+    }
+    val dayTextColor = if (isPredictedPeriodNextMonth) com.mensinator.app.ui.theme.appDRed else dayColors.textColor
+
     // Dates to track (use range so all days between start and end are highlighted)
     val isSelected = day.date in state.selectedDaysRange
     val hasSymptomDate = day.date in state.symptomDates
@@ -747,7 +755,7 @@ fun Day(
             Text(
                 text = day.date.dayOfMonth.toString(),
                 fontWeight = fontStyleType,
-                color = dayColors.textColor
+                color = dayTextColor
             )
 
             // Add symptom circles
@@ -784,7 +792,7 @@ fun Day(
                             text = cycleNumber.toString(),
                             fontSize = 8.sp,
                             modifier = Modifier.padding(horizontal = 4.dp),
-                            color = dayColors.textColor,
+                            color = dayTextColor,
                         )
                     }
                 }

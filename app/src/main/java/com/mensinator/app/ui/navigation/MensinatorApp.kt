@@ -202,7 +202,7 @@ private fun MainScaffold(
                     NavigationBar(
                         containerColor = appDRed,
                         modifier = Modifier
-                            .height(70.dp)
+                            .height(76.dp)
                             .shadow(elevation = 8.dp)
                     ) {
                         navigationItems.forEach { item ->
@@ -217,8 +217,8 @@ private fun MainScaffold(
                                         ),
                                         contentDescription = stringResource(item.screen.titleRes),
                                         modifier = Modifier
-                                            .size(24.dp)
-                                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                                            .size(46.dp)
+                                            .padding(horizontal = 8.dp, vertical = 6.dp)
                                     )
                                 },
                                 colors = NavigationBarItemDefaults.colors(
@@ -375,7 +375,7 @@ private fun MainScaffold(
                         StatisticsScreen(
                             modifier = Modifier.padding(topBarPadding),
                             onUserInformationClick = {
-                                navController.navigate("Questionnaire/edit")
+                                navController.navigate(Screen.Answers.name)
                             }
                         )
                     }

@@ -153,6 +153,17 @@ fun SettingsScreen(
                     text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
                     onClick = { viewModel.showPeriodNotificationDialog(true) }
                 )
+                OutlinedButton(
+                    onClick = { viewModel.triggerTestNotification() },
+                    modifier = Modifier.padding(top = 8.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = appDRed,
+                        containerColor = Color.White
+                    ),
+                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
+                ) {
+                    Text(text = stringResource(R.string.test_notification))
+                }
             }
         }
 
@@ -213,7 +224,7 @@ fun SettingsScreen(
             colors = CardDefaults.elevatedCardColors(containerColor = cardColor)
         ) {
             Column(Modifier.padding(16.dp)) {
-                ImportExportRow(viewModel)
+                ExportRow(viewModel)
             }
         }
 
@@ -222,14 +233,6 @@ fun SettingsScreen(
 
         if (viewState.showFaqDialog) {
             FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
-        }
-
-        if (viewState.showImportDialog) {
-            ImportDialog(
-                defaultImportFilePath = viewState.defaultImportFilePath,
-                onDismissRequest = { viewModel.showImportDialog(false) },
-                onImportClick = { importPath -> viewModel.handleImport(importPath) }
-            )
         }
 
         if (viewState.showExportDialog) {
@@ -653,7 +656,7 @@ private fun SettingLanguagePicker() {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ImportExportRow(viewModel: SettingsViewModel) {
+private fun ExportRow(viewModel: SettingsViewModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -669,32 +672,24 @@ private fun ImportExportRow(viewModel: SettingsViewModel) {
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         ) {
             OutlinedButton(
-                onClick = { viewModel.showImportDialog(true) },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color.Black,
-                    containerColor = Color.White
-                ),
-                border = ButtonDefaults.outlinedButtonBorder.copy(
-                    width = 1.dp,
-//                    borderColor = Color.Black
-                )
-            ) {
-                Text(text = stringResource(R.string.Import))
-            }
-
-            // Export Button
-            OutlinedButton(
                 onClick = { viewModel.showExportDialog(true) },
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color.Black,
                     containerColor = Color.White
                 ),
-                border = ButtonDefaults.outlinedButtonBorder.copy(
-                    width = 1.dp,
-//                    color = Color.Black
-                )
+                border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
             ) {
                 Text(text = stringResource(R.string.data_export))
+            }
+            OutlinedButton(
+                onClick = { viewModel.exportPeriodsToPdf() },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Black,
+                    containerColor = Color.White
+                ),
+                border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
+            ) {
+                Text(text = stringResource(R.string.export_periods_pdf))
             }
         }
     }

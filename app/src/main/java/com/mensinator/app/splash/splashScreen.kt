@@ -44,15 +44,16 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        delay(3000)
         val storage = AnswerStorage(context)
-        val destination = if (!storage.hasAnyAnswers()) {
-            "Questionnaire/first"
+        if (!storage.hasAnyAnswers()) {
+            navController.navigate("Questionnaire/first") {
+                popUpTo(Screen.Splash.name) { inclusive = true }
+            }
         } else {
-            Screen.Calendar.name
-        }
-        navController.navigate(destination) {
-            popUpTo(Screen.Splash.name) { inclusive = true }
+            delay(3000)
+            navController.navigate(Screen.Calendar.name) {
+                popUpTo(Screen.Splash.name) { inclusive = true }
+            }
         }
     }
 

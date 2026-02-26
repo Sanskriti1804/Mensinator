@@ -14,20 +14,32 @@ import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
 import com.mensinator.app.business.IExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.notifications.IAndroidNotificationScheduler
 import com.mensinator.app.business.notifications.INotificationScheduler
+import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.settings.ColorSetting.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.time.YearMonth
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
+import android.os.Build
+import android.os.Environment
+import androidx.annotation.RequiresApi
 
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IExportImport,
     private val notificationScheduler: INotificationScheduler,
+    private val androidNotificationScheduler: IAndroidNotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
         ViewState(
@@ -50,9 +62,7 @@ class SettingsViewModel(
             showCycleNumbers = false,
             preventScreenshots = false,
 
-            showImportDialog = false,
             showExportDialog = false,
-            defaultImportFilePath = exportImport.getDefaultImportFilePath(),
             exportFilePath = exportImport.getDocumentsExportFilePath(),
 
             showFaqDialog = false,
@@ -83,9 +93,7 @@ class SettingsViewModel(
         val showCycleNumbers: Boolean,
         val preventScreenshots: Boolean,
 
-        val showImportDialog: Boolean,
         val showExportDialog: Boolean,
-        val defaultImportFilePath: String,
         val exportFilePath: String,
 
         val showFaqDialog: Boolean,
@@ -192,34 +200,21 @@ class SettingsViewModel(
         _viewState.update { it.copy(showPeriodNotificationDialog = show) }
     }
 
+    fun triggerTestNotification() {
+        val message = ResourceMapper.getPeriodReminderMessage(
+            viewState.value.periodNotificationMessage,
+            appContext
+        )
+        androidNotificationScheduler.showTestNotification(message)
+        Toast.makeText(appContext, appContext.getString(R.string.test_notification), Toast.LENGTH_SHORT).show()
+    }
+
     fun showFaqDialog(show: Boolean) {
         _viewState.update { it.copy(showFaqDialog = show) }
     }
 
-    fun showImportDialog(show: Boolean) {
-        _viewState.update { it.copy(showImportDialog = show) }
-    }
-
     fun showExportDialog(show: Boolean) {
         _viewState.update { it.copy(showExportDialog = show) }
-    }
-
-    fun handleImport(importPath: String) {
-        try {
-            exportImport.importDatabase(importPath)
-            Toast.makeText(
-                appContext,
-                "Data imported successfully from $importPath",
-                Toast.LENGTH_SHORT
-            ).show()
-        } catch (e: Exception) {
-            Toast.makeText(
-                appContext,
-                "Error during import: ${e.message}",
-                Toast.LENGTH_SHORT
-            ).show()
-            Log.e("Import", "Import error: ${e.message}", e)
-        }
     }
 
     fun handleExport(exportPath: String) {
@@ -237,6 +232,69 @@ class SettingsViewModel(
                 Toast.LENGTH_SHORT
             ).show()
             Log.e("Export", "Export error: ${e.message}", e)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    fun exportPeriodsToPdf() {
+        viewModelScope.launch {
+            try {
+                val filePath = withContext(Dispatchers.IO) {
+                    val oldest = periodDatabaseHelper.getOldestPeriodDate() ?: run {
+                        return@withContext null
+                    }
+                    val endYm = YearMonth.now()
+                    var ym = YearMonth.of(oldest.year, oldest.monthValue)
+                    val allDates = mutableListOf<java.time.LocalDate>()
+                    while (ym <= endYm) {
+                        val datesInMonth = periodDatabaseHelper.getPeriodDatesForMonth(ym.year, ym.monthValue)
+                        allDates.addAll(datesInMonth.keys)
+                        ym = ym.plusMonths(1)
+                    }
+                    val sortedDates = allDates.distinct().sorted()
+                    if (sortedDates.isEmpty()) return@withContext null
+                    val pdf = PdfDocument()
+                    val pageWidth = 595
+                    val pageHeight = 842
+                    val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+                    val page = pdf.startPage(pageInfo)
+                    val canvas = page.canvas
+                    val paint = Paint().apply {
+                        textSize = 12f
+                        isAntiAlias = true
+                    }
+                    var y = 40f
+                    var currentPage = page
+                    var currentCanvas = canvas
+                    currentCanvas.drawText("Period dates export", 40f, y, paint)
+                    y += 30f
+                    sortedDates.forEach { date ->
+                        if (y > pageHeight - 40) {
+                            pdf.finishPage(currentPage)
+                            currentPage = pdf.startPage(PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pdf.pages.size + 1).create())
+                            currentCanvas = currentPage.canvas
+                            y = 40f
+                        }
+                        currentCanvas.drawText(date.toString(), 40f, y, paint)
+                        y += 20f
+                    }
+                    pdf.finishPage(currentPage)
+                    val dir = appContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+                        ?: appContext.getExternalFilesDir(null)
+                    val dirFile = File(dir, "periods_export.pdf")
+                    dirFile.outputStream().use { pdf.writeTo(it) }
+                    pdf.close()
+                    dirFile.absolutePath
+                }
+                if (filePath != null) {
+                    Toast.makeText(appContext, appContext.getString(R.string.export_periods_pdf) + " saved to $filePath", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(appContext, "No period data to export", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("ExportPdf", "PDF export error: ${e.message}", e)
+                Toast.makeText(appContext, "Error exporting PDF: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

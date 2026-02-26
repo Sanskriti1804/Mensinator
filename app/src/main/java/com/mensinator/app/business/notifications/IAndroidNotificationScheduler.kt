@@ -9,4 +9,7 @@ interface IAndroidNotificationScheduler {
     )
 
     fun cancelScheduledNotification()
+
+    /** Triggers a local notification immediately (for testing). */
+    fun showTestNotification(messageText: String)
 }
